@@ -4,15 +4,15 @@
  * A classe guarda o NIF, o nome, e-mail, morada e palavra-passe.
  * 
  * @author Daniel Costa
- * @version 24/02/2018
+ * @version 25/02/2018
  */
-public class Taxpayer
+public abstract class Taxpayer
 {
-    private int taxId;
-    private String name;
-    private String email;
-    private String adress;
-    private String password; //Isto é muito seguro
+    protected int taxId;
+    protected String name;
+    protected String email;
+    protected String adress;
+    protected String password; //Isto é muito seguro
     
     /**
      * Construtor para objetos da classe Contribuinte
@@ -42,20 +42,6 @@ public class Taxpayer
         this.email = email;
         this.adress = adress;
         this.password = password;
-    }
-    
-    /**
-     * Construtor para objetos da classe Contribuinte recebendo outro objeto da classe Contribuinte
-     * 
-     * @param  contribuinte Outro contribuinte
-     */
-    public Taxpayer(Taxpayer contribuinte)
-    {
-        this.taxId = contribuinte.getTaxId();
-        this.name = contribuinte.getName();
-        this.email = contribuinte.getEmail();
-        this.adress = contribuinte.getAdress();
-        this.password = contribuinte.getPassword();
     }
 
     /**
