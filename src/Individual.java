@@ -6,20 +6,19 @@
  * @author Daniel Costa 
  * @version 25/02/2018
  */
-public class Individual extends Taxpayer
+public class Individual extends Contribuinte
 {
-    private int taxCoefficient;
-    private int[] householdTaxID;
-    private int[] economicActivities;
+    private int numDependentesAF;
+    private int[] nifAF;
+    private float coefFiscal;
+    private int[] atividadesDedutiveis;
     
     /**
      * Construtor para objetos da classe Individual
      */
     public Individual()
     {
-        this.taxCoefficient = 0;
-        this.householdTaxID = null;
-        this.economicActivities = null;
+
     }
     
     /**
@@ -121,5 +120,10 @@ public class Individual extends Taxpayer
     public int[] getEconomicActivities()
     {
         return this.economicActivities;
+    }
+    
+    //verifica as despesas que foram emitidas em seu nome  e verificar o montante de dedução fiscal acumulado, por si e pelo agregado familiar
+    public int verificaDeducaoFiscal(){
+        return 0;
     }
 }

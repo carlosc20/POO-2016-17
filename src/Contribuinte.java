@@ -6,51 +6,51 @@
  * @author Daniel Costa
  * @version 25/02/2018
  */
-public abstract class Taxpayer
+public abstract class Contribuinte
 {
-    protected int taxId;
-    protected String name;
+    protected int nif;
+    protected String nome;
     protected String email;
-    protected String adress;
+    protected String morada;
     protected String password; //Isto é muito seguro
     
     /**
      * Construtor para objetos da classe Contribuinte
      */
-    public Taxpayer()
+    public Contribuinte()
     {
-        this.taxId = 0;
-        this.name = "";
+        this.nif = 0;
+        this.nome = "";
         this.email = "";
-        this.adress = "";
+        this.morada = "";
         this.password = "";
     }
     
     /**
      * Construtor para objetos da classe Contribuinte recebendo parametros
      * 
-     * @param  taxId    Número de Identificação Fiscal do contribuinte
-     * @param  name     Nome do contribuinte
+     * @param  nif    Número de Identificação Fiscal do contribuinte
+     * @param  nome     Nome do contribuinte
      * @param  email    E-mail de contacto do contribuinte
-     * @param  adress   Morada do contribuinte
+     * @param  morada   Morada do contribuinte
      * @param  password Palavra-passe de acesso do contribuinte
      */
-    public Taxpayer(int taxId, String name, String email, String adress, String password)
+    public Contribuinte(int nif, String nome, String email, String morada, String password)
     {
-        this.taxId = taxId;
-        this.name = name;
+        this.nif = nif;
+        this.nome = nome;
         this.email = email;
-        this.adress = adress;
+        this.morada = morada;
         this.password = password;
     }
 
     /**
      * Altera o NIF do contribuinte
-     * @param  taxId    Número de Identificação Fiscal do contribuinte
+     * @param  nif    Número de Identificação Fiscal do contribuinte
      */
-    public void setTaxId(int taxId)
+    public void setnif(int nif)
     {
-        this.taxId = taxId;
+        this.nif = nif;
     }
     
     /**
@@ -58,18 +58,18 @@ public abstract class Taxpayer
      * 
      * @return     o NIF do contribuinte
      */
-    public int getTaxId()
+    public int getNif()
     {
-        return this.taxId;
+        return this.nif;
     }
     
     /**
      * Altera o nome do contribuinte
-     * @param  name     Nome do contribuinte
+     * @param  nome     Nome do contribuinte
      */
-    public void setName(String name)
+    public void setnome(String nome)
     {
-        this.name = name;
+        this.nome = nome;
     }
     
     /**
@@ -77,9 +77,9 @@ public abstract class Taxpayer
      * 
      * @return     o nome do contribuinte
      */
-    public String getName()
+    public String getnome()
     {
-        return this.name;
+        return this.nome;
     }
     
     /**
@@ -103,11 +103,11 @@ public abstract class Taxpayer
     
     /**
      * Altera a morada do contribuinte
-     * @param  adress   Morada do contribuinte
+     * @param  morada   Morada do contribuinte
      */
-    public void setAdress(String adress)
+    public void setmorada(String morada)
     {
-        this.adress = adress;
+        this.morada = morada;
     }
     
     /**
@@ -115,9 +115,9 @@ public abstract class Taxpayer
      * 
      * @return     a morada do contribuinte
      */
-    public String getAdress()
+    public String getmorada()
     {
-        return this.adress;
+        return this.morada;
     }
     
     /**
@@ -138,4 +138,5 @@ public abstract class Taxpayer
     {
         return this.password;
     }
+    
 }
