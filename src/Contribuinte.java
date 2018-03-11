@@ -3,9 +3,12 @@
  * Classe para armazenar informações sobre um contribuinte.
  * A classe guarda o NIF, o nome, e-mail, morada e palavra-passe.
  * 
- * @author Daniel Costa
- * @version 25/02/2018
+ * @author Carlos Castro, Daniel Costa, Luís Macedo
+ * @version 11/03/2018
  */
+import java.util.ArrayList;
+import java.time.LocalDate;
+
 public abstract class Contribuinte
 {
     protected int nif;

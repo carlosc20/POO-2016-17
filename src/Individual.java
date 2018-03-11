@@ -1,77 +1,87 @@
 /**
- * Classe para armazenar informações sobre um contribuinte.
- * A classe guarda o NIF, o nome, e-mail, morada, palavra-passe,
- * coeficiente fiscal, números fiscais do agregado familiar e códigos das atividades económicas
+ * Classe para armazenar informações sobre um contribuinte individual.
  * 
- * @author Daniel Costa 
- * @version 25/02/2018
+ * @author Carlos Castro, Daniel Costa, Luís Macedo
+ * @version 11/03/2018
  */
+
+import java.util.ArrayList;
+import java.time.LocalDate;
+
 public class Individual extends Contribuinte
 {
-    private int numDependentesAF;
+    private int numDependentesAF; // AF = agregado familiar
     private int[] nifAF;
-    private float coefFiscal;
-    private int[] atividadesDedutiveis;
+    private float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível
+    private int[] ativDedutiveis; //setores dedutiveis?
+    private ArrayList<Fatura> faturas;
     
     /**
      * Construtor para objetos da classe Individual
      */
     public Individual()
     {
-
+        super();
+        this.numDependentesAF = 0; 
+        this.nifAF = null;
+        this.coefFiscal = 0;
+        this.ativDedutiveis = null; 
+        this.faturas = new ArrayList<Fatura>();
     }
     
     /**
      * Construtor para objetos da classe Individual recebendo valores iniciais
      * 
-     * @param  taxId              Número de Identificação Fiscal do contribuinte
-     * @param  name               Nome do contribuinte
+     * @param  nif                Número de Identificação Fiscal do contribuinte
+     * @param  nome               Nome do contribuinte
      * @param  email              E-mail de contacto do contribuinte
-     * @param  adress             Morada do contribuinte
+     * @param  morada             Morada do contribuinte
      * @param  password           Palavra-passe de acesso do contribuinte
-     * @param  taxCoefficient     Coeficiente fiscal para efeitos de dedução do contribuinte
-     * @param  householdTaxID     Números fiscais do agregado familiar do contribuinte
-     * @param  economicActivities Códigos das atividades económicas que o contribuinte pode deduzir despesas
+     * @param  coefFiscal         Coeficiente fiscal para efeitos de dedução do contribuinte
+     * @param  nifAF              Números fiscais do agregado familiar do contribuinte
+     * @param  ativDedutiveis     Códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public Individual(int taxId, String name, String email, String adress, String password, int taxCoefficient, int[] householdTaxID, int[] economicActivities)
+    public Individual(int nif, String nome, String email, String morada, String password, int numDependentesAF, int coefFiscal, int[] nifAF, int[] ativDedutiveis, ArrayList<Fatura> faturas)
     {
-        super(taxId, name, email, adress, password);
-        this.taxCoefficient = taxCoefficient;
-        this.householdTaxID = householdTaxID;
-        this.economicActivities = economicActivities;
+        super(nif, nome, email, morada, password);
+        this.numDependentesAF = numDependentesAF; 
+        this.nifAF = nifAF;
+        this.coefFiscal = coefFiscal;
+        this.ativDedutiveis = ativDedutiveis; 
+        this.faturas = faturas;
     }
     
     /**
      * Construtor para objetos da classe Individual recebendo um objeto da classe Individual
      * 
-     * @param  taxId              Número de Identificação Fiscal do contribuinte
-     * @param  name               Nome do contribuinte
+     * @param  nif                Número de Identificação Fiscal do contribuinte
+     * @param  nome               Nome do contribuinte
      * @param  email              E-mail de contacto do contribuinte
-     * @param  adress             Morada do contribuinte
+     * @param  morada             Morada do contribuinte
      * @param  password           Palavra-passe de acesso do contribuinte
-     * @param  taxCoefficient     Coeficiente fiscal para efeitos de dedução do contribuinte
-     * @param  householdTaxID     Números fiscais do agregado familiar do contribuinte
-     * @param  economicActivities Códigos das atividades económicas que o contribuinte pode deduzir despesas
+     * @param  coefFiscal         Coeficiente fiscal para efeitos de dedução do contribuinte
+     * @param  nifAF              Números fiscais do agregado familiar do contribuinte
+     * @param  ativDedutiveis     Códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
     public Individual(Individual other)
     {
-        this.taxId = other.getTaxId();
-        this.name = other.getName();
+        this.nif = other.getNif();
+        this.nome = other.getNome();
         this.email = other.getEmail();
-        this.adress = other.getAdress();
+        this.morada = other.getMorada();
         this.password = other.getPassword();
-        this.taxCoefficient = other.getTaxCoefficient();
-        this.householdTaxID = other.getHouseholdTaxID();
-        this.economicActivities = other.getEconomicActivities();
+        this.coefFiscal = other.getCoefFiscal();
+        this.nifAF = other.getNifAF();
+        this.ativDedutiveis = other.getAtivDedutiveis();
     }
     
     /**
      * Altera o coeficiente fiscal do contribuinte
-     * @param  taxCoefficient    Coeficiente fiscal do contribuinte
+     * @param  coefFiscal    Coeficiente fiscal do contribuinte
      */
-    public void setTaxCoefficient(int taxCoefficient)
+    public void setCoefFiscal(float coefFiscal)
     {
-        this.taxCoefficient = taxCoefficient;
+        this.coefFiscal = coefFiscal;
     }
     
     /**
@@ -79,18 +89,18 @@ public class Individual extends Contribuinte
      * 
      * @return     o NIF do contribuinte
      */
-    public int getTaxCoefficient()
+    public float getCoefFiscal()
     {
-        return this.taxCoefficient;
+        return this.coefFiscal;
     }
     
     /**
      * Altera os números fiscais do agregado familiar do contribuinte
-     * @param  householdTaxID    Números fiscais do agregado familiar do contribuinte
+     * @param  nifAF    Números fiscais do agregado familiar do contribuinte
      */
-    public void setHouseholdTaxID(int[] householdTaxID)
+    public void setNifAF(int[] nifAF)
     {
-        this.householdTaxID = householdTaxID;
+        this.nifAF = nifAF;
     }
     
     /**
@@ -98,18 +108,18 @@ public class Individual extends Contribuinte
      * 
      * @return     os números fiscais do agregado familiar do contribuinte
      */
-    public int[] getHouseholdTaxID()
+    public int[] getNifAF()
     {
-        return this.householdTaxID;
+        return this.nifAF;
     }
     
     /**
      * Altera os códigos das atividades económicas que o contribuinte pode deduzir despesas
-     * @param  economicActivities    Códigos das atividades económicas que o contribuinte pode deduzir despesas
+     * @param  ativDedutiveis    Códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public void setEconomicActivities(int[] economicActivities)
+    public void setAtivDedutiveis(int[] ativDedutiveis)
     {
-        this.economicActivities = economicActivities;
+        this.ativDedutiveis = ativDedutiveis;
     }
     
     /**
@@ -117,13 +127,52 @@ public class Individual extends Contribuinte
      * 
      * @return     os códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public int[] getEconomicActivities()
+    public int[] getAtivDedutiveis()
     {
-        return this.economicActivities;
+        return this.ativDedutiveis;
     }
     
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    // métodos
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+
+    //A FAZER:
     //verifica as despesas que foram emitidas em seu nome  e verificar o montante de dedução fiscal acumulado, por si e pelo agregado familiar
-    public int verificaDeducaoFiscal(){
-        return 0;
+    
+     /**
+     * Atribui uma fatura ao consumidor
+     * @param  fatura    Fatura atribuida
+     */
+    public void adicionaFatura(Fatura fatura) {
+        faturas.add(fatura);
     }
+    
+     /**
+     * Associa classicação de actividade económica de um documento de despesa / resolver pendências
+     * @param  fatura    Fatura a ser classificada
+     * @param  setorEco  Setor económico indicado para classificar a fatura    
+     * 
+     * @return booleano que indica se a classificação pode ser efetuada, se o emitente tem o setor indicado
+     */
+    public boolean classificaFatura(Fatura fatura, String setorEco){
+        Coletivo emitente = fatura.getEmitente;
+        if(emitente.temSetor(setorEco)) {
+            fatura.setAtivEconomica(setorEco);
+            return true;
+        }
+        else
+            return false;
+    }
+    
+    
+     /**
+     * Corrige classicação de actividade económica de um documento de despesa e deixa registo desta operação
+     * @param  fatura    Fatura a ser corrigida
+     * @param  setorEco  Setor económico indicado para classificar a fatura    
+     */
+    public void corrigeFatura(Fatura fatura, String setorEco){
+        fatura.setAtivEconomica(setorEco);
+        //FAZER: deixar registo
+    }    
 }

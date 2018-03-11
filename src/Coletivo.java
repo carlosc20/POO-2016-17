@@ -1,20 +1,23 @@
 
 /**
- * Escreva a descrição da classe Collective aqui.
+ * Classe para armazenar informações sobre um contribuinte coletivo/empresa.
  * 
- * @author Daniel
- * @version 25/02/2018
+ * @author Carlos Castro, Daniel Costa, Luís Macedo
+ * @version 11/03/2018
  */
+
+import java.util.ArrayList;
 import java.time.LocalDate;
 
 public class Coletivo extends Contribuinte
 {
     /**
-     * COnstrutor para objetos da classe Coletivo
+     * Construtor para objetos da classe Coletivo
      */
     
-    private String[] atividadesEconomicas;
+    private String[] cae; //setor economico?
     private float fatorDeducao;
+    private ArrayList<Fatura> faturasEmitidas; //ordenadas por data
     
     public Coletivo()
     {
@@ -22,9 +25,23 @@ public class Coletivo extends Contribuinte
     }
     
     public Fatura emitirFatura(int valor, Individual cliente, LocalDate data, String descricao){
-        String atividadeE = "Pendente"; //fica a espera de validaçao do cliente
-        if(atividadesEconomicas.length == 1) atividadeE = atividadesEconomicas[0]; //ver se pertence a atividades dedutiveis do cliente
-        return Fatura(this.nif, this.nome, data, cliente.getNif(), descricao, atividadeE, valor);
+        String atividadeE = "Pendente"; //fica à espera de validaçao do cliente
+        if(cae.length == 1) 
+            atividadeE = cae[0]; 
+        //algoritmo deduçao?
+        Fatura fatura = new Fatura(this.nif, this.nome, data, cliente.getNif(), descricao, atividadeE, valor);
+        faturasEmitidas.add(fatura);
+        cliente.adicionaFatura(fatura);
+    }
+    
+    public int totalFaturado(LocalDate inicio, LocalDate fim) {
+        //percorrer faturasEmitidas e somar valores
+        return 0;
+    }
+    
+    public boolean temSetor(String setorEco){
+        //ve se tem alguma cae pertencete ao setor
+        return true;
     }
     
 }

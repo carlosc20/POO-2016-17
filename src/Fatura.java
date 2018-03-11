@@ -2,41 +2,34 @@
 /**
  * Write a description of class Fatura here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Carlos Castro, Daniel Costa, Luís Macedo
+ * @version 11/03/2018
  */
 
 import java.time.LocalDate;
 
 public class Fatura
 {
-    // instance variables - replace the example below with your own
-    private int nifEmitente;
-    private String designacaoEmitente;
-    private LocalDate data;
+    private static int totalFaturas;
+    
+    private boolean validada; 
+    private Coletivo emitente;
+    private LocalDate dataEmissao;
     private int nifCliente;
     private String descricao;
-    private String atividadeEconomica; //enum? codigo int?
-    private int valor; //em centimos
+    private String ativEconomica; //enum? codigo int?
+    private int valorTotal; //em centimos
+    //private int valorImposto;
+    //private int valorDedutivel;
 
     /**
      * Constructor for objects of class Fatura
      */
     public Fatura()
     {
-        // initialise instance variables
-        x = 0;
+
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int calcularDeducao(int y)
-    {
-        // put your code here
-        return x + y;
-    }
+
+    
 }
