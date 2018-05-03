@@ -8,20 +8,65 @@
 
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Coletivo extends Contribuinte
-{
-    /**
-     * Construtor para objetos da classe Coletivo
-     */
-    
+{    
     private String[] cae; //setor economico?
     private float fatorDeducao;
     private ArrayList<Fatura> faturasEmitidas; //ordenadas por data
     
-    public Coletivo()
-    {
-        //Por fazer
+    public Coletivo(){
+        this.cae=new String[10];
+        this.fatorDeducao=0;
+        this.faturasEmitidas=new ArrayList<>();
+    }
+    
+    public Coletivo(String[] cae, float fatorDeducao, ArrayList<Fatura> faturasEmitidas){
+        this.cae=Arrays.copyOf(cae,cae.length);
+        this.fatorDeducao=fatorDeducao;
+        this.faturasEmitidas = new ArrayList<>();
+        faturasEmitidas.forEach(s -> {this.faturasEmitidas.add(s);});
+    }
+    
+    public Coletivo(Coletivo umColetivo){
+        setCae(umColetivo.getCae());
+        setFatorDeducao(umColetivo.getFatorDeducao());
+        setFaturasEmitidas(umColetivo.getFaturasEmitidas());
+    }
+    
+    public String[] getCae(){
+        return Arrays.copyOf(this.cae, this.cae.length);
+    }
+    
+    public void setCae(String[] cae){
+        this.cae=Arrays.copyOf(cae,cae.length);
+    }
+    
+    public float getFatorDeducao(){
+        return this.fatorDeducao;
+    }
+    
+    public void setFatorDeducao(float fator){
+        this.fatorDeducao=fator;
+    }
+    
+    public ArrayList<Fatura> getFaturasEmitidas(){
+        ArrayList<Fatura> res = new ArrayList<>();
+        for(Fatura le : this.faturasEmitidas) {
+            res.add(le.clone());
+        }
+        return res;
+    }
+    
+    public void setFaturasEmitidas(ArrayList<Fatura> faturas){
+        this.faturasEmitidas = new ArrayList<>();
+        faturas.forEach(s->{this.faturasEmitidas.add(s);});
+    }
+    
+    public Coletivo clone(){
+        return new Coletivo(this);
     }
     
     public Fatura emitirFatura(int valor, Individual cliente, LocalDate data, String descricao){
