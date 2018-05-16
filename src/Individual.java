@@ -5,16 +5,19 @@
  * @version 11/03/2018
  */
 
+import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
 public class Individual extends Contribuinte
 {
-    private int numDependentesAF; // AF = agregado familiar
-    private int[] nifAF;
+    // situação sócioprossional, que pode ser utilizada para o cálculo das deduções fiscais: 
+    private List<Integer> dependentesAF; // AF = agregado familiar
     private float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível
-    private int[] ativDedutiveis; //setores dedutiveis?
-    private ArrayList<Fatura> faturas;
+    private List<AtivEco> ativDedutiveis; 
+    
+    private List<Fatura> faturas;
+    private List<Alteracao> histAlter;
     
     /**
      * Construtor para objetos da classe Individual
@@ -22,8 +25,7 @@ public class Individual extends Contribuinte
     public Individual()
     {
         super();
-        this.numDependentesAF = 0; 
-        this.nifAF = null;
+        this.dependentesAF = null;
         this.coefFiscal = 0;
         this.ativDedutiveis = null; 
         this.faturas = new ArrayList<Fatura>();
@@ -44,23 +46,31 @@ public class Individual extends Contribuinte
     public Individual(int nif, String nome, String email, String morada, String password, int numDependentesAF, int coefFiscal, int[] nifAF, int[] ativDedutiveis, ArrayList<Fatura> faturas)
     {
         super(nif, nome, email, morada, password);
-        this.numDependentesAF = numDependentesAF; 
-        this.nifAF = nifAF;
         this.coefFiscal = coefFiscal;
-        this.ativDedutiveis = ativDedutiveis; 
         this.faturas = faturas;
     }
     
     /**
      * Construtor para objetos da classe Individual recebendo um objeto da classe Individual
      * 
-     * @param  other    Objeto da classe Individual que vai ser copiado
+     * @param  nif                Número de Identificação Fiscal do contribuinte
+     * @param  nome               Nome do contribuinte
+     * @param  email              E-mail de contacto do contribuinte
+     * @param  morada             Morada do contribuinte
+     * @param  password           Palavra-passe de acesso do contribuinte
+     * @param  coefFiscal         Coeficiente fiscal para efeitos de dedução do contribuinte
+     * @param  nifAF              Números fiscais do agregado familiar do contribuinte
+     * @param  ativDedutiveis     Códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
     public Individual(Individual other)
     {
-        super(other);
+        this.nif = other.getNif();
+        //this.nome = other.getNome();
+        this.email = other.getEmail();
+        //this.morada = other.getMorada();
+        this.password = other.getPassword();
         this.coefFiscal = other.getCoefFiscal();
-        this.nifAF = other.getNifAF();
+        //this.nifAF = other.getNifAF();
         this.ativDedutiveis = other.getAtivDedutiveis();
     }
     
@@ -82,31 +92,12 @@ public class Individual extends Contribuinte
     {
         return this.coefFiscal;
     }
-    
-    /**
-     * Altera os números fiscais do agregado familiar do contribuinte
-     * @param  nifAF    Números fiscais do agregado familiar do contribuinte
-     */
-    public void setNifAF(int[] nifAF)
-    {
-        this.nifAF = nifAF;
-    }
-    
-    /**
-     * Obtém os números fiscais do agregado familiar do contribuinte
-     * 
-     * @return     os números fiscais do agregado familiar do contribuinte
-     */
-    public int[] getNifAF()
-    {
-        return this.nifAF;
-    }
-    
+     
     /**
      * Altera os códigos das atividades económicas que o contribuinte pode deduzir despesas
      * @param  ativDedutiveis    Códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public void setAtivDedutiveis(int[] ativDedutiveis)
+    public void setAtivDedutiveis(List ativDedutiveis)
     {
         this.ativDedutiveis = ativDedutiveis;
     }
@@ -116,7 +107,7 @@ public class Individual extends Contribuinte
      * 
      * @return     os códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public int[] getAtivDedutiveis()
+    public List getAtivDedutiveis()
     {
         return this.ativDedutiveis;
     }
@@ -127,7 +118,7 @@ public class Individual extends Contribuinte
     
 
     //A FAZER:
-    //verifica as despesas que foram emitidas em seu nome  e verificar o montante de dedução fiscal acumulado, por si e pelo agregado familiar
+    //verifica as despesas que foram emitidas em seu nome e verificar o montante de dedução fiscal acumulado, por si e pelo agregado familiar
     
      /**
      * Atribui uma fatura ao consumidor
@@ -144,10 +135,10 @@ public class Individual extends Contribuinte
      * 
      * @return booleano que indica se a classificação pode ser efetuada, se o emitente tem o setor indicado
      */
-    public boolean classificaFatura(Fatura fatura, String setorEco){
+    public boolean classificaFatura(Fatura fatura, AtivEco ativ){
         Coletivo emitente = fatura.getEmitente();
-        if(emitente.temSetor(setorEco)) {
-            fatura.setAtivEconomica(setorEco);
+        if(emitente.temAtivEco(ativ)) {
+            fatura.setAtivEconomica(ativ);
             return true;
         }
         else
@@ -160,8 +151,8 @@ public class Individual extends Contribuinte
      * @param  fatura    Fatura a ser corrigida
      * @param  setorEco  Setor económico indicado para classificar a fatura    
      */
-    public void corrigeFatura(Fatura fatura, String setorEco){
-        fatura.setAtivEconomica(setorEco);
+    public void corrigeFatura(Fatura fatura, AtivEco ativ){
+        fatura.setAtivEconomica(ativ);
         //FAZER: deixar registo
     }    
 }
