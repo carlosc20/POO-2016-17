@@ -15,7 +15,7 @@ public abstract class Contribuinte
     protected String nome;
     protected String email;
     protected String morada;
-    protected String password; //Isto é muito seguro
+    protected String password;
     
     /**
      * Construtor para objetos da classe Contribuinte
@@ -46,12 +46,26 @@ public abstract class Contribuinte
         this.morada = morada;
         this.password = password;
     }
-
+    
+    /**
+     * Construtor para objetos da classe Contribuinte recebendo um objeto da classe Contribuinte
+     * 
+     * @param  other    Objeto da classe Contribuinte que vai ser copiado
+     */
+    public Contribuinte(Individual other)
+    {
+        this.nif = other.getNif();
+        this.nome = other.getNome();
+        this.email = other.getEmail();
+        this.morada = other.getMorada();
+        this.password = other.getPassword();
+    }
+    
     /**
      * Altera o NIF do contribuinte
      * @param  nif    Número de Identificação Fiscal do contribuinte
      */
-    public void setnif(int nif)
+    public void setNif(int nif)
     {
         this.nif = nif;
     }
@@ -70,7 +84,7 @@ public abstract class Contribuinte
      * Altera o nome do contribuinte
      * @param  nome     Nome do contribuinte
      */
-    public void setnome(String nome)
+    public void setNome(String nome)
     {
         this.nome = nome;
     }
@@ -80,7 +94,7 @@ public abstract class Contribuinte
      * 
      * @return     o nome do contribuinte
      */
-    public String getnome()
+    public String getNome()
     {
         return this.nome;
     }
@@ -108,7 +122,7 @@ public abstract class Contribuinte
      * Altera a morada do contribuinte
      * @param  morada   Morada do contribuinte
      */
-    public void setmorada(String morada)
+    public void setMorada(String morada)
     {
         this.morada = morada;
     }
@@ -118,7 +132,7 @@ public abstract class Contribuinte
      * 
      * @return     a morada do contribuinte
      */
-    public String getmorada()
+    public String getMorada()
     {
         return this.morada;
     }

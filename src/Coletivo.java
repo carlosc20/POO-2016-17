@@ -77,6 +77,7 @@ public class Coletivo extends Contribuinte
         Fatura fatura = new Fatura(this.nif, this.nome, data, cliente.getNif(), descricao, atividadeE, valor);
         faturasEmitidas.add(fatura);
         cliente.adicionaFatura(fatura);
+        return fatura;
     }
     
     public int totalFaturado(LocalDate inicio, LocalDate fim) {

@@ -22,54 +22,50 @@ public class Fatura
     //private int valorImposto;
     //private int valorDedutivel;
     
-    public boolean equals(Object o){
-        if(o==this){
-            return true;
-        }
-        if(o==null || o.getClass() != this.getClass()){
-            return false;
-        }
-        
-        Fatura e = (Fatura) o;
-        
-        return this.validada==e.getValidada() && this.emitente.equals(e.getEmitente()) && 
-        this.dataEmissao.equals(e.getDataEmissao()) && this.nifCliente==e.getNifCliente() && 
-        this.descricao.equals(e.getDescricao()) && this.ativEconomica.equals(e.getAtivEconomica()) && 
-        this.valorTotal==e.getValorTotal() && this.totalFaturas==e.getTotalFaturas();
+    public Fatura(){
+        this.totalFaturas = 0;
+        this.validada = false;
+        setEmitente(new Coletivo());
+        this.dataEmissao = LocalDate.now();
+        this.nifCliente = 0;
+        this.descricao = "n/a";
+        this.ativEconomica = "n/a";
+        this.valorTotal = 0;
     }
     
-    public Fatura(){
-        this.totalFaturas=0;
-        this.validada=false;
+    public Fatura(int nif, String nome, LocalDate dataEmissao, 
+    int nifCliente, String descricao, String ativEconomica, int valorTotal){
+        this.totalFaturas = 0;
+        this.validada = false;
         setEmitente(new Coletivo());
-        this.dataEmissao=LocalDate.now();
-        this.nifCliente=0;
-        this.descricao="n/a";
-        this.ativEconomica="n/a";
-        this.valorTotal=0;
+        setDataEmissao(dataEmissao);
+        this.nifCliente = nifCliente;
+        this.descricao = descricao;
+        this.ativEconomica = ativEconomica;
+        this.valorTotal = valorTotal;
     }
     
     public Fatura(int totalFaturas, boolean validada, Coletivo emitente, LocalDate dataEmissao, 
     int nifCliente, String descricao, String ativEconomica, int valorTotal){
-        this.totalFaturas=totalFaturas;
-        this.validada=validada;
+        this.totalFaturas = totalFaturas;
+        this.validada = validada;
         setEmitente(emitente);
         setDataEmissao(dataEmissao);
-        this.nifCliente=nifCliente;
-        this.descricao=descricao;
-        this.ativEconomica=ativEconomica;
-        this.valorTotal=valorTotal;
+        this.nifCliente = nifCliente;
+        this.descricao = descricao;
+        this.ativEconomica = ativEconomica;
+        this.valorTotal = valorTotal;
     }
     
     public Fatura(Fatura umaFatura){
-        this.totalFaturas=umaFatura.getTotalFaturas();
-        this.validada=umaFatura.getValidada();
+        this.totalFaturas = umaFatura.getTotalFaturas();
+        this.validada = umaFatura.getValidada();
         setEmitente(umaFatura.getEmitente());
         setDataEmissao(umaFatura.getDataEmissao());
-        this.nifCliente=umaFatura.getNifCliente();
-        this.descricao=umaFatura.getDescricao();
-        this.ativEconomica=umaFatura.getAtivEconomica();
-        this.valorTotal=umaFatura.getValorTotal();
+        this.nifCliente = umaFatura.getNifCliente();
+        this.descricao = umaFatura.getDescricao();
+        this.ativEconomica = umaFatura.getAtivEconomica();
+        this.valorTotal = umaFatura.getValorTotal();
     }
     
     public int getTotalFaturas(){
@@ -136,6 +132,22 @@ public class Fatura
         return new Fatura(this);
     }
     
+    public boolean equals(Object o){
+        if(o==this){
+            return true;
+        }
+        if(o==null || o.getClass() != this.getClass()){
+            return false;
+        }
+        
+        Fatura e = (Fatura) o;
+        
+        return this.validada==e.getValidada() && this.emitente.equals(e.getEmitente()) && 
+        this.dataEmissao.equals(e.getDataEmissao()) && this.nifCliente==e.getNifCliente() && 
+        this.descricao.equals(e.getDescricao()) && this.ativEconomica.equals(e.getAtivEconomica()) && 
+        this.valorTotal==e.getValorTotal() && this.totalFaturas==e.getTotalFaturas();
+    }
+    
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Numero Total de Faturas: ").append(this.totalFaturas);
@@ -146,5 +158,6 @@ public class Fatura
         sb.append("Descriçao: ").append(this.descricao);
         sb.append("Atividades Economicas: ").append(this.ativEconomica);
         sb.append("Valor Total: ").append(this.valorTotal);
+        return sb.toString();   
     }
 }

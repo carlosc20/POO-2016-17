@@ -54,22 +54,11 @@ public class Individual extends Contribuinte
     /**
      * Construtor para objetos da classe Individual recebendo um objeto da classe Individual
      * 
-     * @param  nif                Número de Identificação Fiscal do contribuinte
-     * @param  nome               Nome do contribuinte
-     * @param  email              E-mail de contacto do contribuinte
-     * @param  morada             Morada do contribuinte
-     * @param  password           Palavra-passe de acesso do contribuinte
-     * @param  coefFiscal         Coeficiente fiscal para efeitos de dedução do contribuinte
-     * @param  nifAF              Números fiscais do agregado familiar do contribuinte
-     * @param  ativDedutiveis     Códigos das atividades económicas que o contribuinte pode deduzir despesas
+     * @param  other    Objeto da classe Individual que vai ser copiado
      */
     public Individual(Individual other)
     {
-        this.nif = other.getNif();
-        this.nome = other.getNome();
-        this.email = other.getEmail();
-        this.morada = other.getMorada();
-        this.password = other.getPassword();
+        super(other);
         this.coefFiscal = other.getCoefFiscal();
         this.nifAF = other.getNifAF();
         this.ativDedutiveis = other.getAtivDedutiveis();
@@ -156,7 +145,7 @@ public class Individual extends Contribuinte
      * @return booleano que indica se a classificação pode ser efetuada, se o emitente tem o setor indicado
      */
     public boolean classificaFatura(Fatura fatura, String setorEco){
-        Coletivo emitente = fatura.getEmitente;
+        Coletivo emitente = fatura.getEmitente();
         if(emitente.temSetor(setorEco)) {
             fatura.setAtivEconomica(setorEco);
             return true;
