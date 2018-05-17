@@ -7,7 +7,9 @@
  */
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.io.Serializable;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
@@ -19,18 +21,18 @@ import java.io.FileNotFoundException;
 public class Estado implements Serializable
 {
 
-    private Map<Integer, Contribuinte> contribs;
+    private Map<Integer, Contribuinte> contribuintes;
 
-    private Map<Integer, List<Fatura>> faturasInd;
-    private Map<Integer, List<Fatura>> faturasCol;
+    private Map<Integer, List<Fatura>> faturas;
     
     public Estado()
     {
-
+        this.contribuintes = new HashMap<>();
+        this.faturas = new HashMap<>();
     }
 
-    public Map<Integer, Contribuinte> getContribs() {
-        return contribs;
+    public Map<Integer, Contribuinte> getContribuintes() {
+        return this.contribuintes; //Precisa de fazer clone
     }
     
 
@@ -46,5 +48,35 @@ public class Estado implements Serializable
         Estado e = (Estado) ois.readObject();
         ois.close();
         return e;
+    }
+    
+    public List<Fatura> getFaturas(Contribuinte contribuinte){
+        int nif = contribuinte.getNif();
+        List<Fatura> resultado = new ArrayList<>();
+        List<Fatura> faturas = this.faturas.get(nif);
+        for(Fatura fatura : faturas){
+            resultado.add(fatura.clone());
+        }
+        return resultado;
+    }
+    
+    public void addFatura(Contribuinte contribuinte, Fatura fatura){
+        int nif = contribuinte.getNif();
+        List<Fatura> faturas = this.faturas.get(nif);
+        faturas.add(fatura.clone());
+    }
+
+    public void updateFatura(Contribuinte contribuinte, Fatura fatura){
+        int nif = contribuinte.getNif();
+        List<Fatura> faturas = this.faturas.get(nif);
+        if(faturas != null){
+            int i = 0;
+            for(Fatura item : faturas){
+                if(fatura.equals(item)){
+                    faturas.set(i, fatura);
+                }
+                i++;
+            }
+        }
     }
 }

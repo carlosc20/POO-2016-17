@@ -14,4 +14,6 @@ comment6.params=ativ
 comment6.target=boolean\ temAtivEco(AtivEco)
 comment7.params=
 comment7.target=Coletivo\ clone()
-numComments=8
+comment8.params=other
+comment8.target=boolean\ equals(java.lang.Object)
+numComments=9

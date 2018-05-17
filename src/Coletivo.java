@@ -61,4 +61,18 @@ public class Coletivo extends Contribuinte
     public Coletivo clone(){
         return new Coletivo(this);
     }
+
+    public boolean equals(Object other) {
+        if(other == this) {
+            return true;
+        }
+        if(other == null || other.getClass() != this.getClass()) {
+            return false;
+        }
+        Coletivo otherColetivo = (Coletivo) other;
+        if(this.getNif() != otherColetivo.getNif()){
+            return false;
+        }
+        return true;
+    }
 }
