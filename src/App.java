@@ -63,38 +63,88 @@ public class App
     }
     
     public static void main(String[] args) {
-       
-       int op = 0;
-       
-       do {
-           try {
-               op = executaMenu();
+        
+        try {
+            estado = Estado.leEstado();
+        }
+        catch(Exception e){
+            estado = new Estado();
+        }
+        
+        Scanner s = new Scanner(System.in);
+        Contribuinte contrib = login(s); 
+        int op = 0;
+        
+        do {
+            try {
+               System.out.println("Escreve um número!");
+               op = s.nextInt();
             } catch (InputMismatchException e){
                System.out.println("Input Errado");
                op = -1;
-           }
-           switch(op){
+            }
+           
+            switch(op){
                    case 1:  System.out.println("1!");
                             break;
                    
-                   default: System.out.println("Isso é um número");
-           }
-       } while(op != 0);
+                    default: System.out.println("Isso é um número.");
+            }
+           
+        } while(op != 0);
         
-       try {
-           estado.guardaEstado();
-       } catch (Exception e){
-           System.out.println("Não foi possivel guardar");
-       }
+        s.close();
+        
+        try {
+            estado.guardaEstado();
+        } 
+        catch(IOException e){
+            System.out.print(e.getMessage());
+        }
+    }
+    
+    private static void menu(Scanner s) {
+        
+        int op = 0;
+
+        do {
+            try {
+                System.out.println("Escreve um número!");//opçoes
+                op = s.nextInt();
+            } catch (InputMismatchException e){
+                System.out.println("Input Errado");
+                op = -1;
+            }
+                    
+            switch(op){
+                   case 1:  System.out.println("1!");
+                            break;
+                   
+                   default: System.out.println("Isso é um número.");
+            }
+           
+        } while(op != 0);
+        
+
     }
     
 
-    private static int executaMenu() throws InputMismatchException {
-       Scanner s = new Scanner(System.in);
-       System.out.println("Escreve um número");
-       int op = s.nextInt();
-       s.close();
-       return op;
+    private static Contribuinte login(Scanner s) {
+
+        System.out.println("Nº de Contribuinte:");
+        String nif = s.next();
+       
+        System.out.println("Senha de acesso:");
+        String passwd = s.next();
+        
+        return null;
+        /*
+        Contribuinte user = estado.getContribs().get(nif);
+        if (user != null && user.getPassword() == passwd) 
+            return user;
+        
+        System.out.println("Não existe esse Nº de Contribuinte ou senha de acesso errada.");
+        return null;
+        */
     }
-    
 }

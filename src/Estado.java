@@ -7,6 +7,7 @@
  */
 
 import java.util.Map;
+import java.util.List;
 import java.io.Serializable;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
@@ -17,39 +18,31 @@ import java.io.FileNotFoundException;
 
 public class Estado implements Serializable
 {
-    // instance variables - replace the example below with your own
+
     private Map<Integer, Contribuinte> contribs;
 
-    /**
-     * Constructor for objects of class Geral
-     */
+    private Map<Integer, List<Fatura>> faturasInd;
+    private Map<Integer, List<Fatura>> faturasCol;
+    
     public Estado()
     {
 
     }
 
-    public void guardaEstado() {
-        try{
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("hoteis.obj"));
-            oos.writeObject(this);
-            oos.close();
-        }
-        catch(FileNotFoundException e){
-            System.out.print(e.getMessage());
-        }
-        catch(IOException e){
-            System.out.print(e.getMessage());
-        }
+    public Map<Integer, Contribuinte> getContribs() {
+        return contribs;
     }
     
-    public void guardaEstado2() throws IOException {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("hoteis.obj"));
+
+    
+    public void guardaEstado() throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("estado.obj"));
         oos.writeObject(this);
         oos.close();
     }
     
     public static Estado leEstado() throws ClassNotFoundException, FileNotFoundException, IOException {
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("hoteis.obj"));
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("estado.obj"));
         Estado e = (Estado) ois.readObject();
         ois.close();
         return e;
