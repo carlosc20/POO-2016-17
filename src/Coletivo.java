@@ -17,9 +17,22 @@ public class Coletivo extends Contribuinte
     private float fatorDeducao; //Ex: privilegia empresas do interior
     private ArrayList<Fatura> faturasEmitidas; //ordenadas por data
     
-    public Coletivo()
-    {
-        //Por fazer
+    public Coletivo(){
+        super();
+        this.ativEco = new ArrayList<>();
+        this.fatorDeducao = 0.0f;
+        this.faturasEmitidas = new ArrayList<>();
+    }
+    
+    public Coletivo(int nif, String nome, String email, String morada, String password, List<AtivEco> ativEco, float fatorDeducao, ArrayList<Fatura> faturasEmitidas){
+        super(nif, nome, email, morada, password);
+        this.ativEco = ativEco;
+        this.fatorDeducao = fatorDeducao;
+        this.faturasEmitidas = faturasEmitidas;
+    }
+    
+    public Coletivo(Coletivo other){
+        super(other);
     }
     
     public Fatura emitirFatura(int valor, Individual cliente, LocalDate data, String descricao){
@@ -45,4 +58,7 @@ public class Coletivo extends Contribuinte
         return ativEco.contains(ativ);
     }
     
+    public Coletivo clone(){
+        return new Coletivo(this);
+    }
 }
