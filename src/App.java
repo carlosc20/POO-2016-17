@@ -62,6 +62,12 @@ public class App
         }
     }
     
+    
+    interface Opcao {
+        void escolher();
+    }
+    
+    
     public static void main(String[] args) {
         
         try {
@@ -72,26 +78,18 @@ public class App
         }
         
         Scanner s = new Scanner(System.in);
-        Contribuinte contrib = login(s); 
-        int op = 0;
+        Contribuinte cont = login(s); 
+
         
-        do {
-            try {
-               System.out.println("Escreve um número!");
-               op = s.nextInt();
-            } catch (InputMismatchException e){
-               System.out.println("Input Errado");
-               op = -1;
-            }
-           
-            switch(op){
-                   case 1:  System.out.println("1!");
-                            break;
-                   
-                    default: System.out.println("Isso é um número.");
-            }
-           
-        } while(op != 0);
+
+        
+        
+        if (cont instanceof Individual){
+            menuInd(s, (Individual) cont);
+        } else {
+            menuCol(s, (Coletivo) cont);
+        }
+        
         
         s.close();
         
@@ -103,33 +101,72 @@ public class App
         }
     }
     
-    private static void menu(Scanner s) {
+    private static void menuAdmin(Scanner s, Individual cont) {
+        String[] descInd = new String[] {
+            "Registar contribuinte", 
+            "etc"
+        };
+        Opcao[] opsInd = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
+            new Opcao() { public void escolher() { System.out.println("Menu 2"); } }
+        };
+        menu(s, opsInd, descInd, 2);
+    }
+    
+    private static void menuInd(Scanner s, Individual cont) {
+        String[] descInd = new String[] {
+            "Ver informações gerais",
+            "Ver faturas", //subcategorias? por empresa, ordenado etc ->pendentes
+            "Ver montante de dedução fiscal acumulado" // por si e por agregado
+        };
+        Opcao[] opsInd = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println("És um contribuinte individual"); } }, //cont
+            new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //cont.getFaturas
+            new Opcao() { public void escolher() { System.out.println("0€"); } }
+        };
+        menu(s, opsInd, descInd, 3);
+    }
+    
+    
+    private static void menuCol(Scanner s, Coletivo cont) {
+        String[] descCol = new String[] {
+            "Diz boas",
+            "Diz oi"
+        };
+        Opcao[] opsCol = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println("Boas"); } },
+            new Opcao() { public void escolher() { System.out.println("Oi"); } }
+        };
+        menu(s, opsCol, descCol, 2);
+    }
+    
+    
+    private static void menu(Scanner s, Opcao[] opcoes, String[] desc, int nOps){
         
         int op = 0;
 
         do {
+            System.out.println("0 -> Sair/Retroceder");
+            for(int i = 0; i < nOps; i++){
+                System.out.println((i+1) + " -> " + desc[i]);
+            }
             try {
-                System.out.println("Escreve um número!");//opçoes
                 op = s.nextInt();
             } catch (InputMismatchException e){
                 System.out.println("Input Errado");
                 op = -1;
             }
-                    
-            switch(op){
-                   case 1:  System.out.println("1!");
-                            break;
-                   
-                   default: System.out.println("Isso é um número.");
+            
+            if(op > 0 && op <= nOps){
+                opcoes[op - 1].escolher();
             }
-           
+
         } while(op != 0);
         
-
     }
     
 
-    private static Contribuinte login(Scanner s) {
+    private static Contribuinte login(Scanner s){
 
         System.out.println("Nº de Contribuinte:");
         String nif = s.next();
