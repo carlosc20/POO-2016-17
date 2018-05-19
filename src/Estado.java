@@ -8,8 +8,8 @@
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import java.io.Serializable;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
@@ -23,7 +23,7 @@ public class Estado implements Serializable
 
     private Map<Integer, Contribuinte> contribuintes;
 
-    private Map<Integer, List<Fatura>> faturas;
+    private Map<Integer, Set<Fatura>> faturas;
     
     public Estado()
     {
@@ -50,33 +50,30 @@ public class Estado implements Serializable
         return e;
     }
     
-    public List<Fatura> getFaturas(Contribuinte contribuinte){
+    public Set<Fatura> getFaturas(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
-        List<Fatura> resultado = new ArrayList<>();
-        List<Fatura> faturas = this.faturas.get(nif);
+        Set<Fatura> resultado = new HashSet<>();
+        Set<Fatura> faturas = this.faturas.get(nif);
         for(Fatura fatura : faturas){
             resultado.add(fatura.clone());
         }
         return resultado;
     }
     
-    public void addFatura(Contribuinte contribuinte, Fatura fatura){
-        int nif = contribuinte.getNif();
-        List<Fatura> faturas = this.faturas.get(nif);
-        faturas.add(fatura.clone());
+    public void addFatura(Fatura fatura){
+        int nifEmitente = fatura.getEmitente().getNif();
+        int nifCliente = fatura.getNifCliente();
+        Fatura clone = fatura.clone();
+        Set<Fatura> faturasEmitente = this.faturas.get(nifEmitente);
+        Set<Fatura> faturasCliente = this.faturas.get(nifCliente);
+        faturasEmitente.add(clone);
+        faturasCliente.add(clone);
     }
-
-    public void updateFatura(Contribuinte contribuinte, Fatura fatura){
-        int nif = contribuinte.getNif();
-        List<Fatura> faturas = this.faturas.get(nif);
-        if(faturas != null){
-            int i = 0;
-            for(Fatura item : faturas){
-                if(fatura.equals(item)){
-                    faturas.set(i, fatura);
-                }
-                i++;
-            }
-        }
+    
+    public boolean existeFatura(Fatura fatura){
+        int nif = fatura.getEmitente().getNif();
+        Set<Fatura> resultado = new HashSet<>();
+        Set<Fatura> faturas = this.faturas.get(nif);
+        return faturas.contains(fatura);
     }
 }

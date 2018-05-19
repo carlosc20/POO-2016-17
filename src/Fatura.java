@@ -16,7 +16,6 @@ public class Fatura {
     private LocalDate dataEmissao;
     private int nifCliente;
     private String descricao;
-    private boolean temAtivEco;
     private AtivEco ativEco;
     private int valorTotal;
 
@@ -26,7 +25,7 @@ public class Fatura {
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(0);
         this.setDescricao("");
-        this.temAtivEco = false;
+        this.setAtivEconomica(ativEco.Pendente);
         this.setValorTotal(0);
     }
 
@@ -41,26 +40,36 @@ public class Fatura {
     }
 
     public Fatura(Fatura other) {
-        this.id = other.getId();
+        this.setId();
         this.setEmitente(other.getEmitente());
         this.setDataEmissao(other.getDataEmissao());
         this.setNifCliente(other.getNifCliente());
         this.setDescricao(other.getDescricao());
-        try {
-            this.setAtivEconomica(other.getAtivEconomica());
-        } catch (SemAtivEconomicaException e) {
-            this.temAtivEco = false;
-        }
+        this.setAtivEconomica(other.getAtivEconomica());
+        this.setValorTotal(other.getValorTotal());
+    }
+
+    private Fatura(Fatura other, int id) {
+        this.id = id;
+        this.setEmitente(other.getEmitente());
+        this.setDataEmissao(other.getDataEmissao());
+        this.setNifCliente(other.getNifCliente());
+        this.setDescricao(other.getDescricao());
+        this.setAtivEconomica(other.getAtivEconomica());
         this.setValorTotal(other.getValorTotal());
     }
 
     private void setId() {
-    	totalFaturas++;
-    	this.id = totalFaturas;
+        totalFaturas++;
+        this.id = totalFaturas;
+    }
+
+    private void setId(int id) {
+        this.id = id;
     }
 
     public int getId(){
-    	return this.id;
+        return this.id;
     }
 
     public void setEmitente(Coletivo emitente) {
@@ -96,19 +105,15 @@ public class Fatura {
     }
 
     public void setAtivEconomica(AtivEco ativEco) {
-        this.temAtivEco = true;
         this.ativEco = ativEco;
     }
 
-    public AtivEco getAtivEconomica() throws SemAtivEconomicaException{
-        if(!this.temAtivEco){
-            throw new SemAtivEconomicaException();
-        }
+    public AtivEco getAtivEconomica(){
         return this.ativEco;
     }
     
     public boolean temAtivEconomica() {
-        return this.temAtivEco;
+        return this.ativEco != ativEco.Pendente;
     }
 
     public void setValorTotal(int valorTotal) {
@@ -120,7 +125,7 @@ public class Fatura {
     }
 
     public Fatura clone() {
-        return new Fatura(this);
+        return new Fatura(this, this.getId());
     }
 
     public boolean equals(Object other) {
@@ -132,19 +137,24 @@ public class Fatura {
         }
         Fatura otherFatura = (Fatura) other;
         if(this.getId() != otherFatura.getId()){
-        	return false;
+            return false;
         }
         return true;
+    }
+    
+    public int hashCode(){
+        return this.getId();
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder("Fatura {");
-        sb.append("emitente: ").append(emitente.toString());
-        sb.append(",").append("dataEmissao: ").append(dataEmissao.toString());
-        sb.append(",").append("nifCliente: ").append(nifCliente);
-        sb.append(",").append("descricao: ").append(descricao);
-        sb.append(",").append("ativEco: ").append(ativEco.toString());
-        sb.append(",").append("valorTotal: ").append(valorTotal);
-    	return sb.toString();
+        sb.append("id:").append(this.id);
+        sb.append(",").append("emitente: ").append(this.emitente.toString());
+        sb.append(",").append("dataEmissao: ").append(this.dataEmissao.toString());
+        sb.append(",").append("nifCliente: ").append(this.nifCliente);
+        sb.append(",").append("descricao: ").append(this.descricao);
+        sb.append(",").append("ativEco: ").append(this.ativEco.toString());
+        sb.append(",").append("valorTotal: ").append(this.valorTotal);
+        return sb.toString();
     }
 }
