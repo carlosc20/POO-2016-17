@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.time.LocalDate;
 import java.io.Serializable;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
@@ -60,6 +64,29 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    public List<Fatura> getFaturasOrdenado(Contribuinte contribuinte, Comparator<Fatura> c){
+        int nif = contribuinte.getNif();
+        List<Fatura> resultado = new ArrayList<>();
+        Set<Fatura> faturas = this.faturas.get(nif);
+        for(Fatura fatura : faturas){
+            resultado.add(fatura.clone());
+        }
+        resultado.sort(c);
+        return resultado;
+    }
+    
+    public Set<Fatura> getFaturasNoIntervalo(Contribuinte contribuinte, LocalDate inicio, LocalDate fim){
+        int nif = contribuinte.getNif();
+        Set<Fatura> resultado = new HashSet<>();
+        Set<Fatura> faturas = this.faturas.get(nif);
+        for(Fatura fatura : faturas){
+            if(fatura.getDataEmissao().compareTo(inicio) >= 0 && fatura.getDataEmissao().compareTo(fim) <= 0){
+                resultado.add(fatura.clone());
+            }
+        }
+        return resultado;
+    }
+    
     public void addFatura(Fatura fatura){
         int nifEmitente = fatura.getEmitente().getNif();
         int nifCliente = fatura.getNifCliente();
@@ -76,4 +103,5 @@ public class Estado implements Serializable
         Set<Fatura> faturas = this.faturas.get(nif);
         return faturas.contains(fatura);
     }
+    
 }
