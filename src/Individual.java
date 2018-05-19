@@ -64,13 +64,8 @@ public class Individual extends Contribuinte
      */
     public Individual(Individual other)
     {
-        this.nif = other.getNif();
-        //this.nome = other.getNome();
-        this.email = other.getEmail();
-        //this.morada = other.getMorada();
-        this.password = other.getPassword();
+        super(other);
         this.coefFiscal = other.getCoefFiscal();
-        //this.nifAF = other.getNifAF();
         this.ativDedutiveis = other.getAtivDedutiveis();
     }
     
@@ -140,9 +135,9 @@ public class Individual extends Contribuinte
         if(emitente.temAtivEco(ativ)) {
             fatura.setAtivEconomica(ativ);
             return true;
-        }
-        else
+        } else {
             return false;
+        }
     }
     
     
@@ -154,5 +149,9 @@ public class Individual extends Contribuinte
     public void corrigeFatura(Fatura fatura, AtivEco ativ){
         fatura.setAtivEconomica(ativ);
         //FAZER: deixar registo
-    }    
+    }
+    
+    public Individual clone(){
+        return new Individual(this);
+    }
 }

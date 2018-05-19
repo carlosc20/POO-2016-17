@@ -12,11 +12,11 @@ import java.time.LocalDate;
 public abstract class Contribuinte
 {
 
-    protected int nif;
-    protected String nome;
-    protected String email;
-    protected String morada;
-    protected String password; //Isto é muito seguro
+    private int nif;
+    private String nome;
+    private String email;
+    private String morada;
+    private String password; //Isto é muito seguro
     
     /**
      * Construtor para objetos da classe Contribuinte
@@ -152,4 +152,5 @@ public abstract class Contribuinte
         return this.password;
     }
     
+    public abstract Contribuinte clone();
 }
