@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.HashMap;
+import java.time.LocalDate;
 
 public class App
 {
@@ -28,11 +29,6 @@ public class App
      * Consultar faturas, associar ativeEco onde não foi auto, corrigir ativEco(deixa registo para ser rastreada)
      * Ver valor acum deduções fiscais -> imposto anual total, por si e por agregado
      * 
-     * Coletivo:
-     * ver faturas por data ou valor
-     * ver faturas por contrib num intervalo de tempo ou ordenadas por valor
-     * ver total faturado em intervalo
-     * emitir faturas
      * 
      * Admin:
      * Criar contrib
@@ -80,16 +76,11 @@ public class App
         Scanner s = new Scanner(System.in);
         Contribuinte cont = login(s); 
 
-        
-
-        
-        
         if (cont instanceof Individual){
             menuInd(s, (Individual) cont);
         } else {
             menuCol(s, (Coletivo) cont);
         }
-        
         
         s.close();
         
@@ -101,6 +92,37 @@ public class App
         }
     }
     
+    private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
+        
+        int op = 0;
+
+        do {
+            System.out.println("0 -> Sair/Retroceder");
+            for(int i = 0; i < desc.length; i++){
+                System.out.println((i+1) + " -> " + desc[i]);
+            }
+            try {
+                op = s.nextInt();
+            } catch (InputMismatchException e){
+                System.out.println("Input Errado");
+                op = -1;
+            }
+            
+            if(op > 0 && op <= opcoes.length){
+                opcoes[op - 1].escolher();
+            }
+
+        } while(op != 0);
+        
+    }
+    
+    private static LocalDate scanData(Scanner s){
+        return LocalDate.now();//acabar
+    }
+    
+    
+    
+    
     private static void menuAdmin(Scanner s, Individual cont) {
         String[] descInd = new String[] {
             "Registar contribuinte", 
@@ -110,8 +132,11 @@ public class App
             new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
             new Opcao() { public void escolher() { System.out.println("Menu 2"); } }
         };
-        menu(s, opsInd, descInd, 2);
+        menu(s, opsInd, descInd);
     }
+    
+    
+    
     
     private static void menuInd(Scanner s, Individual cont) {
         String[] descInd = new String[] {
@@ -124,55 +149,84 @@ public class App
             new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //cont.getFaturas
             new Opcao() { public void escolher() { System.out.println("0€"); } }
         };
-        menu(s, opsInd, descInd, 3);
+        menu(s, opsInd, descInd);
     }
+    
+    private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
+        
+        System.out.println("Atividade Económica:");
+        AtivEco ativ = s.nextLine();
+        
+        Contribuinte emitente = estado.getContribuinte(fatura.getNifEmitente());
+        
+        if(emitente.temAtivEco(ativ)) {
+            fatura.setAtivEconomica(ativ);
+            System.out.println("Atribuição concluída com sucesso");
+        } else {
+            System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
+        }
+    }
+    
     
     
     private static void menuCol(Scanner s, Coletivo cont) {
         String[] descCol = new String[] {
-            "Diz boas",
-            "Diz oi"
+            "Ver informações gerais",
+            "Emitir fatura",
+            "Ver faturas", //por data e valor, por contrib por data ou valor
+            "Ver total faturado" //num intervalo de tempo
         };
         Opcao[] opsCol = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println("Boas"); } },
-            new Opcao() { public void escolher() { System.out.println("Oi"); } }
+            //cenas
+            new Opcao() { public void escolher() { emitirFatura(s, cont); } },
+            new Opcao() { public void escolher() { menuVerFaturas(s, cont); } },
+            new Opcao() { public void escolher() { verTotalFaturado(s, cont); } }
         };
-        menu(s, opsCol, descCol, 2);
+        menu(s, opsCol, descCol);
     }
     
-    
-    private static void menu(Scanner s, Opcao[] opcoes, String[] desc, int nOps){
+    private static void emitirFatura(Scanner s, Coletivo cont){
         
-        int op = 0;
-
-        do {
-            System.out.println("0 -> Sair/Retroceder");
-            for(int i = 0; i < nOps; i++){
-                System.out.println((i+1) + " -> " + desc[i]);
-            }
-            try {
-                op = s.nextInt();
-            } catch (InputMismatchException e){
-                System.out.println("Input Errado");
-                op = -1;
-            }
-            
-            if(op > 0 && op <= nOps){
-                opcoes[op - 1].escolher();
-            }
-
-        } while(op != 0);
+        System.out.println("Nº de Contribuinte do Cliente:");
+        int nif = s.nextInt();
         
+        System.out.println("Valor:");
+        int valor = s.nextInt();
+        
+        System.out.println("Descrição:");
+        String desc = s.nextLine();
+        
+        estado.addFatura(cont.emitirFatura(valor, nif, LocalDate.now(), desc));
     }
+    
+    private static void  menuVerFaturas(Scanner s, Coletivo cont) {
+        //acabar
+    }
+    
+    private static void  verTotalFaturado(Scanner s, Coletivo cont) {
+        System.out.println("De:");
+        LocalDate inicio = scanData(s);
+        
+        System.out.println("Até:");
+        LocalDate fim = scanData(s);
+        
+        System.out.println(cont.totalFaturado(inicio, fim));
+    }
+    
+
+    
+
+    
+
     
 
     private static Contribuinte login(Scanner s){
 
         System.out.println("Nº de Contribuinte:");
-        String nif = s.next();
+        String nif = s.nextLine();
        
         System.out.println("Senha de acesso:");
-        String passwd = s.next();
+        String passwd = s.nextLine();
         
         return null;
         /*

@@ -54,8 +54,12 @@ public class Estado implements Serializable
         return e;
     }
     
-    public Contribuinte getContribuinte(int nif){
-        return this.contribuintes.get(nif).clone();
+    public Contribuinte getContribuinte(int nif) throws NaoExisteContribuinteException {
+        Contribuinte resultado = this.contribuintes.get(nif);
+        if(resultado == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        return resultado.clone();
     }
     
     public void addContribuinte(Contribuinte contribuinte){
@@ -130,9 +134,9 @@ public class Estado implements Serializable
     }
     
     public void addFatura(Fatura fatura){
-        int nifEmitente = fatura.getEmitente().getNif();
-        int nifCliente = fatura.getNifCliente();
         Fatura clone = fatura.clone();
+        int nifEmitente = fatura.getNifEmitente();
+        int nifCliente = fatura.getNifCliente();
         Set<Fatura> faturasEmitente = this.faturas.get(nifEmitente);
         Set<Fatura> faturasCliente = this.faturas.get(nifCliente);
         
@@ -149,7 +153,7 @@ public class Estado implements Serializable
     }
     
     public boolean existeFatura(Fatura fatura){
-        int nif = fatura.getEmitente().getNif();
+        int nif = fatura.getNifEmitente();
         Set<Fatura> resultado = new HashSet<>();
         Set<Fatura> faturas = this.faturas.get(nif);
         

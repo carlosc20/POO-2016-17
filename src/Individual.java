@@ -123,23 +123,6 @@ public class Individual extends Contribuinte
         faturas.add(fatura);
     }
     
-     /**
-     * Associa classicação de actividade económica de um documento de despesa / resolver pendências
-     * @param  fatura    Fatura a ser classificada
-     * @param  setorEco  Setor económico indicado para classificar a fatura    
-     * 
-     * @return booleano que indica se a classificação pode ser efetuada, se o emitente tem o setor indicado
-     */
-    public boolean classificaFatura(Fatura fatura, AtivEco ativ){
-        Coletivo emitente = fatura.getEmitente();
-        if(emitente.temAtivEco(ativ)) {
-            fatura.setAtivEconomica(ativ);
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
     
      /**
      * Corrige classicação de actividade económica de um documento de despesa e deixa registo desta operação
