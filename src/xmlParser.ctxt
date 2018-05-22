@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.target=xmlParser
+comment1.params=dump_path
+comment1.target=void\ parser(java.lang.String)
+numComments=2

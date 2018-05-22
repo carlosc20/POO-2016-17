@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.target=ParseTags
+comment1.params=uri\ localName\ qName\ attributes
+comment1.target=void\ startElement(java.lang.String,\ java.lang.String,\ java.lang.String,\ org.xml.sax.Attributes)
+numComments=2
