@@ -173,11 +173,10 @@ public class App
         String[] descCol = new String[] {
             "Ver informações gerais",
             "Emitir fatura",
-            "Ver faturas", //por data e valor, por contrib por data ou valor
+            "Ver faturas", 
             "Ver total faturado" //num intervalo de tempo
         };
         Opcao[] opsCol = new Opcao[] {
-            //cenas
             new Opcao() { public void escolher() { emitirFatura(s, cont); } },
             new Opcao() { public void escolher() { menuVerFaturas(s, cont); } },
             new Opcao() { public void escolher() { verTotalFaturado(s, cont); } }
@@ -199,8 +198,30 @@ public class App
         estado.addFatura(cont.emitirFatura(valor, nif, LocalDate.now(), desc));
     }
     
-    private static void  menuVerFaturas(Scanner s, Coletivo cont) {
-        //acabar
+    private static void  menuVerFaturas(Scanner s, Coletivo cont) {//por data e valor, por contrib por data ou valor
+        String[] descCol = new String[] {
+            "Ordenado por data",
+            "Ordenado por valor",
+            "Por contribuinte" 
+        };
+        Opcao[] opsCol = new Opcao[] {
+            new Opcao() { public void escolher() { emitirFatura(s, cont); } },
+            new Opcao() { public void escolher() { menuVerFaturas(s, cont); } },
+            new Opcao() { public void escolher() { menuVerFaturaPorContrib(s, cont) } }
+        };
+        menu(s, opsCol, descCol);
+    }
+    
+    private static void  menuVerFaturasPorContrib(Scanner s, Coletivo cont) {//por data e valor, por contrib por data ou valor
+        String[] descCol = new String[] {
+            "Ordenado por data",
+            "Ordenado por valor",
+        };
+        Opcao[] opsCol = new Opcao[] {
+            new Opcao() { public void escolher() { emitirFatura(s, cont); } },
+            new Opcao() { public void escolher() { menuVerFaturas(s, cont); } }
+        };
+        menu(s, opsCol, descCol);
     }
     
     private static void  verTotalFaturado(Scanner s, Coletivo cont) {
@@ -212,12 +233,6 @@ public class App
         
         System.out.println(cont.totalFaturado(inicio, fim));
     }
-    
-
-    
-
-    
-
     
 
     private static Contribuinte login(Scanner s){

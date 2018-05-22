@@ -64,16 +64,15 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public List<Fatura> getFaturas(Contribuinte contribuinte, Comparator<Fatura> c){
+    public SortedSet<Fatura> getFaturas(Contribuinte contribuinte, Comparator<Fatura> c){
         int nif = contribuinte.getNif();
-        List<Fatura> resultado = new ArrayList<>();
+        List<Fatura> resultado = new TreeSet<>(c);
         Set<Fatura> faturas = this.faturas.get(nif);
         
         for(Fatura fatura : faturas){
             resultado.add(fatura.clone());
         }
         
-        resultado.sort(c);
         return resultado;
     }
     
