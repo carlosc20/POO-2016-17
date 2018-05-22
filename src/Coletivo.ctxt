@@ -2,12 +2,12 @@
 comment0.target=Coletivo
 comment1.params=
 comment1.target=Coletivo()
-comment2.params=nif\ nome\ email\ morada\ password\ ativEco\ fatorDeducao\ faturasEmitidas
-comment2.target=Coletivo(int,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.util.List,\ float,\ java.util.ArrayList)
+comment2.params=nif\ nome\ email\ morada\ password\ ativEco\ fatorDeducao
+comment2.target=Coletivo(int,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.util.List,\ float)
 comment3.params=other
 comment3.target=Coletivo(Coletivo)
 comment4.params=valor\ cliente\ data\ descricao
-comment4.target=Fatura\ emitirFatura(int,\ Individual,\ java.time.LocalDate,\ java.lang.String)
+comment4.target=Fatura\ emitirFatura(int,\ int,\ java.time.LocalDate,\ java.lang.String)
 comment5.params=inicio\ fim
 comment5.target=int\ totalFaturado(java.time.LocalDate,\ java.time.LocalDate)
 comment6.params=ativ

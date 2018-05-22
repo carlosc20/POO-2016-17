@@ -12,7 +12,7 @@ public class Fatura {
     private static int totalFaturas;
     
     private int id;
-    private Coletivo emitente;
+    private int nifEmitente;
     private LocalDate dataEmissao;
     private int nifCliente;
     private String descricao;
@@ -21,7 +21,7 @@ public class Fatura {
 
     public Fatura() {
         this.setId();
-        this.setEmitente(new Coletivo());
+        this.setNifEmitente(0);
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(0);
         this.setDescricao("");
@@ -29,9 +29,9 @@ public class Fatura {
         this.setValorTotal(0);
     }
 
-    public Fatura(Coletivo emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, int valorTotal) {
+    public Fatura(int emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, int valorTotal) {
         this.setId();
-        this.setEmitente(emitente);
+        this.setNifEmitente(emitente);
         this.setDataEmissao(dataEmissao);
         this.setNifCliente(nifCliente);
         this.setDescricao(descricao);
@@ -41,7 +41,7 @@ public class Fatura {
 
     public Fatura(Fatura other) {
         this.setId();
-        this.setEmitente(other.getEmitente());
+        this.setNifEmitente(other.getNifEmitente());
         this.setDataEmissao(other.getDataEmissao());
         this.setNifCliente(other.getNifCliente());
         this.setDescricao(other.getDescricao());
@@ -51,7 +51,7 @@ public class Fatura {
 
     private Fatura(Fatura other, int id) {
         this.id = id;
-        this.setEmitente(other.getEmitente());
+        this.setNifEmitente(other.getNifEmitente());
         this.setDataEmissao(other.getDataEmissao());
         this.setNifCliente(other.getNifCliente());
         this.setDescricao(other.getDescricao());
@@ -72,12 +72,12 @@ public class Fatura {
         return this.id;
     }
 
-    public void setEmitente(Coletivo emitente) {
-        this.emitente = emitente.clone();
+    public void setNifEmitente(int nif) {
+        this.nifEmitente = nif;
     }
 
-    public Coletivo getEmitente() {
-        return this.emitente.clone();
+    public int getNifEmitente() {
+        return this.nifEmitente;
     }
 
     public void setDataEmissao(LocalDate dataEmissao) {
@@ -123,7 +123,7 @@ public class Fatura {
     public int getValorTotal() {
         return this.valorTotal;
     }
-
+    
     public Fatura clone() {
         return new Fatura(this, this.getId());
     }
@@ -149,7 +149,7 @@ public class Fatura {
     public String toString() {
         StringBuilder sb = new StringBuilder("Fatura {");
         sb.append("id:").append(this.id);
-        sb.append(",").append("emitente: ").append(this.emitente.toString());
+        sb.append(",").append("emitente: ").append(this.nifEmitente);
         sb.append(",").append("dataEmissao: ").append(this.dataEmissao.toString());
         sb.append(",").append("nifCliente: ").append(this.nifCliente);
         sb.append(",").append("descricao: ").append(this.descricao);
