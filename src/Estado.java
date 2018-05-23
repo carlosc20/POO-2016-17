@@ -36,10 +36,6 @@ public class Estado implements Serializable
         this.contribuintes = new HashMap<>();
         this.faturas = new HashMap<>();
     }
-
-    public Map<Integer, Contribuinte> getContribuintes() {
-        return this.contribuintes; //Precisa de fazer clone
-    }
     
     public void guardaEstado() throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("estado.obj"));
@@ -72,8 +68,27 @@ public class Estado implements Serializable
         return this.contribuintes.get(nif) != null;
     }
     
-    public Set<Fatura> getFaturas(Contribuinte contribuinte){
-        int nif = contribuinte.getNif();
+    public Set<Contribuinte> getContribuintes(){
+        Set<Contribuinte> resultado = new HashSet<Contribuinte>();
+        
+        for(Contribuinte contribuinte : this.contribuintes.values()){
+            resultado.add(contribuinte);
+        }
+        
+        return resultado;
+    }
+    
+    public SortedSet<Contribuinte> getContribuintes(Comparator c){
+        SortedSet<Contribuinte> resultado = new TreeSet<Contribuinte>(c);
+        
+        for(Contribuinte contribuinte : this.contribuintes.values()){
+            resultado.add(contribuinte);
+        }
+        
+        return resultado;
+    }
+    
+    public Set<Fatura> getFaturas(int nif){
         Set<Fatura> resultado = new HashSet<>();
         Set<Fatura> faturas = this.faturas.get(nif);
         
@@ -84,9 +99,9 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public SortedSet<Fatura> getFaturas(Contribuinte contribuinte, Comparator<Fatura> c){
-        int nif = contribuinte.getNif();
+    public SortedSet<Fatura> getFaturas(int nif, Comparator<Fatura> c){
         SortedSet<Fatura> resultado = new TreeSet<>(c);
+
         Set<Fatura> faturas = this.faturas.get(nif);
         
         for(Fatura fatura : faturas){
@@ -96,8 +111,7 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public Set<Fatura> getFaturas(Contribuinte contribuinte, LocalDate inicio, LocalDate fim){
-        int nif = contribuinte.getNif();
+    public Set<Fatura> getFaturas(int nif, LocalDate inicio, LocalDate fim){
         Set<Fatura> resultado = new HashSet<>();
         Set<Fatura> faturas = this.faturas.get(nif).subSet(new Fatura(inicio), new Fatura(fim));
         
@@ -108,9 +122,8 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public Set<Fatura> getFaturasEmComum(Coletivo emitente, Individual cliente){
-        int nifEmitente = emitente.getNif();
-        Set<Fatura> faturas = getFaturas(cliente);
+    public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente){
+        Set<Fatura> faturas = getFaturas(nifCliente);
         Set<Fatura> resultado = new HashSet<>();
         
         for(Fatura fatura : faturas){
@@ -122,8 +135,9 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(Coletivo coletivo){
-        Set<Fatura> faturas = getFaturas(coletivo);
+    
+    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif){
+        Set<Fatura> faturas = getFaturas(nif);
         Map<Integer , Set<Fatura>> resultado = new HashMap<>();
         
         for(Fatura fatura : faturas){
@@ -135,8 +149,8 @@ public class Estado implements Serializable
     }
     
     
-    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(Coletivo coletivo, LocalDate inicio, LocalDate fim){
-        Set<Fatura> faturas = getFaturas(coletivo, inicio, fim);
+    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif, LocalDate inicio, LocalDate fim){
+        Set<Fatura> faturas = getFaturas(nif, inicio, fim);
         Map<Integer, Set<Fatura>> resultado = new HashMap<>();
         
         for(Fatura fatura : faturas){

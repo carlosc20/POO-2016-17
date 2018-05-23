@@ -18,17 +18,15 @@ import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.HashMap;
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 public class App
 {
     private static Estado estado;
     
     /*Validar acesso
-     * 
-     * Individual pode:
-     * Consultar faturas, associar ativeEco onde não foi auto, corrigir ativEco(deixa registo para ser rastreada)
-     * Ver valor acum deduções fiscais -> imposto anual total, por si e por agregado
-     * 
      * 
      * Admin:
      * Criar contrib
@@ -75,13 +73,15 @@ public class App
         
         Scanner s = new Scanner(System.in);
         Contribuinte cont = login(s); 
-
+        
+        menuInd(s, (Individual) cont);
+        /*
         if (cont instanceof Individual){
             menuInd(s, (Individual) cont);
         } else {
             menuCol(s, (Coletivo) cont);
         }
-        
+        */
         s.close();
         
         try {
@@ -92,15 +92,30 @@ public class App
         }
     }
     
+    public void run(){
+        
+        Scanner s = new Scanner(System.in);
+        Contribuinte cont = login(s); 
+
+        if (cont instanceof Individual){
+            menuInd(s, (Individual) cont);
+        } else {
+            menuCol(s, (Coletivo) cont);
+        }
+        
+        s.close();
+        
+    }
+    
     private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
         
         int op = 0;
 
         do {
-            System.out.println("0 -> Sair/Retroceder");
             for(int i = 0; i < desc.length; i++){
                 System.out.println((i+1) + " -> " + desc[i]);
             }
+            System.out.println("0 -> Sair/Retroceder");
             try {
                 op = s.nextInt();
             } catch (InputMismatchException e){
@@ -120,16 +135,35 @@ public class App
         return LocalDate.now();//acabar
     }
     
-    
-    
+
+    private static AtivEco scanAtiv(Scanner s){
+        
+        AtivEco[] ativs = AtivEco.values();
+        for(int i = 0; i < ativs.length; i++){
+             System.out.println(i + "->" + ativs[i]);
+        }
+        
+        int esc;
+        try {
+            esc = s.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Input Errado");
+            esc = -1;
+        }
+        
+        return ativs[esc];
+    }
+
     
     private static void menuAdmin(Scanner s, Individual cont) {
         String[] descInd = new String[] {
-            "Registar contribuinte", 
-            "etc"
+            //"Registar contribuinte", 
+            "Ver os 10 contribuintes que gastam mais",
+            "Ver as 10 empresas que mais faturam"
         };
         Opcao[] opsInd = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
+            //new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
+            new Opcao() { public void escolher() {  } },
             new Opcao() { public void escolher() { System.out.println("Menu 2"); } }
         };
         menu(s, opsInd, descInd);
@@ -139,58 +173,116 @@ public class App
     
     
     private static void menuInd(Scanner s, Individual cont) {
-        String[] descInd = new String[] {
+        String[] desc = new String[] {
             "Ver informações gerais",
-            "Ver faturas", //subcategorias? por empresa, ordenado etc ->pendentes
-            "Ver montante de dedução fiscal acumulado" // por si e por agregado
+            "Ver/alterar faturas", 
+            "Ver montante de dedução fiscal acumulado" 
         };
-        Opcao[] opsInd = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println("És um contribuinte individual"); } }, //cont
-            new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //cont.getFaturas
-            new Opcao() { public void escolher() { System.out.println("0€"); } }
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println(cont); } },
+            new Opcao() { public void escolher() { menuIndFaturas(s, cont); } },
+            new Opcao() { public void escolher() { deducaoFiscal(s, cont); } }
         };
-        menu(s, opsInd, descInd);
+        menu(s, ops, desc);
     }
+    
+    
+    
+    private static void  menuIndFaturas(Scanner s, Individual cont) {
+        System.out.println("Ver faturas:");
+        String[] desc = new String[] {
+            "Com atribuição pendente",
+            "Ordenadas por data",
+            "Ordenadas por valor",
+            "Por um emitente" 
+        };
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEconomica() == AtivEco.Pendente).collect(Collectors.toSet()) );} },
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) )));} },
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() )));} },
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturasEmComum( scanNif(s), cont.getNif()));} }
+        };
+
+        menu(s, ops, desc);
+    }
+    
+    private static int scanNif(Scanner s) {
+        System.out.println("Nif:"); 
+        int emit;
+        try {
+            emit = s.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Input Errado");
+            emit = -1;
+        }
+        
+        return emit;
+    }
+    
+    private static void menuFaturas(Scanner s, Set<Fatura> faturas) {
+        System.out.println("Escolha uma fatura para editar a atividade económica (esta operação ficará registada)");
+        
+        
+        
+        
+        
+        //FAZERRRRRRRRRRRRRRRRRRRRRRRRRR
+    }
+
     
     private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
         
         System.out.println("Atividade Económica:");
-        AtivEco ativ = s.nextLine();
+        AtivEco ativ = scanAtiv(s);
         
-        Contribuinte emitente = estado.getContribuinte(fatura.getNifEmitente());
-        
-        if(emitente.temAtivEco(ativ)) {
-            fatura.setAtivEconomica(ativ);
-            System.out.println("Atribuição concluída com sucesso");
-        } else {
-            System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
+        try {
+            Coletivo emitente = (Coletivo) estado.getContribuinte(fatura.getNifEmitente());
+            if(emitente.temAtivEco(ativ)) {
+                fatura.setAtivEconomica(ativ);
+                System.out.println("Atribuição concluída com sucesso");
+            } else {
+                System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
+            }
         }
+        catch (NaoExisteContribuinteException e){
+            System.out.println("Erro: Emitente não existe.");
+        }
+        
     }
+    
+    
+   
+    private static void deducaoFiscal(Scanner s, Individual cont) {
+        System.out.println("Individual: " + estado.calculaDeducao(cont) + "€");
+        System.out.println("Agregado familiar: " + estado.calculaDeducaoAF(cont) + "€");
+    }
+        
+    
     
     
     
     private static void menuCol(Scanner s, Coletivo cont) {
-        String[] descCol = new String[] {
+        String[] desc = new String[] {
             "Ver informações gerais",
             "Emitir fatura",
-            "Ver faturas", //por data e valor, por contrib por data ou valor
-            "Ver total faturado" //num intervalo de tempo
+            "Ver faturas", 
+            "Ver total faturado" 
         };
-        Opcao[] opsCol = new Opcao[] {
-            //cenas
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println(cont); } },
             new Opcao() { public void escolher() { emitirFatura(s, cont); } },
-            new Opcao() { public void escolher() { menuVerFaturas(s, cont); } },
+            new Opcao() { public void escolher() { menuColFaturas(s, cont); } },
             new Opcao() { public void escolher() { verTotalFaturado(s, cont); } }
         };
-        menu(s, opsCol, descCol);
+        menu(s, ops, desc);
     }
     
     private static void emitirFatura(Scanner s, Coletivo cont){
-        
+        System.out.println("Dados da Fatura");
         System.out.println("Nº de Contribuinte do Cliente:");
-        int nif = s.nextInt();
+        int nif = s.nextInt(); //adicionar exceçoes
         
-        System.out.println("Valor:");
+        System.out.println("Valor em euros:");
         int valor = s.nextInt();
         
         System.out.println("Descrição:");
@@ -199,11 +291,29 @@ public class App
         estado.addFatura(cont.emitirFatura(valor, nif, LocalDate.now(), desc));
     }
     
-    private static void  menuVerFaturas(Scanner s, Coletivo cont) {
-        //acabar
+    private static void  menuColFaturas(Scanner s, Coletivo cont) {//por data e valor, por contrib por data ou valor
+        System.out.println("Faturas:");
+        String[] desc = new String[] {
+            "Ordenadas por data",
+            "Ordenadas por valor",
+            "Por contribuinte" 
+        };
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) ))); } },
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() ))); } },
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturasEmComum( cont.getNif(), scanNif(s))); } }
+        };
+        menu(s, ops, desc);
     }
     
+    private static void verFaturas(Set<Fatura> faturas) {
+        System.out.println("Faturas"); 
+    }
+    
+    
+    
     private static void  verTotalFaturado(Scanner s, Coletivo cont) {
+        
         System.out.println("De:");
         LocalDate inicio = scanData(s);
         
@@ -215,11 +325,9 @@ public class App
     
 
     
-
     
-
     
-
+    
     private static Contribuinte login(Scanner s){
 
         System.out.println("Nº de Contribuinte:");
