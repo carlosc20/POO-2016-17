@@ -28,6 +28,16 @@ public class Fatura {
         this.setAtivEconomica(ativEco.Pendente);
         this.setValorTotal(0);
     }
+    
+    public Fatura(LocalDate dataEmissao){
+        this.id = -1;
+        this.setNifEmitente(0);
+        this.setDataEmissao(LocalDate.now());
+        this.setNifCliente(0);
+        this.setDescricao("");
+        this.setAtivEconomica(ativEco.Pendente);
+        this.setValorTotal(0);
+    }
 
     public Fatura(int emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, int valorTotal) {
         this.setId();

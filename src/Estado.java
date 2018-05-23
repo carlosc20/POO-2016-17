@@ -9,7 +9,9 @@
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,7 +29,7 @@ public class Estado implements Serializable
 
     private Map<Integer, Contribuinte> contribuintes;
 
-    private Map<Integer, Set<Fatura>> faturas;
+    private Map<Integer, SortedSet<Fatura>> faturas;
     
     public Estado()
     {
@@ -52,6 +54,24 @@ public class Estado implements Serializable
         return e;
     }
     
+    public Contribuinte getContribuinte(int nif) throws NaoExisteContribuinteException {
+        Contribuinte resultado = this.contribuintes.get(nif);
+        if(resultado == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        return resultado.clone();
+    }
+    
+    public void addContribuinte(Contribuinte contribuinte){
+        int nif = contribuinte.getNif();
+        this.contribuintes.put(nif, contribuinte);
+    }
+    
+    public boolean existeContribuinte(Contribuinte contribuinte){
+        int nif = contribuinte.getNif();
+        return this.contribuintes.get(nif) != null;
+    }
+    
     public Set<Fatura> getFaturas(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         Set<Fatura> resultado = new HashSet<>();
@@ -66,7 +86,8 @@ public class Estado implements Serializable
     
     public SortedSet<Fatura> getFaturas(Contribuinte contribuinte, Comparator<Fatura> c){
         int nif = contribuinte.getNif();
-        List<Fatura> resultado = new TreeSet<>(c);
+        SortedSet<Fatura> resultado = new TreeSet<>(c);
+
         Set<Fatura> faturas = this.faturas.get(nif);
         
         for(Fatura fatura : faturas){
@@ -79,85 +100,64 @@ public class Estado implements Serializable
     public Set<Fatura> getFaturas(Contribuinte contribuinte, LocalDate inicio, LocalDate fim){
         int nif = contribuinte.getNif();
         Set<Fatura> resultado = new HashSet<>();
-        Set<Fatura> faturas = this.faturas.get(nif);
+        Set<Fatura> faturas = this.faturas.get(nif).subSet(new Fatura(inicio), new Fatura(fim));
         
         for(Fatura fatura : faturas){
-            if(fatura.getDataEmissao().compareTo(inicio) >= 0 && fatura.getDataEmissao().compareTo(fim) <= 0){
-                resultado.add(fatura.clone());
-            }
+            resultado.add(fatura.clone());
         }
         
         return resultado;
     }
     
-    public Map<Contribuinte, Set<Fatura>> getContribuintes(Coletivo coletivo){
-        int nif = coletivo.getNif();
-        Map<Contribuinte, Set<Fatura>> resultado = new HashMap<>();
-        Set<Fatura> faturas = this.faturas.get(nif);
+    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(Coletivo coletivo){
+        Set<Fatura> faturas = getFaturas(coletivo);
+        Map<Integer , Set<Fatura>> resultado = new HashMap<>();
         
-        for(Fatura f : faturas){
-            Contribuinte clone = this.contribuintes.get(f.getNifCliente()).clone();
-            Set<Fatura> faturasDoContribuinte = resultado.putIfAbsent(this.contribuintes.get(clone), new HashSet<>());
-            if(faturasDoContribuinte != null){
-                faturasDoContribuinte.add(f);
-            }
+        for(Fatura fatura : faturas){
+            Set<Fatura> faturasDoContribuinte = resultado.putIfAbsent(fatura.getNifCliente(), new HashSet<>());
+            faturasDoContribuinte.add(fatura);
         }
         
         return resultado;
     }
     
-    public Map<Contribuinte, List<Fatura>> getContribuintes(Coletivo coletivo, Comparator<Fatura> c){
-        int nif = coletivo.getNif();
-        Map<Contribuinte, List<Fatura>> resultado = new HashMap<>();
-        Set<Fatura> faturas = this.faturas.get(nif);
-        
-        for(Fatura fatura : faturas){
-            Contribuinte clone = this.contribuintes.get(fatura.getNifCliente()).clone();
-            List<Fatura> faturasDoContribuinte = resultado.putIfAbsent(this.contribuintes.get(clone), new ArrayList<>());
-            if(faturasDoContribuinte != null){
-                faturasDoContribuinte.add(fatura);
-            }
-        }
-        
-        for(List list : resultado.values()){
-            list.sort(c);
-        }
-        
-        return resultado;
-    }
     
-    public Map<Contribuinte, Set<Fatura>> getContribuintes(Coletivo coletivo, LocalDate inicio, LocalDate fim){
-        int nif = coletivo.getNif();
-        Map<Contribuinte, Set<Fatura>> resultado = new HashMap<>();
-        Set<Fatura> faturas = this.faturas.get(nif);
+    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(Coletivo coletivo, LocalDate inicio, LocalDate fim){
+        Set<Fatura> faturas = getFaturas(coletivo, inicio, fim);
+        Map<Integer, Set<Fatura>> resultado = new HashMap<>();
         
         for(Fatura fatura : faturas){
-            if(fatura.getDataEmissao().compareTo(inicio) >= 0 && fatura.getDataEmissao().compareTo(fim) <= 0){
-                Contribuinte clone = this.contribuintes.get(fatura.getNifCliente()).clone();
-                Set<Fatura> faturasDoContribuinte = resultado.putIfAbsent(this.contribuintes.get(clone), new HashSet<>());
-                if(faturasDoContribuinte != null){
-                    faturasDoContribuinte.add(fatura);
-                }
-            }
-        }   
+            Set<Fatura> faturasDoContribuinte = resultado.putIfAbsent(fatura.getNifCliente(), new HashSet<>());
+            faturasDoContribuinte.add(fatura);
+        }
         
         return resultado;
     }
     
     public void addFatura(Fatura fatura){
         Fatura clone = fatura.clone();
-        
         int nifEmitente = fatura.getNifEmitente();
-        this.faturas.get(nifEmitente).add(clone);
-        
         int nifCliente = fatura.getNifCliente();
-        this.faturas.get(nifCliente).add(clone);
+        Set<Fatura> faturasEmitente = this.faturas.get(nifEmitente);
+        Set<Fatura> faturasCliente = this.faturas.get(nifCliente);
+        
+        if(faturasEmitente == null){
+            faturasEmitente = new TreeSet<Fatura>();
+        }
+        
+        if(faturasEmitente == null){
+            faturasEmitente = new TreeSet<Fatura>();
+        }
+        
+        faturasEmitente.add(clone);
+        faturasCliente.add(clone);
     }
     
     public boolean existeFatura(Fatura fatura){
         int nif = fatura.getNifEmitente();
         Set<Fatura> resultado = new HashSet<>();
         Set<Fatura> faturas = this.faturas.get(nif);
+        
         return faturas.contains(fatura);
     }
     

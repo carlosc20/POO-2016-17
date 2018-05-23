@@ -39,7 +39,7 @@ public class Coletivo extends Contribuinte
             atividadeE = ativEco.get(0);
                 //calcula deduçao
         }
-        Fatura fatura = new Fatura(super.getNif(), data, cliente, descricao, atividadeE, valor);
+        Fatura fatura = new Fatura(getNif(), data, cliente, descricao, atividadeE, valor);
         
         return fatura;
     }

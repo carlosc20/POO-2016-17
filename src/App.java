@@ -25,11 +25,6 @@ public class App
     
     /*Validar acesso
      * 
-     * Individual pode:
-     * Consultar faturas, associar ativeEco onde não foi auto, corrigir ativEco(deixa registo para ser rastreada)
-     * Ver valor acum deduções fiscais -> imposto anual total, por si e por agregado
-     * 
-     * 
      * Admin:
      * Criar contrib
      * associar empresas a ativ eco
@@ -139,17 +134,43 @@ public class App
     
     
     private static void menuInd(Scanner s, Individual cont) {
-        String[] descInd = new String[] {
+        String[] desc = new String[] {
             "Ver informações gerais",
-            "Ver faturas", //subcategorias? por empresa, ordenado etc ->pendentes
-            "Ver montante de dedução fiscal acumulado" // por si e por agregado
+            "Ver/alterar faturas", 
+            "Ver montante de dedução fiscal acumulado" 
         };
-        Opcao[] opsInd = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println("És um contribuinte individual"); } }, //cont
-            new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //cont.getFaturas
-            new Opcao() { public void escolher() { System.out.println("0€"); } }
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println(cont); } },
+            new Opcao() { public void escolher() { menuIndFaturas(s, cont); } },
+            new Opcao() { public void escolher() { deducaoFiscal(s, cont); } }
         };
-        menu(s, opsInd, descInd);
+        menu(s, ops, desc);
+    }
+    
+    
+    
+    private static void  menuIndFaturas(Scanner s, Individual cont) {//subcategorias? por empresa, ordenado etc ->pendentes
+        System.out.println("Faturas:");
+        String[] desc = new String[] {
+            "Com atribuição pendente",
+            "Ordenadas por data",
+            "Ordenadas por valor",
+            "Por um emitente" 
+        };
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { menuVerFaturaPorContrib(s, cont); } },
+            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c)); } }, //fazer
+            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c)); } }, //fazer
+            new Opcao() { public void escolher() { faturasPorEmitente(s, cont); } }
+        };
+        menu(s, ops, desc);
+    }
+    
+    private static void  faturasPorEmitente(Scanner s, Individual cont){
+        System.out.println("Nº de Contribuinte do Emitente:");
+        int nif = s.nextInt();
+        
+        //acabar
     }
     
     private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
@@ -157,7 +178,7 @@ public class App
         System.out.println("Atividade Económica:");
         AtivEco ativ = s.nextLine();
         
-        Coletivo emitente = estado.getContribuinte(fatura.getNifEmitente());
+        Contribuinte emitente = estado.getContribuinte(fatura.getNifEmitente());
         
         if(emitente.temAtivEco(ativ)) {
             fatura.setAtivEconomica(ativ);
@@ -168,28 +189,39 @@ public class App
     }
     
     
+   
+    private static void deducaoFiscal(Scanner s, Individual cont) {
+        System.out.println("Individual: " + estado.calculaDeducao(cont) + "€");
+        System.out.println("Agregado familiar: " + estado.calculaDeducaoAF(cont) + "€");
+    }
+    
+    
+    
+    
+    
     
     private static void menuCol(Scanner s, Coletivo cont) {
-        String[] descCol = new String[] {
+        String[] desc = new String[] {
             "Ver informações gerais",
             "Emitir fatura",
             "Ver faturas", 
-            "Ver total faturado" //num intervalo de tempo
+            "Ver total faturado" 
         };
-        Opcao[] opsCol = new Opcao[] {
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println(cont); } },
             new Opcao() { public void escolher() { emitirFatura(s, cont); } },
-            new Opcao() { public void escolher() { menuVerFaturas(s, cont); } },
+            new Opcao() { public void escolher() { menuColFaturas(s, cont); } },
             new Opcao() { public void escolher() { verTotalFaturado(s, cont); } }
         };
-        menu(s, opsCol, descCol);
+        menu(s, ops, desc);
     }
     
     private static void emitirFatura(Scanner s, Coletivo cont){
-        
+        System.out.println("Dados da Fatura");
         System.out.println("Nº de Contribuinte do Cliente:");
-        int nif = s.nextInt();
+        int nif = s.nextInt(); //adicionar exceçoes
         
-        System.out.println("Valor:");
+        System.out.println("Valor em euros:");
         int valor = s.nextInt();
         
         System.out.println("Descrição:");
@@ -198,33 +230,29 @@ public class App
         estado.addFatura(cont.emitirFatura(valor, nif, LocalDate.now(), desc));
     }
     
-    private static void  menuVerFaturas(Scanner s, Coletivo cont) {//por data e valor, por contrib por data ou valor
-        String[] descCol = new String[] {
-            "Ordenado por data",
-            "Ordenado por valor",
+    private static void  menuColFaturas(Scanner s, Coletivo cont) {//por data e valor, por contrib por data ou valor
+        System.out.println("Faturas:");
+        String[] desc = new String[] {
+            "Ordenadas por data",
+            "Ordenadas por valor",
             "Por contribuinte" 
         };
-        Opcao[] opsCol = new Opcao[] {
-            new Opcao() { public void escolher() { emitirFatura(s, cont); } },
-            new Opcao() { public void escolher() { menuVerFaturas(s, cont); } },
-            new Opcao() { public void escolher() { menuVerFaturaPorContrib(s, cont) } }
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c)); } },
+            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c));  } },
+            new Opcao() { public void escolher() { menuColFaturasPorContrib(s, cont); } }
         };
-        menu(s, opsCol, descCol);
+        menu(s, ops, desc);
     }
     
-    private static void  menuVerFaturasPorContrib(Scanner s, Coletivo cont) {//por data e valor, por contrib por data ou valor
-        String[] descCol = new String[] {
-            "Ordenado por data",
-            "Ordenado por valor",
-        };
-        Opcao[] opsCol = new Opcao[] {
-            new Opcao() { public void escolher() { emitirFatura(s, cont); } },
-            new Opcao() { public void escolher() { menuVerFaturas(s, cont); } }
-        };
-        menu(s, opsCol, descCol);
+    private static void  faturasPorContrib(Scanner s, Coletivo cont) {
+        //getFaturasEmComum(Contribuinte contribuinte, Comparator<Fatura> c);
     }
+    
+    
     
     private static void  verTotalFaturado(Scanner s, Coletivo cont) {
+        
         System.out.println("De:");
         LocalDate inicio = scanData(s);
         
@@ -235,6 +263,10 @@ public class App
     }
     
 
+    
+    
+    
+    
     private static Contribuinte login(Scanner s){
 
         System.out.println("Nº de Contribuinte:");
