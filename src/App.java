@@ -120,16 +120,15 @@ public class App
         return LocalDate.now();//acabar
     }
     
-    
-    
-    
     private static void menuAdmin(Scanner s, Individual cont) {
         String[] descInd = new String[] {
-            "Registar contribuinte", 
-            "etc"
+            //"Registar contribuinte", 
+            "Ver os 10 contribuintes que gastam mais",
+            "Ver as 10 empresas que mais faturam"
         };
         Opcao[] opsInd = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
+            //new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
+            new Opcao() { public void escolher() {  } },
             new Opcao() { public void escolher() { System.out.println("Menu 2"); } }
         };
         menu(s, opsInd, descInd);
@@ -151,22 +150,8 @@ public class App
         };
         menu(s, opsInd, descInd);
     }
-    
-    private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
-        
-        System.out.println("Atividade Económica:");
-        AtivEco ativ = s.nextLine();
-        
-        Contribuinte emitente = estado.getContribuinte(fatura.getNifEmitente());
-        
-        if(emitente.temAtivEco(ativ)) {
-            fatura.setAtivEconomica(ativ);
-            System.out.println("Atribuição concluída com sucesso");
-        } else {
-            System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
-        }
-    }
-    
+   
+    //Falta função aqui
     
     
     private static void menuCol(Scanner s, Coletivo cont) {
