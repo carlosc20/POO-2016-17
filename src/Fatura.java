@@ -16,7 +16,7 @@ public class Fatura {
     private LocalDate dataEmissao;
     private int nifCliente;
     private String descricao;
-    private AtivEco ativEco;
+    private AtivEco ativEconomica;
     private int valorTotal;
 
     public Fatura() {
@@ -25,7 +25,7 @@ public class Fatura {
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(0);
         this.setDescricao("");
-        this.setAtivEconomica(ativEco.Pendente);
+        this.setAtivEconomica(ativEconomica.Pendente);
         this.setValorTotal(0);
     }
     
@@ -35,7 +35,7 @@ public class Fatura {
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(0);
         this.setDescricao("");
-        this.setAtivEconomica(ativEco.Pendente);
+        this.setAtivEconomica(ativEconomica.Pendente);
         this.setValorTotal(0);
     }
 
@@ -45,7 +45,7 @@ public class Fatura {
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(nifCliente);
         this.setDescricao("");
-        this.setAtivEconomica(ativEco.Pendente);
+        this.setAtivEconomica(ativEconomica.Pendente);
         this.setValorTotal(0);
     }
     
@@ -125,15 +125,15 @@ public class Fatura {
     }
 
     public void setAtivEconomica(AtivEco ativEco) {
-        this.ativEco = ativEco;
+        this.ativEconomica = ativEco;
     }
 
     public AtivEco getAtivEconomica(){
-        return this.ativEco;
+        return this.ativEconomica;
     }
     
     public boolean temAtivEconomica() {
-        return this.ativEco != ativEco.Pendente;
+        return this.ativEconomica != AtivEco.Pendente;
     }
 
     public void setValorTotal(int valorTotal) {
@@ -173,7 +173,7 @@ public class Fatura {
         sb.append(",").append("dataEmissao: ").append(this.dataEmissao.toString());
         sb.append(",").append("nifCliente: ").append(this.nifCliente);
         sb.append(",").append("descricao: ").append(this.descricao);
-        sb.append(",").append("ativEco: ").append(this.ativEco.toString());
+        sb.append(",").append("ativEco: ").append(this.ativEconomica.toString());
         sb.append(",").append("valorTotal: ").append(this.valorTotal);
         return sb.toString();
     }

@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=AtividadeEconomica
+comment1.params=nomeAtividadeEconomica\ percentagem\ limite
+comment1.target=AtividadeEconomica(java.lang.String,\ float,\ float)
+comment2.params=atividade
+comment2.target=AtividadeEconomica(AtividadeEconomica)
+comment3.params=nomeAtividadeEconomica
+comment3.target=AtividadeEconomica\ getAtividade(java.lang.String)
+comment4.params=
+comment4.target=java.lang.String\ getNomeAtividadeEconomica()
+comment5.params=
+comment5.target=float\ getPercentagem()
+comment6.params=
+comment6.target=float\ getLimite()
+comment7.params=
+comment7.target=AtividadeEconomica\ clone()
+numComments=8

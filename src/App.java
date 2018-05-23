@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 public class App
 {
@@ -72,13 +73,15 @@ public class App
         
         Scanner s = new Scanner(System.in);
         Contribuinte cont = login(s); 
-
+        
+        menuInd(s, (Individual) cont);
+        /*
         if (cont instanceof Individual){
             menuInd(s, (Individual) cont);
         } else {
             menuCol(s, (Coletivo) cont);
         }
-        
+        */
         s.close();
         
         try {
@@ -109,10 +112,10 @@ public class App
         int op = 0;
 
         do {
-            System.out.println("0 -> Sair/Retroceder");
             for(int i = 0; i < desc.length; i++){
                 System.out.println((i+1) + " -> " + desc[i]);
             }
+            System.out.println("0 -> Sair/Retroceder");
             try {
                 op = s.nextInt();
             } catch (InputMismatchException e){
@@ -132,6 +135,7 @@ public class App
         return LocalDate.now();//acabar
     }
     
+
     private static AtivEco scanAtiv(Scanner s){
         
         AtivEco[] ativs = AtivEco.values();
@@ -149,15 +153,17 @@ public class App
         
         return ativs[esc];
     }
-    
+
     
     private static void menuAdmin(Scanner s, Individual cont) {
         String[] descInd = new String[] {
-            "Registar contribuinte", 
-            "etc"
+            //"Registar contribuinte", 
+            "Ver os 10 contribuintes que gastam mais",
+            "Ver as 10 empresas que mais faturam"
         };
         Opcao[] opsInd = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
+            //new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
+            new Opcao() { public void escolher() {  } },
             new Opcao() { public void escolher() { System.out.println("Menu 2"); } }
         };
         menu(s, opsInd, descInd);
@@ -191,16 +197,17 @@ public class App
             "Por um emitente" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { menuFatura(s, estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEco() == AtivEco.Pendente).collect(Collectors.toSet()) );} },
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEconomica() == AtivEco.Pendente).collect(Collectors.toSet()) );} },
             new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) )));} },
             new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() )));} },
-            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturasEmComum( scanEmitente(s), cont.getNif()));} }
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturasEmComum( scanNif(s), cont.getNif()));} }
         };
 
         menu(s, ops, desc);
     }
     
-    private static int scanEmitente(Scanner s) {
+    private static int scanNif(Scanner s) {
+        System.out.println("Nif:"); 
         int emit;
         try {
             emit = s.nextInt();
@@ -209,12 +216,19 @@ public class App
             emit = -1;
         }
         
+        return emit;
     }
     
     private static void menuFaturas(Scanner s, Set<Fatura> faturas) {
         System.out.println("Escolha uma fatura para editar a atividade económica (esta operação ficará registada)");
+        
+        
+        
+        
+        
         //FAZERRRRRRRRRRRRRRRRRRRRRRRRRR
     }
+
     
     private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
         
@@ -242,8 +256,7 @@ public class App
         System.out.println("Individual: " + estado.calculaDeducao(cont) + "€");
         System.out.println("Agregado familiar: " + estado.calculaDeducaoAF(cont) + "€");
     }
-    
-    
+        
     
     
     
@@ -286,15 +299,15 @@ public class App
             "Por contribuinte" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() {  } },
-            new Opcao() { public void escolher() {  } },
-            new Opcao() { public void escolher() { faturasPorContrib(s, cont); } }
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) ))); } },
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() ))); } },
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturasEmComum( cont.getNif(), scanNif(s))); } }
         };
         menu(s, ops, desc);
     }
     
-    private static void  faturasPorContrib(Scanner s, Coletivo cont) {
-        //getFaturasEmComum(Contribuinte contribuinte, Comparator<Fatura> c);
+    private static void verFaturas(Set<Fatura> faturas) {
+        System.out.println("Faturas"); 
     }
     
     
