@@ -18,6 +18,8 @@ import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.HashMap;
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class App
 {
@@ -87,6 +89,21 @@ public class App
         }
     }
     
+    public void run(){
+        
+        Scanner s = new Scanner(System.in);
+        Contribuinte cont = login(s); 
+
+        if (cont instanceof Individual){
+            menuInd(s, (Individual) cont);
+        } else {
+            menuCol(s, (Coletivo) cont);
+        }
+        
+        s.close();
+        
+    }
+    
     private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
         
         int op = 0;
@@ -115,7 +132,23 @@ public class App
         return LocalDate.now();//acabar
     }
     
-    
+    private static AtivEco scanAtiv(Scanner s){
+        
+        AtivEco[] ativs = AtivEco.values();
+        for(int i = 0; i < ativs.length; i++){
+             System.out.println(i + "->" + ativs[i]);
+        }
+        
+        int esc;
+        try {
+            esc = s.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Input Errado");
+            esc = -1;
+        }
+        
+        return ativs[esc];
+    }
     
     
     private static void menuAdmin(Scanner s, Individual cont) {
@@ -149,8 +182,8 @@ public class App
     
     
     
-    private static void  menuIndFaturas(Scanner s, Individual cont) {//subcategorias? por empresa, ordenado etc ->pendentes
-        System.out.println("Faturas:");
+    private static void  menuIndFaturas(Scanner s, Individual cont) {
+        System.out.println("Ver faturas:");
         String[] desc = new String[] {
             "Com atribuição pendente",
             "Ordenadas por data",
@@ -158,34 +191,49 @@ public class App
             "Por um emitente" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { menuVerFaturaPorContrib(s, cont); } },
-            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c)); } }, //fazer
-            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c)); } }, //fazer
-            new Opcao() { public void escolher() { faturasPorEmitente(s, cont); } }
+            new Opcao() { public void escolher() { menuFatura(s, estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEco() == AtivEco.Pendente).collect(Collectors.toSet()) );} },
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) )));} },
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() )));} },
+            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturasEmComum( scanEmitente(s), cont.getNif()));} }
         };
+
         menu(s, ops, desc);
     }
     
-    private static void  faturasPorEmitente(Scanner s, Individual cont){
-        System.out.println("Nº de Contribuinte do Emitente:");
-        int nif = s.nextInt();
+    private static int scanEmitente(Scanner s) {
+        int emit;
+        try {
+            emit = s.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Input Errado");
+            emit = -1;
+        }
         
-        //acabar
+    }
+    
+    private static void menuFaturas(Scanner s, Set<Fatura> faturas) {
+        System.out.println("Escolha uma fatura para editar a atividade económica (esta operação ficará registada)");
+        //FAZERRRRRRRRRRRRRRRRRRRRRRRRRR
     }
     
     private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
         
         System.out.println("Atividade Económica:");
-        AtivEco ativ = s.nextLine();
+        AtivEco ativ = scanAtiv(s);
         
-        Contribuinte emitente = estado.getContribuinte(fatura.getNifEmitente());
-        
-        if(emitente.temAtivEco(ativ)) {
-            fatura.setAtivEconomica(ativ);
-            System.out.println("Atribuição concluída com sucesso");
-        } else {
-            System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
+        try {
+            Coletivo emitente = (Coletivo) estado.getContribuinte(fatura.getNifEmitente());
+            if(emitente.temAtivEco(ativ)) {
+                fatura.setAtivEconomica(ativ);
+                System.out.println("Atribuição concluída com sucesso");
+            } else {
+                System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
+            }
         }
+        catch (NaoExisteContribuinteException e){
+            System.out.println("Erro: Emitente não existe.");
+        }
+        
     }
     
     
@@ -238,9 +286,9 @@ public class App
             "Por contribuinte" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c)); } },
-            new Opcao() { public void escolher() { System.out.println(getFaturas(cont, Comparator<Fatura> c));  } },
-            new Opcao() { public void escolher() { menuColFaturasPorContrib(s, cont); } }
+            new Opcao() { public void escolher() {  } },
+            new Opcao() { public void escolher() {  } },
+            new Opcao() { public void escolher() { faturasPorContrib(s, cont); } }
         };
         menu(s, ops, desc);
     }
