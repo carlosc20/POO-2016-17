@@ -174,16 +174,30 @@ public class Estado implements Serializable
         return faturas.contains(fatura);
     }
     
+    private float calculaDeducaoFaturas(Set<Fatura> faturas){
+        float resultado = 0;
+        int valorFatura;
+        float ativEcoPercen;
+        float ativEcoLimite;
+        
+        for(Fatura fatura : faturas){
+            valorFatura = fatura.getValorTotal();
+            ativEcoPercen = fatura.getAtivEconomica().getPercentagem();
+            ativEcoLimite = fatura.getAtivEconomica().getLimite();
+            
+            if(valorFatura * ativEcoPercen <= ativEcoLimite){
+                resultado += valorFatura * ativEcoPercen;
+            }    
+        }
+        
+        return resultado;
+    }
+    
     public float calculaDeducao(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         Set<Fatura> faturas = this.faturas.get(nif);
-        float resultado = 0;
-
-        for(Fatura fatura : faturas){
-            resultado++;
-        }
-
-        return resultado;
+        
+        return calculaDeducaoFaturas(faturas);
     }
     
     public float calculaDeducaoAF(Individual contribuinte){
@@ -198,9 +212,7 @@ public class Estado implements Serializable
 
         for(int nif : nifs){
             faturas = this.faturas.get(nif);
-            for(Fatura fatura : faturas){
-                resultado++;
-            }
+            resultado += calculaDeducaoFaturas(faturas);
         }
         
         return resultado;   

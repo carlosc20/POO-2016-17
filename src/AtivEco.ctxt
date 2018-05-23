@@ -1,10 +1,16 @@
 #BlueJ class context
 comment0.target=AtivEco
-comment0.text=\r\n\ Enumeration\ class\ AtivEco\ -\ write\ a\ description\ of\ the\ enum\ class\ here\r\n\r\n\ @author\ (your\ name\ here)\r\n\ @version\ (version\ number\ or\ date\ here)\r\n
-comment1.params=percentagem\ limite
-comment1.target=AtivEco(float,\ float)
+comment0.text=\n\ Enumeration\ class\ AtivEco\ -\ write\ a\ description\ of\ the\ enum\ class\ here\n\n\ @author\ (your\ name\ here)\n\ @version\ (version\ number\ or\ date\ here)\n
+comment1.params=
+comment1.target=java.lang.String\ fancyToString()
 comment2.params=
-comment2.target=float\ getPercentagem()
-comment3.params=
-comment3.target=float\ getLimite()
-numComments=4
+comment2.target=java.lang.String\ toString()
+comment3.params=percentagem\ limite\ ativEco
+comment3.target=AtivEco(float,\ float,\ java.lang.String)
+comment4.params=
+comment4.target=float\ getPercentagem()
+comment5.params=
+comment5.target=float\ getLimite()
+comment6.params=
+comment6.target=java.lang.String\ getAtivEco()
+numComments=7

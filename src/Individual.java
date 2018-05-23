@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class Individual extends Contribuinte
 {
@@ -18,9 +19,38 @@ public class Individual extends Contribuinte
     private Set<Integer> dependentesAF; // AF = agregado familiar
     private float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível
     private List<AtivEco> ativDedutiveis; 
-    
     private List<Fatura> faturas;
     private List<Alteracao> histAlter;
+    
+    public String fancyAtivEco(List<AtivEco> ativEco){
+        StringBuilder sb = new StringBuilder("");
+        for(AtivEco a : ativEco){
+            sb.append(a.fancyToString()).append("; ");
+        }
+        return sb.toString();
+    }
+    
+    public String fancyToString(){
+        StringBuilder sb = new StringBuilder("");
+        sb.append(super.toString()).append("\n");
+        sb.append("Numero de Dependentes do Agregado Familiar: ").append(this.dependentesAF.size()).append("\n");
+        sb.append("Nif de Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
+        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
+        sb.append("Atividades Dedutiveis: ").append(fancyAtivEco(this.ativDedutiveis)).append("\n");
+        return sb.toString();
+    }
+    
+    public String toString(){
+        StringBuilder sb = new StringBuilder("Contribuinte Individual{\n");
+        sb.append(super.toString()).append("\n");
+        sb.append("Nif Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
+        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
+        sb.append("Atividades Dedutiveis").append(this.ativDedutiveis).append("\n");
+        sb.append("Faturas: ").append(this.faturas).append("\n");
+        sb.append("Alteraçoes: ").append(this.histAlter).append("\n");
+        sb.append("}\n");
+        return sb.toString();
+    }
     
     /**
      * Construtor para objetos da classe Individual

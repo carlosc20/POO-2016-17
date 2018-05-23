@@ -1,6 +1,4 @@
 #BlueJ class context
 comment0.target=Alteracao
 comment0.text=\n\ Write\ a\ description\ of\ class\ Alteracao\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
-comment1.params=
-comment1.target=java.lang.String\ toString()
-numComments=2
+numComments=1
