@@ -39,6 +39,16 @@ public class Fatura {
         this.setValorTotal(0);
     }
 
+    public Fatura(int emitente, int nifCliente){
+        this.setId();
+        this.setNifEmitente(emitente);
+        this.setDataEmissao(LocalDate.now());
+        this.setNifCliente(nifCliente);
+        this.setDescricao("");
+        this.setAtivEconomica(ativEco.Pendente);
+        this.setValorTotal(0);
+    }
+    
     public Fatura(int emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, int valorTotal) {
         this.setId();
         this.setNifEmitente(emitente);

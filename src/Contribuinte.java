@@ -153,4 +153,5 @@ public abstract class Contribuinte
     }
     
     public abstract Contribuinte clone();
+    
 }

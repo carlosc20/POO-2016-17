@@ -108,6 +108,20 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    public Set<Fatura> getFaturasEmComum(Coletivo emitente, Individual cliente){
+        int nifEmitente = emitente.getNif();
+        Set<Fatura> faturas = getFaturas(cliente);
+        Set<Fatura> resultado = new HashSet<>();
+        
+        for(Fatura fatura : faturas){
+            if(fatura.getNifEmitente() == nifEmitente){
+                resultado.add(fatura);
+            }
+        }
+        
+        return resultado;
+    }
+    
     public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(Coletivo coletivo){
         Set<Fatura> faturas = getFaturas(coletivo);
         Map<Integer , Set<Fatura>> resultado = new HashMap<>();
@@ -141,11 +155,11 @@ public class Estado implements Serializable
         Set<Fatura> faturasCliente = this.faturas.get(nifCliente);
         
         if(faturasEmitente == null){
-            faturasEmitente = new TreeSet<Fatura>();
+            faturasEmitente = new TreeSet<Fatura>((a, b) -> a.getDataEmissao().compareTo(b.getDataEmissao()));
         }
         
-        if(faturasEmitente == null){
-            faturasEmitente = new TreeSet<Fatura>();
+        if(faturasCliente == null){
+            faturasCliente = new TreeSet<Fatura>((a, b) -> a.getDataEmissao().compareTo(b.getDataEmissao()));
         }
         
         faturasEmitente.add(clone);
@@ -160,4 +174,35 @@ public class Estado implements Serializable
         return faturas.contains(fatura);
     }
     
+    public float calculaDeducao(Contribuinte contribuinte){
+        int nif = contribuinte.getNif();
+        Set<Fatura> faturas = this.faturas.get(nif);
+        float resultado = 0;
+
+        for(Fatura fatura : faturas){
+            resultado++;
+        }
+
+        return resultado;
+    }
+    
+    public float calculaDeducaoAF(Individual contribuinte){
+        List<Integer> nifs = new ArrayList<>();
+        nifs.add(contribuinte.getNif());
+        for(int nif : contribuinte.getAgregadoFamiliar()){
+            nifs.add(nif);
+        }
+        
+        Set<Fatura> faturas;
+        float resultado = 0;
+
+        for(int nif : nifs){
+            faturas = this.faturas.get(nif);
+            for(Fatura fatura : faturas){
+                resultado++;
+            }
+        }
+        
+        return resultado;   
+    }
 }

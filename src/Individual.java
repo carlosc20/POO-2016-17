@@ -5,14 +5,17 @@
  * @version 11/03/2018
  */
 
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import java.time.LocalDate;
 
 public class Individual extends Contribuinte
 {
     // situação sócioprossional, que pode ser utilizada para o cálculo das deduções fiscais: 
-    private List<Integer> dependentesAF; // AF = agregado familiar
+    private Set<Integer> dependentesAF; // AF = agregado familiar
     private float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível
     private List<AtivEco> ativDedutiveis; 
     
@@ -105,6 +108,29 @@ public class Individual extends Contribuinte
     public List getAtivDedutiveis()
     {
         return this.ativDedutiveis;
+    }
+    
+    public void setAgregadoFamiliar(Collection<Integer> agregado){
+        this.dependentesAF = new HashSet<>();
+        this.dependentesAF.addAll(agregado);
+    }
+    
+    public void addAgregadoFamiliar(int nif){
+        this.dependentesAF.add(nif);
+    }
+    
+    public void removeAgregadoFamiliar(int nif){
+        this.dependentesAF.remove(nif);
+    }
+    
+    public Set<Integer> getAgregadoFamiliar(){
+        HashSet<Integer> novo = new HashSet<>();
+        
+        for(int nif : this.dependentesAF){
+            novo.add(nif);
+        }
+        
+        return novo;
     }
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
