@@ -8,17 +8,17 @@
 public enum AtivEco
 {
     Pendente(0, 0),
-    Geral(0, 0),
-    Saude(0, 0),
-    Educacao(0, 0),
-    Imoveis(0, 0),
-    Lares(0, 0),
-    Automoveis(0, 0),
-    Motociclos(0, 0),
-    AlojametoRestauracao(0, 0),
-    Beleza(0, 0),
-    Veterinario(0, 0),
-    Transportes(0, 0);
+    Geral(0.35f, 250f),
+    Saude(0.15f, 1000f),
+    Educacao(0.3f, 800f),
+    Imoveis(0.15f, 502f),
+    Lares(0.25f, 403.75f),
+    Automoveis(0.3f, 500f),
+    Motociclos(0, 0), // não tem
+    AlojametoRestauracao(0.15f, 250f),
+    Beleza(0.15f, 250f),
+    Veterinario(0, 0), // não tem
+    Transportes(0, 0); // não tem
     
     private float percentagem;
     private float limite;
@@ -35,4 +35,5 @@ public enum AtivEco
     public float getLimite(){
         return this.limite;
     }
+
 }
