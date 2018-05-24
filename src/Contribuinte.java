@@ -17,6 +17,7 @@ public abstract class Contribuinte
     private String email;
     private String morada;
     private String password; //Isto é muito seguro
+    private float totalGasto;
     
     /**
      * Construtor para objetos da classe Contribuinte
@@ -28,6 +29,7 @@ public abstract class Contribuinte
         this.email = "";
         this.morada = "";
         this.password = "";
+        this.totalGasto = 0.0f;
     }
     
     /**
@@ -46,6 +48,7 @@ public abstract class Contribuinte
         this.email = email;
         this.morada = morada;
         this.password = password;
+        this.totalGasto = 0.0f;
     }
     
     public Contribuinte(Contribuinte other)
@@ -55,6 +58,7 @@ public abstract class Contribuinte
         this.email = other.getEmail();
         this.morada = other.getMorada();
         this.password = other.getPassword();
+        this.totalGasto = other.getTotalGasto();
     }
     
     /**
@@ -150,6 +154,25 @@ public abstract class Contribuinte
     public String getPassword()
     {
         return this.password;
+    }
+    
+    /**
+     * Aumenta o total gasto pelo contribuinte
+     * @param  valor Valor a adicionar ao total gasto pelo contribuinte;
+     */
+    public void addTotalGasto(float valor)
+    {
+        this.totalGasto += valor;
+    }
+    
+    /**
+     * Obtém o total gasto pelo contribuinte
+     * 
+     * @return     o total gasto pelo contribuinte
+     */
+    public float getTotalGasto()
+    {
+        return this.totalGasto;
     }
     
     public abstract Contribuinte clone();

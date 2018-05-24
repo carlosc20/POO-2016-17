@@ -6,6 +6,11 @@
  * @version (a version number or a date)
  */
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -120,6 +125,48 @@ public class App
         return LocalDate.now();//acabar
     }
     
+    private static int maisGastador(Contribuinte a, Contribuinte b){
+        Set<Fatura> faturasA = estado.getFaturas(a.getNif());
+        Set<Fatura> faturasB = estado.getFaturas(a.getNif());
+        float totalA = 0.0f;
+        float totalB = 0.0f;;
+        
+        for(Fatura fatura : faturasA){
+            totalA += fatura.getValorTotal();
+        }
+        
+        for(Fatura fatura : faturasB){
+            totalA += fatura.getValorTotal();
+        }
+        
+        if(totalA > totalB){
+            return -1;
+        } else if(totalA > totalB){
+            return 1;
+        }
+        
+        return 0;
+    }
+    
+    private static Set<Contribuinte> topGastadores(int n){
+        Set<Contribuinte> ordenar = new TreeSet<Contribuinte>(new Comparator<Contribuinte>() {
+            public int compare(Contribuinte a, Contribuinte b) {
+                return maisGastador(a, b);
+            }
+        });
+        Set<Contribuinte> resultado = new HashSet<Contribuinte>();
+        
+        for(Contribuinte contribuinte : estado.getContribuintes()){
+            ordenar.add(contribuinte);
+        }
+        
+        Iterator<Contribuinte> iter = ordenar.iterator();
+        
+        for(int i = 0; i < n && iter.hasNext(); i++){
+            resultado.add(iter.next());
+        }
+    }
+    
     private static void menuAdmin(Scanner s, Individual cont) {
         String[] descInd = new String[] {
             //"Registar contribuinte", 
@@ -128,7 +175,7 @@ public class App
         };
         Opcao[] opsInd = new Opcao[] {
             //new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
-            new Opcao() { public void escolher() {  } },
+            new Opcao() { public void escolher() { System.out.println(topGastadores(10)); } },
             new Opcao() { public void escolher() { System.out.println("Menu 2"); } }
         };
         menu(s, opsInd, descInd);
@@ -150,8 +197,22 @@ public class App
         };
         menu(s, opsInd, descInd);
     }
-   
-    //Falta função aqui
+    
+    private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
+        
+        System.out.println("Atividade Económica:");
+      
+        
+        Contribuinte emitente = estado.getContribuinte(fatura.getNifEmitente());
+        
+        if(emitente.temAtivEco(ativ)) {
+            fatura.setAtivEconomica(ativ);
+            System.out.println("Atribuição concluída com sucesso");
+        } else {
+            System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
+        }
+    }
+    
     
     
     private static void menuCol(Scanner s, Coletivo cont) {
