@@ -16,16 +16,41 @@ public class Fatura {
     private LocalDate dataEmissao;
     private int nifCliente;
     private String descricao;
-    private AtivEco ativEco;
+    private AtivEco ativEconomica;
     private int valorTotal;
-
+    
+    public String fancyToString(){
+        StringBuilder sb = new StringBuilder("");
+        sb.append("Id: ").append(this.id).append("; ");
+        sb.append("Atividade Economica: ").append(this.ativEconomica.fancyToString()).append(";\n");
+        sb.append("NIF Cliente: ").append(this.nifCliente).append("; ");
+        sb.append("Emitente: ").append(this.nifEmitente).append("; ");
+        sb.append("Data Emissao: ").append(this.dataEmissao.toString()).append(";\n");
+        sb.append("Valor Total: ").append(this.valorTotal).append("; ");
+        sb.append("Descricao: ").append(this.descricao).append(";\n");
+        return sb.toString();
+    }
+   
+    public String toString(){
+        StringBuilder sb = new StringBuilder("Fatura {");
+        sb.append("Id:").append(this.id).append("\n");
+        sb.append("Emitente: ").append(this.nifEmitente).append("\n");
+        sb.append("Data Emissao: ").append(this.dataEmissao.toString()).append("\n");
+        sb.append("NIF Cliente: ").append(this.nifCliente).append("\n");
+        sb.append("Descricao: ").append(this.descricao).append("\n");
+        sb.append("AtivEco: ").append(this.ativEconomica.toString()).append("\n");
+        sb.append("ValorTotal: ").append(this.valorTotal).append("\n");
+        sb.append("}\n");
+        return sb.toString();
+    }
+    
     public Fatura() {
         this.setId();
         this.setNifEmitente(0);
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(0);
         this.setDescricao("");
-        this.setAtivEconomica(ativEco.Pendente);
+        this.setAtivEconomica(ativEconomica.Pendente);
         this.setValorTotal(0);
     }
     
@@ -35,7 +60,7 @@ public class Fatura {
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(0);
         this.setDescricao("");
-        this.setAtivEconomica(ativEco.Pendente);
+        this.setAtivEconomica(ativEconomica.Pendente);
         this.setValorTotal(0);
     }
 
@@ -45,7 +70,7 @@ public class Fatura {
         this.setDataEmissao(LocalDate.now());
         this.setNifCliente(nifCliente);
         this.setDescricao("");
-        this.setAtivEconomica(ativEco.Pendente);
+        this.setAtivEconomica(ativEconomica.Pendente);
         this.setValorTotal(0);
     }
     
@@ -125,15 +150,15 @@ public class Fatura {
     }
 
     public void setAtivEconomica(AtivEco ativEco) {
-        this.ativEco = ativEco;
+        this.ativEconomica = ativEco;
     }
 
     public AtivEco getAtivEconomica(){
-        return this.ativEco;
+        return this.ativEconomica;
     }
     
     public boolean temAtivEconomica() {
-        return this.ativEco != ativEco.Pendente;
+        return this.ativEconomica != AtivEco.Pendente;
     }
 
     public void setValorTotal(int valorTotal) {
@@ -164,17 +189,5 @@ public class Fatura {
     
     public int hashCode(){
         return this.getId();
-    }
-
-    public String toString() {
-        StringBuilder sb = new StringBuilder("Fatura {");
-        sb.append("id:").append(this.id);
-        sb.append(",").append("emitente: ").append(this.nifEmitente);
-        sb.append(",").append("dataEmissao: ").append(this.dataEmissao.toString());
-        sb.append(",").append("nifCliente: ").append(this.nifCliente);
-        sb.append(",").append("descricao: ").append(this.descricao);
-        sb.append(",").append("ativEco: ").append(this.ativEco.toString());
-        sb.append(",").append("valorTotal: ").append(this.valorTotal);
-        return sb.toString();
     }
 }
