@@ -17,6 +17,7 @@ public class Coletivo extends Contribuinte
 
     private Set<AtivEco> ativEco; 
     private float fatorDeducao; //Ex: privilegia empresas do interior
+    private float totalFaturado;
     
     public String fancyAtivEco(Set<AtivEco> ativEco){
         StringBuilder sb = new StringBuilder("");
@@ -47,16 +48,21 @@ public class Coletivo extends Contribuinte
         super();
         this.ativEco = new HashSet<>();
         this.fatorDeducao = 0.0f;
+        this.totalFaturado = 0.0f;
     }
     
     public Coletivo(int nif, String nome, String email, String morada, String password, Set<AtivEco> ativEco, float fatorDeducao){
         super(nif, nome, email, morada, password);
-        this.ativEco = ativEco;
+        this.ativEco = new HashSet<>(ativEco);
         this.fatorDeducao = fatorDeducao;
+        this.totalFaturado = 0.0f;
     }
     
     public Coletivo(Coletivo other){
         super(other);
+        this.ativEco = other.getAtivEco();
+        this.fatorDeducao = other.getFatorDeducao();
+        this.totalFaturado = other.getTotalFaturado();
     }
     
     public Fatura emitirFatura(int valor,int cliente, LocalDate data, String descricao){
@@ -78,8 +84,32 @@ public class Coletivo extends Contribuinte
         return 0;
     }
     
+    public void setAtivEco(Set<AtivEco> ativ){
+        this.ativEco = new HashSet<>(ativ);
+    }
+    
+    public Set getAtivEco(){
+        return new HashSet<>(this.ativEco);
+    }
+    
     public boolean temAtivEco(AtivEco ativ){
         return ativEco.contains(ativ);
+    }
+    
+    public void setFatorDeducao(float fator){
+        this.fatorDeducao = fator;
+    }
+    
+    public float getFatorDeducao(){
+        return this.fatorDeducao;
+    }
+    
+    public void addTotalFaturado(float valor){
+        this.totalFaturado += valor;
+    }
+    
+    public float getTotalFaturado(){
+        return this.totalFaturado;
     }
     
     public Coletivo clone(){

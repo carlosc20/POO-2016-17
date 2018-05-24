@@ -178,6 +178,13 @@ public class Estado implements Serializable
         
         faturasEmitente.add(clone);
         faturasCliente.add(clone);
+        Coletivo emitente = (Coletivo) this.contribuintes.get(nifEmitente);
+        Contribuinte cliente = this.contribuintes.get(nifCliente);
+        
+        float valor = fatura.getValorTotal();
+        
+        emitente.addTotalFaturado(valor);
+        cliente.addTotalGasto(valor);
     }
     
     public boolean existeFatura(Fatura fatura){

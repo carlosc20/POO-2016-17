@@ -143,16 +143,23 @@ public class App
     private static int maisGastador(Contribuinte a, Contribuinte b){
         Set<Fatura> faturasA = estado.getFaturas(a.getNif());
         Set<Fatura> faturasB = estado.getFaturas(a.getNif());
-        float totalA = 0.0f;
-        float totalB = 0.0f;;
+        float totalA = a.getTotalGasto();
+        float totalB = b.getTotalGasto();
         
-        for(Fatura fatura : faturasA){
-            totalA += fatura.getValorTotal();
+        if(totalA > totalB){
+            return -1;
+        } else if(totalA > totalB){
+            return 1;
         }
         
-        for(Fatura fatura : faturasB){
-            totalA += fatura.getValorTotal();
-        }
+        return 0;
+    }
+    
+    private static int maisFaturador(Coletivo a, Coletivo b){
+        Set<Fatura> faturasA = estado.getFaturas(a.getNif());
+        Set<Fatura> faturasB = estado.getFaturas(a.getNif());
+        float totalA = a.getTotalFaturado();
+        float totalB = b.getTotalFaturado();
         
         if(totalA > totalB){
             return -1;
@@ -167,6 +174,27 @@ public class App
         Set<Contribuinte> ordenar = new TreeSet<Contribuinte>(new Comparator<Contribuinte>() {
             public int compare(Contribuinte a, Contribuinte b) {
                 return maisGastador(a, b);
+            }
+        });
+        Set<Contribuinte> resultado = new HashSet<Contribuinte>();
+        
+        for(Contribuinte contribuinte : estado.getContribuintes()){
+            ordenar.add(contribuinte);
+        }
+        
+        Iterator<Contribuinte> iter = ordenar.iterator();
+        
+        for(int i = 0; i < n && iter.hasNext(); i++){
+            resultado.add(iter.next());
+        }
+        
+        return resultado;
+    }
+    
+    private static Set<Contribuinte> topFaturadores(int n){
+        Set<Contribuinte> ordenar = new TreeSet<Contribuinte>(new Comparator<Contribuinte>() {
+            public int compare(Contribuinte a, Contribuinte b) {
+                return maisFaturador((Coletivo) a, (Coletivo) b);
             }
         });
         Set<Contribuinte> resultado = new HashSet<Contribuinte>();
@@ -211,7 +239,7 @@ public class App
         Opcao[] opsInd = new Opcao[] {
             //new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
             new Opcao() { public void escolher() { System.out.println(topGastadores(10)); } },
-            new Opcao() { public void escolher() { System.out.println("Menu 2"); } }
+            new Opcao() { public void escolher() { System.out.println(topFaturadores(10)); } } //Deve ser n
         };
         menu(s, opsInd, descInd);
     }
