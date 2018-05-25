@@ -44,6 +44,9 @@ public class Coletivo extends Contribuinte
         return sb.toString();
     }
     
+    /**
+     * Construtor para objetos da classe Coletivo
+     */
     public Coletivo(){
         super();
         this.ativEco = new HashSet<>();
@@ -51,6 +54,17 @@ public class Coletivo extends Contribuinte
         this.totalFaturado = 0.0f;
     }
     
+    /**
+     * Construtor para objetos da classe Coletivo recebendo valores iniciais
+     * 
+     * @param  nif                Número de Identificação Fiscal do contribuinte
+     * @param  nome               Nome do contribuinte
+     * @param  email              E-mail de contacto do contribuinte
+     * @param  morada             Morada do contribuinte
+     * @param  password           Palavra-passe de acesso do contribuinte
+     * @param  ativEco            Set com as atividades económicas
+     * @param  fatorDeducao       Fator de dedução
+     */
     public Coletivo(int nif, String nome, String email, String morada, String password, Set<AtivEco> ativEco, float fatorDeducao){
         super(nif, nome, email, morada, password);
         this.ativEco = new HashSet<>(ativEco);
@@ -58,13 +72,26 @@ public class Coletivo extends Contribuinte
         this.totalFaturado = 0.0f;
     }
     
-    public Coletivo(Coletivo other){
-        super(other);
-        this.ativEco = other.getAtivEco();
-        this.fatorDeducao = other.getFatorDeducao();
-        this.totalFaturado = other.getTotalFaturado();
+    /**
+     * Construtor para objetos da classe Coletivo recebendo outro objeto
+     * @param outro     Objeto a ser copiado
+     */
+    public Coletivo(Coletivo outro){
+        super(outro);
+        this.ativEco = outro.getAtivEco();
+        this.fatorDeducao = outro.getFatorDeducao();
+        this.totalFaturado = outro.getTotalFaturado();
     }
     
+    /**
+     * Cria uma fatura
+     * @param valor         Valor total da fatura
+     * @param cliente       NIF do cliente da fatura
+     * @param data          Data da emissão da fatura
+     * @param descricao     Descrição da nova fatura
+     * @return Uma nova fatura
+     */
+    // Por fazer
     public Fatura emitirFatura(int valor,int cliente, LocalDate data, String descricao){
         AtivEco atividadeE = AtivEco.Pendente; //fica à espera de validaçao do cliente
         
@@ -79,36 +106,66 @@ public class Coletivo extends Contribuinte
         return fatura;
     }
     
+    // Por fazer
     public int totalFaturado(LocalDate inicio, LocalDate fim) {
         //percorrer faturasEmitidas e somar valores
         return 0;
     }
     
+    /**
+     * Modifica as atividades económicas da empresa
+     * @param ativ         Novo Set com as  atividades económicas que a empresa pertence
+     */
     public void setAtivEco(Set<AtivEco> ativ){
         this.ativEco = new HashSet<>(ativ);
     }
     
+    /**
+     * Retorna as atividades económicas da empresa
+     * @return Set com as atividades económicas da empresa
+     */
     public Set getAtivEco(){
         return new HashSet<>(this.ativEco);
     }
     
+    /**
+     * Verifica se a empresa tem a atividade económica
+     * @param ativ          Atividade económica a verificar
+     * @return 'true' se a empresa tiver a atividade económica passada como argumento, 'false' caso contrário
+     */
     public boolean temAtivEco(AtivEco ativ){
         return ativEco.contains(ativ);
     }
     
+    /**
+     * Modifica o fator de dedução
+     * @param fator         Percentagem do valor a ser deduzido
+     */
     public void setFatorDeducao(float fator){
         this.fatorDeducao = fator;
     }
     
+    /**
+     * Retorna o fator de dedução
+     * @return Percentagem do valor a ser deduzido
+     */
     public float getFatorDeducao(){
         return this.fatorDeducao;
     }
     
+    /**
+     * Soma o valor ao total faturado
+     * @param valor         Valor a ser adicionado ao total faturado
+     */
     public void addTotalFaturado(float valor){
         this.totalFaturado += valor;
     }
     
-    public float getTotalFaturado(){
+    /**
+     * Retorna o total faturado pela empresa
+     * @return Valor total faturado pela empresa
+     */
+    public float totalFaturado(){
         return this.totalFaturado;
     }
     
@@ -116,15 +173,19 @@ public class Coletivo extends Contribuinte
         return new Coletivo(this);
     }
 
-    public boolean equals(Object other) {
-        if(other == this) {
+    /**
+     * @param outro         Objeto a ser verificado se é igual
+     * @return 'true' o contribuinte coletivo tiver o mesmo NIF
+     */
+    public boolean equals(Object outro) {
+        if(outro == this) {
             return true;
         }
-        if(other == null || other.getClass() != this.getClass()) {
+        if(outro == null || outro.getClass() != this.getClass()) {
             return false;
         }
-        Coletivo otherColetivo = (Coletivo) other;
-        if(this.getNif() != otherColetivo.getNif()){
+        Coletivo outroColetivo = (Coletivo) outro;
+        if(this.getNif() != outroColetivo.getNif()){
             return false;
         }
         return true;

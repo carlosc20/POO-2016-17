@@ -22,36 +22,6 @@ public class Individual extends Contribuinte
     private List<Fatura> faturas;
     private List<Alteracao> histAlter;
     
-    public String fancyAtivEco(List<AtivEco> ativEco){
-        StringBuilder sb = new StringBuilder("");
-        for(AtivEco a : ativEco){
-            sb.append(a.fancyToString()).append("; ");
-        }
-        return sb.toString();
-    }
-    
-    public String fancyToString(){
-        StringBuilder sb = new StringBuilder("");
-        sb.append(super.toString()).append("\n");
-        sb.append("Numero de Dependentes do Agregado Familiar: ").append(this.dependentesAF.size()).append("\n");
-        sb.append("Nif de Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
-        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
-        sb.append("Atividades Dedutiveis: ").append(fancyAtivEco(this.ativDedutiveis)).append("\n");
-        return sb.toString();
-    }
-    
-    public String toString(){
-        StringBuilder sb = new StringBuilder("Contribuinte Individual{\n");
-        sb.append(super.toString()).append("\n");
-        sb.append("Nif Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
-        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
-        sb.append("Atividades Dedutiveis").append(this.ativDedutiveis).append("\n");
-        sb.append("Faturas: ").append(this.faturas).append("\n");
-        sb.append("Alteraçoes: ").append(this.histAlter).append("\n");
-        sb.append("}\n");
-        return sb.toString();
-    }
-    
     /**
      * Construtor para objetos da classe Individual
      */
@@ -192,5 +162,35 @@ public class Individual extends Contribuinte
     
     public Individual clone(){
         return new Individual(this);
+    }
+
+    public String fancyAtivEco(List<AtivEco> ativEco){
+        StringBuilder sb = new StringBuilder("");
+        for(AtivEco a : ativEco){
+            sb.append(a.fancyToString()).append("; ");
+        }
+        return sb.toString();
+    }
+    
+    public String fancyToString(){
+        StringBuilder sb = new StringBuilder("");
+        sb.append(super.toString()).append("\n");
+        sb.append("Numero de Dependentes do Agregado Familiar: ").append(this.dependentesAF.size()).append("\n");
+        sb.append("Nif de Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
+        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
+        sb.append("Atividades Dedutiveis: ").append(fancyAtivEco(this.ativDedutiveis)).append("\n");
+        return sb.toString();
+    }
+    
+    public String toString(){
+        StringBuilder sb = new StringBuilder("Contribuinte Individual{\n");
+        sb.append(super.toString()).append("\n");
+        sb.append("Nif Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
+        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
+        sb.append("Atividades Dedutiveis").append(this.ativDedutiveis).append("\n");
+        sb.append("Faturas: ").append(this.faturas).append("\n");
+        sb.append("Alteraçoes: ").append(this.histAlter).append("\n");
+        sb.append("}\n");
+        return sb.toString();
     }
 }
