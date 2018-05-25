@@ -80,7 +80,7 @@ public class Coletivo extends Contribuinte
         super(outro);
         this.ativEco = outro.getAtivEco();
         this.fatorDeducao = outro.getFatorDeducao();
-        this.totalFaturado = outro.getTotalFaturado();
+        this.totalFaturado = outro.totalFaturado();
     }
     
     /**
