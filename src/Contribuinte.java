@@ -21,7 +21,7 @@ public abstract class Contribuinte
     
     
     /**
-     * Cria uma String que representa a informaçao, organizada, partilha pelos Contribuintes.
+     * Cria e retorna uma String que representa a informaçao, organizada, por objetos que extendo deta classe.
      * 
      * @return  String com as informaçoes
      */

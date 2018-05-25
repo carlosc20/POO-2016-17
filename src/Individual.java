@@ -22,6 +22,14 @@ public class Individual extends Contribuinte
     private List<Fatura> faturas;
     private List<Alteracao> histAlter;
     
+    
+    /**
+     * Cria uma String com as infomaçoes, organizadas, contidas num Lista
+     * 
+     * @param ativEco Lista com Atividades Econimicas(AtivEco) guardadas
+     * 
+     * @return String com os elementos da Lista
+     */
     public String fancyAtivEco(List<AtivEco> ativEco){
         StringBuilder sb = new StringBuilder("");
         for(AtivEco a : ativEco){
@@ -30,6 +38,11 @@ public class Individual extends Contribuinte
         return sb.toString();
     }
     
+    /**
+     * Cria e retorna uma String com as informaçoes, organizadas, pelo objeto, com o objetivo de apresetar ao user
+     * 
+     * @return String com as informaçoes do objeto
+     */
     public String fancyToString(){
         StringBuilder sb = new StringBuilder("");
         sb.append(super.toString()).append("\n");
@@ -40,6 +53,11 @@ public class Individual extends Contribuinte
         return sb.toString();
     }
     
+    /**
+     * Cria e retorna uma String com as informaçoes do objeto, com o objetivo de debugging
+     * 
+     * @return String com as informaçoes do objeto
+     */
     public String toString(){
         StringBuilder sb = new StringBuilder("Contribuinte Individual{\n");
         sb.append(super.toString()).append("\n");
@@ -140,19 +158,39 @@ public class Individual extends Contribuinte
         return this.ativDedutiveis;
     }
     
+    /**
+     * Altera o Set do Agregado Familiar 
+     * 
+     * @param agregado A nova Collection a ser guardada
+     */
     public void setAgregadoFamiliar(Collection<Integer> agregado){
         this.dependentesAF = new HashSet<>();
         this.dependentesAF.addAll(agregado);
     }
     
+    /**
+     * Adiciona um Numero de Identificaçao Fiscal ao Agregado Familiar
+     * 
+     * @param nif Numero de Identificaçao Fiscal a ser adicionado ao Agregado Familiar
+     */
     public void addAgregadoFamiliar(int nif){
         this.dependentesAF.add(nif);
     }
     
+    /**
+     * Remove um Numero de Identificaçao Fiscal do Agregado Familiar
+     * 
+     * @param nif Numero de Identificaçao Fiscal a ser removido do Agregado Familiar
+     */
     public void removeAgregadoFamiliar(int nif){
         this.dependentesAF.remove(nif);
     }
     
+    /**
+     * Obtem a Coleçao com os Numeros de Identificaçao Fiscais do Agregado Familiar
+     * 
+     * @return Um Set com os NIFs do Agregado Familiar
+     */
     public Set<Integer> getAgregadoFamiliar(){
         HashSet<Integer> novo = new HashSet<>();
         
@@ -190,6 +228,11 @@ public class Individual extends Contribuinte
         //FAZER: deixar registo
     }
     
+    /**
+     * Clona um objeto
+     * 
+     * @return Clone do Objeto
+     */
     public Individual clone(){
         return new Individual(this);
     }
