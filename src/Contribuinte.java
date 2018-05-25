@@ -19,6 +19,12 @@ public abstract class Contribuinte
     private String password; //Isto é muito seguro
     private float totalGasto;
     
+    
+    /**
+     * Cria uma String que representa a informaçao, organizada, partilha pelos Contribuintes.
+     * 
+     * @return  String com as informaçoes
+     */
     public String toString(){
         StringBuilder sb = new StringBuilder("");
         sb.append("NIF: ").append(nif).append("\n");
@@ -44,7 +50,7 @@ public abstract class Contribuinte
     /**
      * Construtor para objetos da classe Contribuinte recebendo parametros
      * 
-     * @param  nif    Número de Identificação Fiscal do contribuinte
+     * @param  nif      Número de Identificação Fiscal do contribuinte
      * @param  nome     Nome do contribuinte
      * @param  email    E-mail de contacto do contribuinte
      * @param  morada   Morada do contribuinte
@@ -60,6 +66,11 @@ public abstract class Contribuinte
         this.totalGasto = 0.0f;
     }
     
+    /**
+     * Construtor para objetos da classe Contribuinte recebendo um Contribuinte
+     * 
+     * @param  other  Contribuinte
+     */
     public Contribuinte(Contribuinte other)
     {
         this.nif = other.getNif();
@@ -72,6 +83,7 @@ public abstract class Contribuinte
     
     /**
      * Altera o NIF do contribuinte
+     * 
      * @param  nif    Número de Identificação Fiscal do contribuinte
      */
     public void setNif(int nif)
@@ -82,7 +94,7 @@ public abstract class Contribuinte
     /**
      * Obtém o NIF do contribuinte
      * 
-     * @return     o NIF do contribuinte
+     * @return     O NIF do contribuinte
      */
     public int getNif()
     {
@@ -184,6 +196,11 @@ public abstract class Contribuinte
         return this.totalGasto;
     }
     
+    /**
+     * Clona um Contribuinte
+     * 
+     * @return Contribuinte clone
+     */
     public abstract Contribuinte clone();
     
 }
