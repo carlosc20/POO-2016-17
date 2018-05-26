@@ -123,12 +123,25 @@ public class Estado implements Serializable
     }
     
     public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente){
-        Set<Fatura> faturas = getFaturas(nifCliente);
+        Set<Fatura> faturas = this.faturas.get(nifCliente);
         Set<Fatura> resultado = new HashSet<>();
         
         for(Fatura fatura : faturas){
             if(fatura.getNifEmitente() == nifEmitente){
-                resultado.add(fatura);
+                resultado.add(fatura.clone());
+            }
+        }
+        
+        return resultado;
+    }
+    
+    public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, LocalDate inicio, LocalDate fim){
+        Set<Fatura> faturas = this.faturas.get(nifCliente).subSet(new Fatura(inicio), new Fatura(fim));
+        Set<Fatura> resultado = new HashSet<>();
+        
+        for(Fatura fatura : faturas){
+            if(fatura.getNifEmitente() == nifEmitente){
+                resultado.add(fatura.clone());
             }
         }
         
@@ -136,7 +149,7 @@ public class Estado implements Serializable
     }
     
     public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator<Fatura> c){
-        Set<Fatura> faturas = getFaturas(nifCliente);
+        Set<Fatura> faturas = this.faturas.get(nifCliente);
         SortedSet<Fatura> resultado = new TreeSet<>(c);
         
         for(Fatura fatura : faturas){
@@ -147,6 +160,7 @@ public class Estado implements Serializable
         
         return resultado;
     }
+    
     
     public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif){
         Set<Fatura> faturas = getFaturas(nif);
