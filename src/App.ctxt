@@ -85,11 +85,10 @@ comment46.params=s\ cont\ ind
 comment46.target=void\ verFaturasContIntervalo(java.util.Scanner,\ Coletivo,\ int)
 comment47.params=s\ cont
 comment47.target=void\ verTotalFaturado(java.util.Scanner,\ Coletivo)
-comment48.params=s
-comment48.target=Contribuinte\ login(java.util.Scanner)
+comment48.params=
+comment48.target=Contribuinte\ login()
 comment5.params=s\ opcoes\ desc
 comment5.target=void\ menu(java.util.Scanner,\ App.Opcao[],\ java.lang.String[])
-comment5.text=\r\n\ \ \ \ private\ static\ Contribuinte\ login(Scanner\ s){\r\n\r\n\ \ \ \ \ \ \ \ System.out.println("N\u00BA\ de\ Contribuinte\:");\r\n\ \ \ \ \ \ \ \ int\ nif\ \=\ scanNif(s);\r\n\ \ \ \ \ \ \ \r\n\ \ \ \ \ \ \ \ System.out.println("Senha\ de\ acesso\:");\r\n\ \ \ \ \ \ \ \ String\ passwd\ \=\ s.nextLine();\r\n\ \ \ \ \ \ \ \ \r\n\ \ \ \ \ \ \ \ \r\n\ \ \ \ \ \ \ \ try{\r\n\ \ \ \ \ \ \ \ \ \ \ \ Contribuinte\ user\ \=\ estado.getContribuinte(nif);\r\n\ \ \ \ \ \ \ \ \ \ \ \ if\ (user\ \!\=\ null\ &&\ user.getPassword()\ \=\=\ passwd)\ \r\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ user;\r\n\ \ \ \ \ \ \ \ \ \ \ \ else\r\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ System.out.println("Senha\ de\ acesso\ errada");\r\n\ \ \ \ \ \ \ \ }\r\n\ \ \ \ \ \ \ \ catch(NaoExisteContribuinteException\ e\ ){\r\n\ \ \ \ \ \ \ \ \ \ \ \ System.out.println("N\u00E3o\ existe\ esse\ N\u00BA\ de\ Contribuinte");\r\n\ \ \ \ \ \ \ \ }\r\n\ \ \ \ \ \ \ \ \r\n\ \ \ \ \ \ \ \ return\ null;\r\n\ \ \ \ \ \ \ \ \r\n\ \ \ \ }\r\n
 comment6.params=s
 comment6.target=void\ menuInicial(java.util.Scanner)
 comment7.params=
