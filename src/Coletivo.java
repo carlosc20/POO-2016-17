@@ -38,10 +38,10 @@ public class Coletivo extends Contribuinte
      * @param  ativEco            Set com as atividades económicas
      * @param  fatorDeducao       Fator de dedução
      */
-    public Coletivo(int nif, String nome, String email, String morada, String password, Set<AtivEco> ativEco, float totalFaturado){
+    public Coletivo(int nif, String nome, String email, String morada, String password, Set<AtivEco> ativEco){
         super(nif, nome, email, morada, password);
         this.ativEco = new HashSet<>(ativEco);
-        this.totalFaturado = totalFaturado;
+        this.totalFaturado = 0.0f;
     }
     
     /**

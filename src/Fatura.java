@@ -48,17 +48,6 @@ public class Fatura {
         this.setAtivEconomica(ativEconomica.Pendente);
         this.setValorTotal(0);
     }
-
-    // Temporário
-    public Fatura(int emitente, int nifCliente){
-        this.setId();
-        this.setNifEmitente(emitente);
-        this.setDataEmissao(LocalDate.now());
-        this.setNifCliente(nifCliente);
-        this.setDescricao("");
-        this.setAtivEconomica(ativEconomica.Pendente);
-        this.setValorTotal(0);
-    }
     
     /**
      * Construtor para objetos da classe Fatura recebendo valores iniciais
