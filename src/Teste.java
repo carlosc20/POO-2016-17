@@ -39,17 +39,37 @@ public class Teste
     @Before
     public void setUp()
     {
+       
+
+    }
+
+    /**
+     * Tears down the test fixture.
+     *
+     * Called after every test case method.
+     */
+    @After
+    public void tearDown()
+    {
+        
+    }
+
+    @Test
+    public void testarMenu()
+    {
         this.estado = new Estado();
+
         
         this.empresa1 = new Coletivo(1001, "Empresa1", "", "", "", new java.util.HashSet<>(), 0);
         this.empresa2 = new Coletivo(1002, "Empresa2", "", "", "", new java.util.HashSet<>(), 0);
         this.empresa3 = new Coletivo(1003, "Empresa3", "", "", "", new java.util.HashSet<>(), 0);
-        
-        this.cliente1 = new Individual(1, "Cliente1", "", "", "", 0, 0, null, null, new java.util.ArrayList<>());
-        this.cliente2 = new Individual(2, "Cliente1", "", "", "", 0, 0, null, null, new java.util.ArrayList<>());
-        this.cliente3 = new Individual(3, "Cliente1", "", "", "", 0, 0, null, null, new java.util.ArrayList<>());
-        this.cliente4 = new Individual(4, "Cliente1", "", "", "", 0, 0, null, null, new java.util.ArrayList<>());
-        this.cliente5 = new Individual(5, "Cliente1", "", "", "", 0, 0, null, null, new java.util.ArrayList<>());
+
+        Individual cliente1 = new Individual(1, "Cliente1", "e1", "m1", "1234", 0, 0, null, null, new java.util.ArrayList<>());
+        Individual cliente2 = new Individual(2, "Cliente2", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
+        Individual cliente3 = new Individual(3, "Cliente3", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
+        Individual cliente4 = new Individual(4, "Cliente4", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
+        Individual cliente5 = new Individual(5, "Cliente5", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
+
         
         this.estado.addContribuinte(empresa1);
         this.estado.addContribuinte(empresa2);
@@ -67,18 +87,13 @@ public class Teste
         this.estado.addFatura(new Fatura(empresa1.getNif(), cliente3.getNif()));
         this.estado.addFatura(new Fatura(empresa3.getNif(), cliente4.getNif()));
         this.estado.addFatura(new Fatura(empresa3.getNif(), cliente5.getNif()));
+       
+        App teste = new App(estado);
+        teste.run();
+
+
     }
 
-    /**
-     * Tears down the test fixture.
-     *
-     * Called after every test case method.
-     */
-    @After
-    public void tearDown()
-    {
-        
-    }
 
     @Test
     public void getContribuinte()

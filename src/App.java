@@ -30,20 +30,7 @@ import java.util.stream.Collectors;
 public class App
 {
     private static Estado estado;
-    
-    /*Validar acesso
-     * 
-     * Admin:
-     * Criar contrib
-     * associar empresas a ativ eco
-     * relaçao 10 contribs que mais gastam 
-     * ver X empresas com mais faturas e suas deduçoes
-     * 
-     * extracto de facturação de uma empresa num determinado período
-     * valor total de despesas de um contribuinte, valor total de despesas de um contribuinte por actividade económica
-     */
-    
-    
+     
     /*Calcualr dedução
      * varia com ativ eco(algumas nao permitem)
      * varia com a empresa
@@ -61,6 +48,9 @@ public class App
         }
     }
     
+    public App(Estado e) {
+        estado = e;
+    }
     
     interface Opcao {
         void escolher();
@@ -77,16 +67,7 @@ public class App
         }
         
         Scanner s = new Scanner(System.in);
-        Contribuinte cont = login(s); 
-        
-        menuInd(s, (Individual) cont);
-        /*
-        if (cont instanceof Individual){
-            menuInd(s, (Individual) cont);
-        } else {
-            menuCol(s, (Coletivo) cont);
-        }
-        */
+        menuInicial(s);
         s.close();
         
         try {
@@ -100,17 +81,36 @@ public class App
     public void run(){
         
         Scanner s = new Scanner(System.in);
-        Contribuinte cont = login(s); 
-
-        if (cont instanceof Individual){
-            menuInd(s, (Individual) cont);
-        } else {
-            menuCol(s, (Coletivo) cont);
-        }
-        
+        menuInicial(s);
         s.close();
         
     }
+    
+    /*
+    private static Contribuinte login(Scanner s){
+
+        System.out.println("Nº de Contribuinte:");
+        int nif = scanNif(s);
+       
+        System.out.println("Senha de acesso:");
+        String passwd = s.nextLine();
+        
+        
+        try{
+            Contribuinte user = estado.getContribuinte(nif);
+            if (user != null && user.getPassword() == passwd) 
+                return user;
+            else
+                System.out.println("Senha de acesso errada");
+        }
+        catch(NaoExisteContribuinteException e ){
+            System.out.println("Não existe esse Nº de Contribuinte");
+        }
+        
+        return null;
+        
+    }
+    */
     
     private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
         
@@ -121,6 +121,7 @@ public class App
                 System.out.println((i+1) + " -> " + desc[i]);
             }
             System.out.println("0 -> Sair/Retroceder");
+            
             try {
                 op = s.nextInt();
             } catch (InputMismatchException e){
@@ -136,7 +137,29 @@ public class App
         
     }
     
-    
+    private static void menuInicial(Scanner s) {
+        String[] desc = new String[] {
+            "Login"
+        };
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { 
+                            Contribuinte cont;
+                            try{
+                                cont = login(s); 
+                            } catch(MaxTentativasException err){
+                                return;
+                            }
+
+                            if (cont instanceof Individual){
+                                menuInd(s, (Individual) cont);
+                            } else {
+                                menuCol(s, (Coletivo) cont);
+                            } 
+                           } 
+                        }
+        };
+        menu(s, ops, desc);
+    }
     
     private static int maisGastador(Contribuinte a, Contribuinte b){
         Set<Fatura> faturasA = estado.getFaturas(a.getNif());
@@ -233,30 +256,30 @@ public class App
     }
     
     private static int scanNif(Scanner s) {
-        System.out.println("Nif:"); 
-        int emit;
+        int nif;
         try {
-            emit = s.nextInt();
+            nif = s.nextInt();
         } catch (InputMismatchException e){
             System.out.println("Input Errado");
-            emit = -1;
+            nif = -1;
         }
         
-        return emit;
+        return nif;
     }
     
+    
     private static void menuAdmin(Scanner s, Individual cont) {
-        String[] descInd = new String[] {
+        String[] desc = new String[] {
             //"Registar contribuinte", // individual e empresa
             "Ver os 10 contribuintes que gastam mais",
             "Ver as 10 empresas que mais faturam"
         };
-        Opcao[] opsInd = new Opcao[] {
+        Opcao[] ops = new Opcao[] {
             //new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
             new Opcao() { public void escolher() { System.out.println(topGastadores(10)); } },
             new Opcao() { public void escolher() { System.out.println(topFaturadores(10)); } } //Deve ser n
         };
-        menu(s, opsInd, descInd);
+        menu(s, ops, desc);
     }
     
     
@@ -435,29 +458,48 @@ public class App
     
     
     
-    private static Contribuinte login(Scanner s){
-        String passwd = "";
+    private static Contribuinte login(Scanner s) throws MaxTentativasException{
+        String passwd;
         Contribuinte resultado = null;
+        Scanner nifScanner = new Scanner(System.in);
+        Scanner passScanner = new Scanner(System.in);
+        int tentativas = 3;
         
         System.out.println("Nº de Contribuinte:");
         do {
-            String nif = s.nextLine();
+            String nif = nifScanner.nextLine();
 
             try{
                 resultado = estado.getContribuinte(Integer.parseInt(nif));
             } catch(NaoExisteContribuinteException err){
-                System.out.println("Nº de Contribuinte não encontrado.");
+                System.out.println("Nº de Contribuinte não encontrado. Tente novamente:");
+                tentativas--;
             } catch(NumberFormatException err){
-                System.out.println("Nº de Contribuinte não válido.");
+                System.out.println("Nº de Contribuinte não válido. Tente novamente:");
+                tentativas--;
             }
-        } while(resultado != null);
-    
-        System.out.println("Senha de acesso:");
-        String passwd = s.nextLine();
-        while(!passwd.equals(resultado.getPassword())){
-            System.out.println("Senha de acesso errada.");
-            passwd = s.nextLine();
+        } while(resultado == null && tentativas > 0);
+        
+        if(tentativas == 0){
+            throw new MaxTentativasException("NIF");
         }
+        
+        tentativas = 3;
+        
+        System.out.println("Senha de acesso:");
+        passwd = passScanner.nextLine();
+        while(!passwd.equals(resultado.getPassword()) && tentativas > 0){
+            System.out.println("Senha de acesso errada. Tente novamente:");
+            passwd = passScanner.nextLine();
+            tentativas--;
+        }
+        
+        if(tentativas == 0){
+            throw new MaxTentativasException("NIF");
+        }
+        
+        nifScanner.close();
+        passScanner.close();
         
         return resultado;
     }
