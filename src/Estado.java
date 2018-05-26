@@ -135,7 +135,7 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator c){
+    public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator<Fatura> c){
         Set<Fatura> faturas = getFaturas(nifCliente);
         SortedSet<Fatura> resultado = new TreeSet<>(c);
         
