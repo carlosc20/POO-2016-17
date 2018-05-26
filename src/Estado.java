@@ -135,6 +135,18 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator c){
+        Set<Fatura> faturas = getFaturas(nifCliente);
+        SortedSet<Fatura> resultado = new TreeSet<>(c);
+        
+        for(Fatura fatura : faturas){
+            if(fatura.getNifEmitente() == nifEmitente){
+                resultado.add(fatura);
+            }
+        }
+        
+        return resultado;
+    }
     
     public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif){
         Set<Fatura> faturas = getFaturas(nif);
