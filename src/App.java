@@ -232,7 +232,7 @@ public class App
     
     private static void menuAdmin(Scanner s, Individual cont) {
         String[] descInd = new String[] {
-            //"Registar contribuinte", 
+            //"Registar contribuinte", // individual e empresa
             "Ver os 10 contribuintes que gastam mais",
             "Ver as 10 empresas que mais faturam"
         };
@@ -337,8 +337,8 @@ public class App
         String[] desc = new String[] {
             "Ver informações gerais",
             "Emitir fatura",
-            "Ver faturas", 
-            "Ver total faturado" 
+            "Ver faturas emitidas", 
+            "Ver total faturado num período" 
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { System.out.println(cont); } },
@@ -363,8 +363,8 @@ public class App
         estado.addFatura(cont.emitirFatura(valor, nif, LocalDate.now(), desc));
     }
     
-    private static void  menuColFaturas(Scanner s, Coletivo cont) {//por data e valor, por contrib por data ou valor
-        System.out.println("Faturas:");
+    private static void  menuColFaturas(Scanner s, Coletivo cont) {
+        System.out.println("Faturas emitidas:");
         String[] desc = new String[] {
             "Ordenadas por data",
             "Ordenadas por valor",
@@ -372,14 +372,31 @@ public class App
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) ))); } },
-            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() ))); } },
-            new Opcao() { public void escolher() { verFaturas(estado.getFaturasEmComum( cont.getNif(), scanNif(s))); } }
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - a.getValorTotal() ))); } },
+            new Opcao() { public void escolher() { menuFaturasCont(s, cont, scanNif(s)); } }
+        };
+        menu(s, ops, desc);
+    }
+    
+    
+    private static void  menuFaturasCont(Scanner s, Coletivo cont, int ind) {
+        System.out.println("Faturas do contribuinte " + ind + " :");
+        String[] desc = new String[] {
+            "Num intervalo",
+            "Ordenadas por valor decrescente",
+        };
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() {  } },//corrigir
+            new Opcao() { public void escolher() { verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( b.getValorTotal() - a.getValorTotal() ))); } }
         };
         menu(s, ops, desc);
     }
     
     private static void verFaturas(Set<Fatura> faturas) {
-        System.out.println("Faturas"); 
+        for(Fatura f : faturas){
+            System.out.println(f); 
+            System.out.println("\n"); 
+        }
     }
     
     
