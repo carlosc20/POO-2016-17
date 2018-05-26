@@ -12,4 +12,6 @@ comment3.target=void\ tearDown()
 comment3.text=\r\n\ Tears\ down\ the\ test\ fixture.\r\n\r\n\ Called\ after\ every\ test\ case\ method.\r\n
 comment4.params=
 comment4.target=void\ testarMenu()
-numComments=5
+comment5.params=
+comment5.target=void\ getContribuinte()
+numComments=6

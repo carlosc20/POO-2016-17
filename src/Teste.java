@@ -13,7 +13,7 @@ import org.junit.Test;
  */
 public class Teste
 {
-    Estado e = new Estado();
+    Estado estado;
         
     Coletivo empresa1;
     Coletivo empresa2;
@@ -57,37 +57,52 @@ public class Teste
     @Test
     public void testarMenu()
     {
-        Estado e = new Estado();
+        this.estado = new Estado();
+
         
-        Coletivo empresa1 = new Coletivo(1001, "Empresa1", "", "", "", new java.util.HashSet<>(), 0);
-        Coletivo empresa2 = new Coletivo(1002, "Empresa2", "", "", "", new java.util.HashSet<>(), 0);
-        Coletivo empresa3 = new Coletivo(1003, "Empresa3", "", "", "", new java.util.HashSet<>(), 0);
-        
+        this.empresa1 = new Coletivo(1001, "Empresa1", "", "", "", new java.util.HashSet<>(), 0);
+        this.empresa2 = new Coletivo(1002, "Empresa2", "", "", "", new java.util.HashSet<>(), 0);
+        this.empresa3 = new Coletivo(1003, "Empresa3", "", "", "", new java.util.HashSet<>(), 0);
+
         Individual cliente1 = new Individual(1, "Cliente1", "e1", "m1", "1234", 0, 0, null, null, new java.util.ArrayList<>());
         Individual cliente2 = new Individual(2, "Cliente2", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
         Individual cliente3 = new Individual(3, "Cliente3", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
         Individual cliente4 = new Individual(4, "Cliente4", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
         Individual cliente5 = new Individual(5, "Cliente5", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
+
         
-        e.addContribuinte(empresa1);
-        e.addContribuinte(empresa2);
-        e.addContribuinte(empresa3);
+        this.estado.addContribuinte(empresa1);
+        this.estado.addContribuinte(empresa2);
+        this.estado.addContribuinte(empresa3);
         
-        e.addContribuinte(cliente1);
-        e.addContribuinte(cliente2);
-        e.addContribuinte(cliente3);
-        e.addContribuinte(cliente4);
-        e.addContribuinte(cliente5);
+        this.estado.addContribuinte(cliente1);
+        this.estado.addContribuinte(cliente2);
+        this.estado.addContribuinte(cliente3);
+        this.estado.addContribuinte(cliente4);
+        this.estado.addContribuinte(cliente5);
         
-        e.addFatura(new Fatura(empresa1.getNif(), cliente1.getNif()));
-        e.addFatura(new Fatura(empresa1.getNif(), cliente1.getNif()));
-        e.addFatura(new Fatura(empresa2.getNif(), cliente1.getNif()));
-        e.addFatura(new Fatura(empresa1.getNif(), cliente3.getNif()));
-        e.addFatura(new Fatura(empresa3.getNif(), cliente4.getNif()));
-        e.addFatura(new Fatura(empresa3.getNif(), cliente5.getNif()));
+        this.estado.addFatura(new Fatura(empresa1.getNif(), cliente1.getNif()));
+        this.estado.addFatura(new Fatura(empresa1.getNif(), cliente1.getNif()));
+        this.estado.addFatura(new Fatura(empresa2.getNif(), cliente1.getNif()));
+        this.estado.addFatura(new Fatura(empresa1.getNif(), cliente3.getNif()));
+        this.estado.addFatura(new Fatura(empresa3.getNif(), cliente4.getNif()));
+        this.estado.addFatura(new Fatura(empresa3.getNif(), cliente5.getNif()));
        
-        App teste = new App(e);
+        App teste = new App(estado);
         teste.run();
+
+
+    }
+
+
+    @Test
+    public void getContribuinte()
+    {
+        try{
+            assertEquals(empresa1, this.estado.getContribuinte(1001));
+        } catch(Exception err){
+            assertEquals(false, true);
+        }
     }
 }
 
