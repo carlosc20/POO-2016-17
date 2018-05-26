@@ -16,7 +16,6 @@ public class Coletivo extends Contribuinte
 {
 
     private Set<AtivEco> ativEco; 
-    private float fatorDeducao; //Ex: privilegia empresas do interior
     private float totalFaturado;
     
     /**
@@ -25,7 +24,6 @@ public class Coletivo extends Contribuinte
     public Coletivo(){
         super();
         this.ativEco = new HashSet<>();
-        this.fatorDeducao = 0.0f;
         this.totalFaturado = 0.0f;
     }
     
@@ -40,11 +38,10 @@ public class Coletivo extends Contribuinte
      * @param  ativEco            Set com as atividades económicas
      * @param  fatorDeducao       Fator de dedução
      */
-    public Coletivo(int nif, String nome, String email, String morada, String password, Set<AtivEco> ativEco, float fatorDeducao){
+    public Coletivo(int nif, String nome, String email, String morada, String password, Set<AtivEco> ativEco, float totalFaturado){
         super(nif, nome, email, morada, password);
         this.ativEco = new HashSet<>(ativEco);
-        this.fatorDeducao = fatorDeducao;
-        this.totalFaturado = 0.0f;
+        this.totalFaturado = totalFaturado;
     }
     
     /**
@@ -54,7 +51,6 @@ public class Coletivo extends Contribuinte
     public Coletivo(Coletivo outro){
         super(outro);
         this.ativEco = outro.getAtivEco();
-        this.fatorDeducao = outro.getFatorDeducao();
         this.totalFaturado = outro.totalFaturado();
     }
     
@@ -110,22 +106,6 @@ public class Coletivo extends Contribuinte
      */
     public boolean temAtivEco(AtivEco ativ){
         return ativEco.contains(ativ);
-    }
-    
-    /**
-     * Modifica o fator de dedução
-     * @param fator         Percentagem do valor a ser deduzido
-     */
-    public void setFatorDeducao(float fator){
-        this.fatorDeducao = fator;
-    }
-    
-    /**
-     * Retorna o fator de dedução
-     * @return Percentagem do valor a ser deduzido
-     */
-    public float getFatorDeducao(){
-        return this.fatorDeducao;
     }
     
     /**
@@ -193,7 +173,6 @@ public class Coletivo extends Contribuinte
         StringBuilder sb = new StringBuilder("");
         sb.append(super.toString()).append("\n");
         sb.append("Atividades Economicas: ").append(fancyAtivEco(ativEco)).append("\n");
-        sb.append("Fator de Deduçao: ").append(fatorDeducao).append("\n");
         return sb.toString();
     }
     
@@ -206,7 +185,6 @@ public class Coletivo extends Contribuinte
         StringBuilder sb = new StringBuilder("Contribuinte Coletivo{\n");
         sb.append(super.toString()).append("\n");
         sb.append("Atividades Economicas: ").append(this.ativEco).append("\n");
-        sb.append("Fator de Deduçao: ").append(fatorDeducao).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

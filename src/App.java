@@ -86,32 +86,6 @@ public class App
         
     }
     
-    /*
-    private static Contribuinte login(Scanner s){
-
-        System.out.println("Nº de Contribuinte:");
-        int nif = scanNif(s);
-       
-        System.out.println("Senha de acesso:");
-        String passwd = s.nextLine();
-        
-        
-        try{
-            Contribuinte user = estado.getContribuinte(nif);
-            if (user != null && user.getPassword() == passwd) 
-                return user;
-            else
-                System.out.println("Senha de acesso errada");
-        }
-        catch(NaoExisteContribuinteException e ){
-            System.out.println("Não existe esse Nº de Contribuinte");
-        }
-        
-        return null;
-        
-    }
-    */
-    
     private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
         
         int op = 0;
@@ -143,25 +117,26 @@ public class App
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { 
-                            Contribuinte cont;
-                            try{
-                                cont = login(); 
-                            } catch(NaoExisteContribuinteException err){
-                                System.out.println("Nº de Contribuinte inexistente.")
-                            } catch(NumberFormatException err){
-                                System.out.println("Nº de Contribuinte inválido.")
-                            } catch(PasswordErradaException err){
-                                System.out.println("Senha errada.");
-                                return;
-                            }
-
-                            if (cont instanceof Individual){
-                                menuInd(s, (Individual) cont);
-                            } else {
-                                menuCol(s, (Coletivo) cont);
-                            } 
-                           } 
+                    Contribuinte cont;
+                    try {
+                        cont = login();
+                        if (cont instanceof Individual){
+                            menuInd(s, (Individual) cont);
+                        } else {
+                            menuCol(s, (Coletivo) cont);
                         }
+                    } catch(NaoExisteContribuinteException err){
+                        System.out.println("Nº de Contribuinte inexistente.");
+                        return;
+                    } catch(NumberFormatException err){
+                        System.out.println("Nº de Contribuinte inválido.");
+                        return;
+                    } catch(PasswordErradaException err){
+                        System.out.println("Senha errada.");
+                        return;
+                    }
+                } 
+            }
         };
         menu(s, ops, desc);
     }
@@ -297,7 +272,7 @@ public class App
             "Ver montante de dedução fiscal acumulado" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println(cont); } },
+            new Opcao() { public void escolher() { System.out.println("Informações gerais:\n" + cont.fancyToString()); } },
             new Opcao() { public void escolher() { menuIndFaturas(s, cont); } },
             new Opcao() { public void escolher() { deducaoFiscal(s, cont); } }
         };
@@ -378,7 +353,7 @@ public class App
             "Ver total faturado num período" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println(cont); } },
+            new Opcao() { public void escolher() { System.out.println("Informações gerais:\n" + cont.fancyToString()); } },
             new Opcao() { public void escolher() { emitirFatura(s, cont); } },
             new Opcao() { public void escolher() { menuColFaturas(s, cont); } },
             new Opcao() { public void escolher() { verTotalFaturado(s, cont); } }
@@ -462,8 +437,7 @@ public class App
     
     
     
-    
-    private static Contribuinte login() throws NaoExisteContribuinteException, NumberFormatException{
+    private static Contribuinte login() throws PasswordErradaException, NaoExisteContribuinteException, NumberFormatException{
         String passwd;
         Contribuinte resultado = null;
         Scanner scanner = new Scanner(System.in);
@@ -476,7 +450,7 @@ public class App
         System.out.println("Senha de acesso:");
         passwd = scanner.nextLine();
         if(!passwd.equals(resultado.getPassword())){
-            throws new PasswordErradaException(passwd);
+            throw new PasswordErradaException(passwd);
         }
         
         scanner.close();

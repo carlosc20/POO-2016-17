@@ -22,6 +22,8 @@ public class Individual extends Contribuinte
     private List<Fatura> faturas;
     private List<Alteracao> histAlter;
     
+    
+    
     /**
      * Construtor para objetos da classe Individual
      */
@@ -207,9 +209,6 @@ public class Individual extends Contribuinte
     // métodos
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     
-
-    //A FAZER:
-    //verifica as despesas que foram emitidas em seu nome e verificar o montante de dedução fiscal acumulado, por si e pelo agregado familiar
     
      /**
      * Atribui uma fatura ao consumidor
