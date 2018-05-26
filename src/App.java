@@ -145,8 +145,13 @@ public class App
             new Opcao() { public void escolher() { 
                             Contribuinte cont;
                             try{
-                                cont = login(s); 
-                            } catch(MaxTentativasException err){
+                                cont = login(); 
+                            } catch(NaoExisteContribuinteException err){
+                                System.out.println("Nº de Contribuinte inexistente.")
+                            } catch(NumberFormatException err){
+                                System.out.println("Nº de Contribuinte inválido.")
+                            } catch(PasswordErradaException err){
+                                System.out.println("Senha errada.");
                                 return;
                             }
 
@@ -458,48 +463,23 @@ public class App
     
     
     
-    private static Contribuinte login(Scanner s) throws MaxTentativasException{
+    private static Contribuinte login() throws NaoExisteContribuinteException, NumberFormatException{
         String passwd;
         Contribuinte resultado = null;
-        Scanner nifScanner = new Scanner(System.in);
-        Scanner passScanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         int tentativas = 3;
         
         System.out.println("Nº de Contribuinte:");
-        do {
-            String nif = nifScanner.nextLine();
-
-            try{
-                resultado = estado.getContribuinte(Integer.parseInt(nif));
-            } catch(NaoExisteContribuinteException err){
-                System.out.println("Nº de Contribuinte não encontrado. Tente novamente:");
-                tentativas--;
-            } catch(NumberFormatException err){
-                System.out.println("Nº de Contribuinte não válido. Tente novamente:");
-                tentativas--;
-            }
-        } while(resultado == null && tentativas > 0);
-        
-        if(tentativas == 0){
-            throw new MaxTentativasException("NIF");
-        }
-        
-        tentativas = 3;
+        String nif = scanner.nextLine();
+        resultado = estado.getContribuinte(Integer.parseInt(nif));
         
         System.out.println("Senha de acesso:");
-        passwd = passScanner.nextLine();
-        while(!passwd.equals(resultado.getPassword()) && tentativas > 0){
-            System.out.println("Senha de acesso errada. Tente novamente:");
-            passwd = passScanner.nextLine();
-            tentativas--;
+        passwd = scanner.nextLine();
+        if(!passwd.equals(resultado.getPassword())){
+            throws new PasswordErradaException(passwd);
         }
         
-        if(tentativas == 0){
-            throw new MaxTentativasException("NIF");
-        }
-        
-        nifScanner.close();
-        passScanner.close();
+        scanner.close();
         
         return resultado;
     }
