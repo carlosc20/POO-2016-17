@@ -19,31 +19,6 @@ public class Coletivo extends Contribuinte
     private float fatorDeducao; //Ex: privilegia empresas do interior
     private float totalFaturado;
     
-    public String fancyAtivEco(Set<AtivEco> ativEco){
-        StringBuilder sb = new StringBuilder("");
-        for(AtivEco a : ativEco){
-            sb.append(a.fancyToString()).append("; ");
-        }
-        return sb.toString();
-    }
-    
-    public String fancyToString(){
-        StringBuilder sb = new StringBuilder("");
-        sb.append(super.toString()).append("\n");
-        sb.append("Atividades Economicas: ").append(fancyAtivEco(ativEco)).append("\n");
-        sb.append("Fator de Deduçao: ").append(fatorDeducao).append("\n");
-        return sb.toString();
-    }
-    
-    public String toString(){
-        StringBuilder sb = new StringBuilder("Contribuinte Coletivo{\n");
-        sb.append(super.toString()).append("\n");
-        sb.append("Atividades Economicas: ").append(this.ativEco).append("\n");
-        sb.append("Fator de Deduçao: ").append(fatorDeducao).append("\n");
-        sb.append("}\n");
-        return sb.toString();
-    }
-    
     /**
      * Construtor para objetos da classe Coletivo
      */
@@ -169,6 +144,11 @@ public class Coletivo extends Contribuinte
         return this.totalFaturado;
     }
     
+    /**
+     * Clona o objeto
+     * 
+     * @return Clone do objeto
+     */
     public Coletivo clone(){
         return new Coletivo(this);
     }
@@ -189,5 +169,45 @@ public class Coletivo extends Contribuinte
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Cria e retorna uma String com as atividades Economicas de um Set
+     * 
+     * @return String com as atividades economicas
+     */
+    public String fancyAtivEco(Set<AtivEco> ativEco){
+        StringBuilder sb = new StringBuilder("");
+        for(AtivEco a : ativEco){
+            sb.append(a.fancyToString()).append("; ");
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * Cria e retorna uma String com as informações do objeto, organizadas, para apresentar ao user
+     * 
+     * @return String com as informações do objeto
+     */
+    public String fancyToString(){
+        StringBuilder sb = new StringBuilder("");
+        sb.append(super.toString()).append("\n");
+        sb.append("Atividades Economicas: ").append(fancyAtivEco(ativEco)).append("\n");
+        sb.append("Fator de Deduçao: ").append(fatorDeducao).append("\n");
+        return sb.toString();
+    }
+    
+    /**
+     * Cria e retorna uma String com as informações do objeto, com o objetivo de Debugging
+     * 
+     * @return String com as informações do objeto
+     */
+    public String toString(){
+        StringBuilder sb = new StringBuilder("Contribuinte Coletivo{\n");
+        sb.append(super.toString()).append("\n");
+        sb.append("Atividades Economicas: ").append(this.ativEco).append("\n");
+        sb.append("Fator de Deduçao: ").append(fatorDeducao).append("\n");
+        sb.append("}\n");
+        return sb.toString();
     }
 }

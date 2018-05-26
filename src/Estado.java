@@ -31,18 +31,29 @@ public class Estado implements Serializable
 
     private Map<Integer, SortedSet<Fatura>> faturas;
     
+    /**
+     * Construtor para objetos da classe Contribuinte
+     */
     public Estado()
     {
         this.contribuintes = new HashMap<>();
         this.faturas = new HashMap<>();
     }
     
+    /**
+     * Guarda o Estado num ficheiro ("estado.obj")
+     */
     public void guardaEstado() throws IOException {
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("estado.obj"));
         oos.writeObject(this);
         oos.close();
     }
     
+    /**
+     * Abre o ficheiro "estado.obj", que contem o estado guardado, e le-o
+     * 
+     * @return Estado guardado no ficheiro "estado.obj"
+     */
     public static Estado leEstado() throws ClassNotFoundException, FileNotFoundException, IOException {
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream("estado.obj"));
         Estado e = (Estado) ois.readObject();
@@ -50,6 +61,13 @@ public class Estado implements Serializable
         return e;
     }
     
+    /**
+     * Obtem as informações do Contribuinte guardadas na Map, usando o NIF
+     * 
+     * @param NIF Numero de Identificação Fiscal
+     * 
+     * @return Clone do objeto Contribuite
+     */
     public Contribuinte getContribuinte(int nif) throws NaoExisteContribuinteException {
         Contribuinte resultado = this.contribuintes.get(nif);
         if(resultado == null){
@@ -58,16 +76,33 @@ public class Estado implements Serializable
         return resultado.clone();
     }
     
+    /**
+     * Adiciona um Contribuinte à Map dos contribuintes
+     * 
+     * @param contribuinte Contribuinte a ser adicionadao
+     */
     public void addContribuinte(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         this.contribuintes.put(nif, contribuinte);
     }
     
+    /**
+     * Testa se um Contribuinte existe na Map dos Contribuintes
+     * 
+     * @param Contribuinte a ser procurado
+     * 
+     * @return True se o Contribuite estiver presente dentro da Map dos Contribuintes, False caso contrario
+     */
     public boolean existeContribuinte(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         return this.contribuintes.get(nif) != null;
     }
     
+    /**
+     * Cria e retorna um Set com os Contribuintes que estao presentes no Map dos Contribuintes
+     * 
+     * @return Set com os Contribuintes
+     */
     public Set<Contribuinte> getContribuintes(){
         Set<Contribuinte> resultado = new HashSet<Contribuinte>();
         
@@ -78,6 +113,13 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Cria e retorna um Set com os Contribuintes ordenados atraves de um Comparator que estao presentes no Map dos Contribuintes
+     * 
+     * @param c Comparator para ordenar os Contribuintes no Set
+     * 
+     * @return Set com os Contribuintes ordenados
+     */
     public SortedSet<Contribuinte> getContribuintes(Comparator c){
         SortedSet<Contribuinte> resultado = new TreeSet<Contribuinte>(c);
         
@@ -88,6 +130,13 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Cria e retorna um Set com as faturas de um contribuinte, atraves do NIF desse contribuinte
+     * 
+     * @param nif NIF do contribuinte
+     * 
+     * @return Set com as faturas
+     */
     public Set<Fatura> getFaturas(int nif){
         Set<Fatura> resultado = new HashSet<>();
         Set<Fatura> faturas = this.faturas.get(nif);
@@ -99,6 +148,14 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Cria e retorna um Set com as faturas de um contribuinte, ordenado atraves de um Comparator
+     * 
+     * @param nif NIF do contribuinte
+     * @param c Comparator para ordenar o Set
+     * 
+     * @return Set com as faturas
+     */
     public SortedSet<Fatura> getFaturas(int nif, Comparator<Fatura> c){
         SortedSet<Fatura> resultado = new TreeSet<>(c);
 
@@ -111,7 +168,16 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public Set<Fatura> getFaturas(int nif, LocalDate inicio, LocalDate fim){
+    /**
+     * Cria e retorna um Set com as faturas de um contribuinte, entre um intervalo de tempo
+     * 
+     * @param nif NIF do contribuinte
+     * @param inicio um LocalDate que representa o inicio do intervalo
+     * @param fim um LocalDate que representa o fim do intervalo
+     * 
+     * @return Set com as faturas
+     */
+     public Set<Fatura> getFaturas(int nif, LocalDate inicio, LocalDate fim){
         Set<Fatura> resultado = new HashSet<>();
         Set<Fatura> faturas = this.faturas.get(nif).subSet(new Fatura(inicio), new Fatura(fim));
         
@@ -122,6 +188,14 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Cria e retorna um Set com as faturas em comum entre um emitente e um cliente
+     * 
+     * @param nifEmitente NIF do emitente
+     * @param nifCliente NIF do cliente
+     * 
+     * @return Set com as faturas
+     */
     public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente){
         Set<Fatura> faturas = this.faturas.get(nifCliente);
         Set<Fatura> resultado = new HashSet<>();
@@ -135,6 +209,16 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Cria e retorna um Set com as faturas em comum entre um emitente e um cliente, entre um intervalo de tempo
+     * 
+     * @param nifEmitente NIF do emitente
+     * @param nifCliente NIF do cliente
+     * @param inicio LocalDate que representa o inicio do intervalo
+     * @param fim LocalDate que representa o fim do intervalo
+     * 
+     * @return Set com as faturas
+     */
     public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, LocalDate inicio, LocalDate fim){
         Set<Fatura> faturas = this.faturas.get(nifCliente).subSet(new Fatura(inicio), new Fatura(fim));
         Set<Fatura> resultado = new HashSet<>();
@@ -148,6 +232,15 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Cria e retorna um Set com as faturas em comum entre um emitente e um cliente, ordenado atraves de um comparator
+     * 
+     * @param nifEmitente NIF do emitente
+     * @param nifCliente NIF do cliente
+     * @param c Comparator
+     * 
+     * @return Set com as faturas
+     */
     public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator<Fatura> c){
         Set<Fatura> faturas = this.faturas.get(nifCliente);
         SortedSet<Fatura> resultado = new TreeSet<>(c);
@@ -161,7 +254,6 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    
     public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif){
         Set<Fatura> faturas = getFaturas(nif);
         Map<Integer , Set<Fatura>> resultado = new HashMap<>();
@@ -173,7 +265,6 @@ public class Estado implements Serializable
         
         return resultado;
     }
-    
     
     public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif, LocalDate inicio, LocalDate fim){
         Set<Fatura> faturas = getFaturas(nif, inicio, fim);
@@ -187,6 +278,11 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Adiciona uma Fatura ao Set das Faturas do Emitente e ao Set das Faturas do Cliente e incremente ao total faturado do Emitente e do Cliente
+     * 
+     * @param fatura Fatura a ser adicionada
+     */
     public void addFatura(Fatura fatura){
         Fatura clone = fatura.clone();
         int nifEmitente = fatura.getNifEmitente();
@@ -213,6 +309,13 @@ public class Estado implements Serializable
         cliente.addTotalGasto(valor);
     }
     
+    /**
+     * Testa se uma Fatura existe no Set das Faturas do Emitente
+     * 
+     * @param fatura Fatura a ser testada
+     * 
+     * @return True se a Fatura existir no Set das Faturas do Emitente
+     */
     public boolean existeFatura(Fatura fatura){
         int nif = fatura.getNifEmitente();
         Set<Fatura> resultado = new HashSet<>();
@@ -221,11 +324,20 @@ public class Estado implements Serializable
         return faturas.contains(fatura);
     }
     
+    /**
+     * Calcula a deduçao das Faturas, atraves da atividade Economica
+     * 
+     * @param faturas Set com as faturas a ser deduzidas
+     * 
+     * @return Soma das deduçoes de todas as Faturas do Set
+     */
     private float calculaDeducaoFaturas(Set<Fatura> faturas){
         float resultado = 0;
         int valorFatura;
         float ativEcoPercen;
         float ativEcoLimite;
+        
+        if(faturas == null){return 0;}
         
         for(Fatura fatura : faturas){
             valorFatura = fatura.getValorTotal();
@@ -240,6 +352,13 @@ public class Estado implements Serializable
         return resultado;
     }
     
+    /**
+     * Calcula a deduçao de um Contribuinte atraves das suas Faturas
+     * 
+     * @param contribuinte Contribuinte
+     * 
+     * @return Soma das deduçoes de todas as Faturas do Set 
+     */
     public float calculaDeducao(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         Set<Fatura> faturas = this.faturas.get(nif);
@@ -247,6 +366,13 @@ public class Estado implements Serializable
         return calculaDeducaoFaturas(faturas);
     }
     
+    /**
+     * Calcula a deduçao de um Contribuinte e do seu Agregado Familiar atraves das suas Faturas
+     * 
+     * @param contribuinte Individual
+     * 
+     * @return Soma das deduçoes de todas as Faturas do Agregado Familiar
+     */
     public float calculaDeducaoAF(Individual contribuinte){
         List<Integer> nifs = new ArrayList<>();
         nifs.add(contribuinte.getNif());

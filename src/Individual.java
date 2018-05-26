@@ -23,53 +23,6 @@ public class Individual extends Contribuinte
     private List<Alteracao> histAlter;
     
     /**
-     * Cria uma String com as infomaçoes, organizadas, contidas num Lista
-     * 
-     * @param ativEco Lista com Atividades Econimicas(AtivEco) guardadas
-     * 
-     * @return String com os elementos da Lista
-     */
-    public String fancyAtivEco(List<AtivEco> ativEco){
-        StringBuilder sb = new StringBuilder("");
-        for(AtivEco a : ativEco){
-            sb.append(a.fancyToString()).append("; ");
-        }
-        return sb.toString();
-    }
-    
-    /**
-     * Cria e retorna uma String com as informaçoes, organizadas, pelo objeto, com o objetivo de apresetar ao user
-     * 
-     * @return String com as informaçoes do objeto
-     */
-    public String fancyToString(){
-        StringBuilder sb = new StringBuilder("");
-        sb.append(super.toString()).append("\n");
-        sb.append("Numero de Dependentes do Agregado Familiar: ").append(this.dependentesAF.size()).append("\n");
-        sb.append("Nif de Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
-        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
-        sb.append("Atividades Dedutiveis: ").append(fancyAtivEco(this.ativDedutiveis)).append("\n");
-        return sb.toString();
-    }
-    
-    /**
-     * Cria e retorna uma String com as informaçoes do objeto, com o objetivo de debugging
-     * 
-     * @return String com as informaçoes do objeto
-     */
-    public String toString(){
-        StringBuilder sb = new StringBuilder("Contribuinte Individual{\n");
-        sb.append(super.toString()).append("\n");
-        sb.append("Nif Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
-        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
-        sb.append("Atividades Dedutiveis").append(this.ativDedutiveis).append("\n");
-        sb.append("Faturas: ").append(this.faturas).append("\n");
-        sb.append("Alteraçoes: ").append(this.histAlter).append("\n");
-        sb.append("}\n");
-        return sb.toString();
-    }
-    
-    /**
      * Construtor para objetos da classe Individual
      */
     public Individual()
@@ -198,6 +151,56 @@ public class Individual extends Contribuinte
         }
         
         return novo;
+    }
+    
+    /**
+     * Cria uma String com as infomaçoes, organizadas, contidas num Lista
+     * 
+     * @param ativEco Lista com Atividades Econimicas(AtivEco) guardadas
+     * 
+     * @return String com os elementos da Lista
+     */
+    public String fancyAtivEco(List<AtivEco> ativEco){
+        if(ativEco ==null){return "Não tem";}
+        StringBuilder sb = new StringBuilder("");
+        for(AtivEco a : ativEco){
+            sb.append(a.fancyToString()).append("; ");
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * Cria e retorna uma String com as informaçoes, organizadas, pelo objeto, com o objetivo de apresetar ao user
+     * 
+     * @return String com as informaçoes do objeto
+     */
+    public String fancyToString(){
+        StringBuilder sb = new StringBuilder("");
+        sb.append(super.toString()).append("\n");
+        if(this.dependentesAF != null){
+            sb.append("Numero de Dependentes do Agregado Familiar: ").append(this.dependentesAF.size()).append("\n");
+            sb.append("Nif de Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
+        }
+        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
+        sb.append("Atividades Dedutiveis: ").append(fancyAtivEco(this.ativDedutiveis)).append("\n");
+        return sb.toString();
+    }
+    
+    /**
+     * Cria e retorna uma String com as informaçoes do objeto, com o objetivo de debugging
+     * 
+     * @return String com as informaçoes do objeto
+     */
+    public String toString(){
+        StringBuilder sb = new StringBuilder("Contribuinte Individual{\n");
+        sb.append(super.toString()).append("\n");
+        sb.append("Nif Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
+        sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
+        sb.append("Atividades Dedutiveis").append(this.ativDedutiveis).append("\n");
+        sb.append("Faturas: ").append(this.faturas).append("\n");
+        sb.append("Alteraçoes: ").append(this.histAlter).append("\n");
+        sb.append("}\n");
+        return sb.toString();
     }
     
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
