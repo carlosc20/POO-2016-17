@@ -86,8 +86,9 @@ public class App
         
     }
     
+    /*
     private static Contribuinte login(Scanner s){
-        /*
+
         System.out.println("Nº de Contribuinte:");
         int nif = scanNif(s);
        
@@ -105,8 +106,13 @@ public class App
         catch(NaoExisteContribuinteException e ){
             System.out.println("Não existe esse Nº de Contribuinte");
         }
-        */
-       Contribuinte user = null;
+
+        return null;
+        
+    }
+    */
+        /*
+           Contribuinte user = null;
         try{
             user = estado.getContribuinte(1);
         }
@@ -114,8 +120,39 @@ public class App
             System.out.println("Não existe 1");
         }
         return user;
-        //return null;
+        */
+    private static Contribuinte login(){
+        String passwd;
+        String nif = "";
+        Contribuinte resultado = null;
+        Scanner nifScanner = new Scanner(System.in);
+        Scanner passScanner = new Scanner(System.in);
         
+        System.out.println("Nº de Contribuinte:");
+        do {
+            nif = nifScanner.nextLine();
+
+            try{
+                resultado = estado.getContribuinte(Integer.parseInt(nif));
+            } catch(NaoExisteContribuinteException err){
+                System.out.println("Nº de Contribuinte não encontrado. Tente novamente:");
+            } catch(NumberFormatException err){
+                System.out.println("Nº de Contribuinte não válido. Tente novamente:");
+            }
+        } while(resultado == null);
+        
+        System.out.println("Senha de acesso:");
+        passwd = passScanner.nextLine();
+        while(!passwd.equals(resultado.getPassword())){
+
+            System.out.println("Senha de acesso errada. Tente novamente:");
+            passwd = passScanner.nextLine();
+        }
+        
+        nifScanner.close();
+        passScanner.close();
+        
+        return resultado;
     }
     
     private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
@@ -149,7 +186,7 @@ public class App
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { 
-                            Contribuinte cont = login(s); 
+                            Contribuinte cont = login();
                             if(cont == null) return;
                             if (cont instanceof Individual){
                                 menuInd(s, (Individual) cont);
@@ -293,7 +330,7 @@ public class App
             "Ver montante de dedução fiscal acumulado" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println(cont.fancyToString()); } },
+            new Opcao() { public void escolher() { System.out.println("Informações gerais:\n" + cont.fancyToString()); } },
             new Opcao() { public void escolher() { menuIndFaturas(s, cont); } },
             new Opcao() { public void escolher() { deducaoFiscal(s, cont); } }
         };

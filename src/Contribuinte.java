@@ -19,21 +19,6 @@ public abstract class Contribuinte
     private String password; //Isto é muito seguro
     private float totalGasto;
     
-    
-    /**
-     * Cria e retorna uma String que representa a informaçao, organizada, por objetos que extendo deta classe.
-     * 
-     * @return  String com as informaçoes
-     */
-    public String toString(){
-        StringBuilder sb = new StringBuilder("");
-        sb.append("NIF: ").append(nif).append("\n");
-        sb.append("Nome: ").append(nome).append("\n");
-        sb.append("Email: ").append(email).append("\n");
-        sb.append("Morada: ").append(morada).append("\n");
-        return sb.toString();
-    }
-    
     /**
      * Construtor para objetos da classe Contribuinte
      */
@@ -203,4 +188,17 @@ public abstract class Contribuinte
      */
     public abstract Contribuinte clone();
     
+    /**
+     * Cria e retorna uma String que representa a informaçao, organizada, por objetos que extendo deta classe.
+     * 
+     * @return  String com as informaçoes
+     */
+    public String toString(){
+        StringBuilder sb = new StringBuilder("");
+        sb.append("NIF: ").append(nif).append("\n");
+        sb.append("Nome: ").append(nome).append("\n");
+        sb.append("Email: ").append(email).append("\n");
+        sb.append("Morada: ").append(morada).append("\n");
+        return sb.toString();
+    }
 }
