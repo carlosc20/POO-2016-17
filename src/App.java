@@ -30,20 +30,7 @@ import java.util.stream.Collectors;
 public class App
 {
     private static Estado estado;
-    
-    /*Validar acesso
-     * 
-     * Admin:
-     * Criar contrib
-     * associar empresas a ativ eco
-     * relaçao 10 contribs que mais gastam 
-     * ver X empresas com mais faturas e suas deduçoes
-     * 
-     * extracto de facturação de uma empresa num determinado período
-     * valor total de despesas de um contribuinte, valor total de despesas de um contribuinte por actividade económica
-     */
-    
-    
+     
     /*Calcualr dedução
      * varia com ativ eco(algumas nao permitem)
      * varia com a empresa
@@ -61,6 +48,9 @@ public class App
         }
     }
     
+    public App(Estado e) {
+        estado = e;
+    }
     
     interface Opcao {
         void escolher();
@@ -77,16 +67,7 @@ public class App
         }
         
         Scanner s = new Scanner(System.in);
-        Contribuinte cont = login(s); 
-        
-        menuInd(s, (Individual) cont);
-        /*
-        if (cont instanceof Individual){
-            menuInd(s, (Individual) cont);
-        } else {
-            menuCol(s, (Coletivo) cont);
-        }
-        */
+        menuInicial(s);
         s.close();
         
         try {
@@ -100,15 +81,32 @@ public class App
     public void run(){
         
         Scanner s = new Scanner(System.in);
-        Contribuinte cont = login(s); 
+        menuInicial(s);
+        s.close();
+        
+    }
+    
+    private static Contribuinte login(Scanner s){
 
-        if (cont instanceof Individual){
-            menuInd(s, (Individual) cont);
-        } else {
-            menuCol(s, (Coletivo) cont);
+        System.out.println("Nº de Contribuinte:");
+        int nif = scanNif(s);
+       
+        System.out.println("Senha de acesso:");
+        String passwd = s.nextLine();
+        
+        
+        try{
+            Contribuinte user = estado.getContribuinte(nif);
+            if (user != null && user.getPassword() == passwd) 
+                return user;
+            else
+                System.out.println("Senha de acesso errada");
+        }
+        catch(NaoExisteContribuinteException e ){
+            System.out.println("Não existe esse Nº de Contribuinte");
         }
         
-        s.close();
+        return null;
         
     }
     
@@ -121,6 +119,7 @@ public class App
                 System.out.println((i+1) + " -> " + desc[i]);
             }
             System.out.println("0 -> Sair/Retroceder");
+            
             try {
                 op = s.nextInt();
             } catch (InputMismatchException e){
@@ -136,7 +135,24 @@ public class App
         
     }
     
-    
+    private static void menuInicial(Scanner s) {
+        String[] desc = new String[] {
+            "Login"
+        };
+        Opcao[] ops = new Opcao[] {
+            new Opcao() { public void escolher() { 
+                            Contribuinte cont = login(s); 
+                            if(cont == null) return;
+                            if (cont instanceof Individual){
+                                menuInd(s, (Individual) cont);
+                            } else {
+                                menuCol(s, (Coletivo) cont);
+                            } 
+                           } 
+                        }
+        };
+        menu(s, ops, desc);
+    }
     
     private static int maisGastador(Contribuinte a, Contribuinte b){
         Set<Fatura> faturasA = estado.getFaturas(a.getNif());
@@ -233,30 +249,30 @@ public class App
     }
     
     private static int scanNif(Scanner s) {
-        System.out.println("Nif:"); 
-        int emit;
+        int nif;
         try {
-            emit = s.nextInt();
+            nif = s.nextInt();
         } catch (InputMismatchException e){
             System.out.println("Input Errado");
-            emit = -1;
+            nif = -1;
         }
         
-        return emit;
+        return nif;
     }
     
+    
     private static void menuAdmin(Scanner s, Individual cont) {
-        String[] descInd = new String[] {
+        String[] desc = new String[] {
             //"Registar contribuinte", // individual e empresa
             "Ver os 10 contribuintes que gastam mais",
             "Ver as 10 empresas que mais faturam"
         };
-        Opcao[] opsInd = new Opcao[] {
+        Opcao[] ops = new Opcao[] {
             //new Opcao() { public void escolher() { System.out.println("Faturas:"); } }, //(Individual)contrib).getFaturas
             new Opcao() { public void escolher() { System.out.println(topGastadores(10)); } },
             new Opcao() { public void escolher() { System.out.println(topFaturadores(10)); } } //Deve ser n
         };
-        menu(s, opsInd, descInd);
+        menu(s, ops, desc);
     }
     
     
@@ -435,22 +451,5 @@ public class App
     
     
     
-    private static Contribuinte login(Scanner s){
 
-        System.out.println("Nº de Contribuinte:");
-        String nif = s.nextLine();
-       
-        System.out.println("Senha de acesso:");
-        String passwd = s.nextLine();
-        
-        return null;
-        /*
-        Contribuinte user = estado.getContribs().get(nif);
-        if (user != null && user.getPassword() == passwd) 
-            return user;
-        
-        System.out.println("Não existe esse Nº de Contribuinte ou senha de acesso errada.");
-        return null;
-        */
-    }
 }
