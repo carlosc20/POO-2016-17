@@ -60,7 +60,7 @@ public class Teste
         this.estado = new Estado();
 
         
-        this.empresa1 = new Coletivo(1001, "Empresa1", "", "", "", new java.util.HashSet<>(), 0);
+        this.empresa1 = new Coletivo(1001, "Empresa1", "email1", "morada1", "1234", new java.util.HashSet<>(), 100);
         this.empresa2 = new Coletivo(1002, "Empresa2", "", "", "", new java.util.HashSet<>(), 0);
         this.empresa3 = new Coletivo(1003, "Empresa3", "", "", "", new java.util.HashSet<>(), 0);
 

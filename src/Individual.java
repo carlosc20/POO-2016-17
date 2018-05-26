@@ -62,7 +62,7 @@ public class Individual extends Contribuinte
         sb.append(super.toString()).append("\n");
         sb.append("Nif Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
         sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
-        sb.append("Atividades Dedutiveis").append(this.ativDedutiveis).append("\n");
+        sb.append("Atividades Dedutiveis: ").append(this.ativDedutiveis).append("\n");
         sb.append("Faturas: ").append(this.faturas).append("\n");
         sb.append("Alteraçoes: ").append(this.histAlter).append("\n");
         sb.append("}\n");

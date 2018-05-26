@@ -87,7 +87,7 @@ public class App
     }
     
     private static Contribuinte login(Scanner s){
-
+        /*
         System.out.println("Nº de Contribuinte:");
         int nif = scanNif(s);
        
@@ -105,8 +105,16 @@ public class App
         catch(NaoExisteContribuinteException e ){
             System.out.println("Não existe esse Nº de Contribuinte");
         }
-        
-        return null;
+        */
+       Contribuinte user = null;
+        try{
+            user = estado.getContribuinte(1);
+        }
+        catch(NaoExisteContribuinteException e ){
+            System.out.println("Não existe 1");
+        }
+        return user;
+        //return null;
         
     }
     
@@ -285,7 +293,7 @@ public class App
             "Ver montante de dedução fiscal acumulado" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println(cont); } },
+            new Opcao() { public void escolher() { System.out.println(cont.fancyToString()); } },
             new Opcao() { public void escolher() { menuIndFaturas(s, cont); } },
             new Opcao() { public void escolher() { deducaoFiscal(s, cont); } }
         };
@@ -366,7 +374,7 @@ public class App
             "Ver total faturado num período" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { System.out.println(cont); } },
+            new Opcao() { public void escolher() { System.out.println("Informações gerais:\n" + cont.fancyToString()); } },
             new Opcao() { public void escolher() { emitirFatura(s, cont); } },
             new Opcao() { public void escolher() { menuColFaturas(s, cont); } },
             new Opcao() { public void escolher() { verTotalFaturado(s, cont); } }
