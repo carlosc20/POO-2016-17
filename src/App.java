@@ -436,21 +436,29 @@ public class App
     
     
     private static Contribuinte login(Scanner s){
-
+        String passwd = "";
+        Contribuinte resultado = null;
+        
         System.out.println("Nº de Contribuinte:");
-        String nif = s.nextLine();
-       
+        do {
+            String nif = s.nextLine();
+
+            try{
+                resultado = estado.getContribuinte(Integer.parseInt(nif));
+            } catch(NaoExisteContribuinteException err){
+                System.out.println("Nº de Contribuinte não encontrado.");
+            } catch(NumberFormatException err){
+                System.out.println("Nº de Contribuinte não válido.");
+            }
+        } while(resultado != null);
+    
         System.out.println("Senha de acesso:");
         String passwd = s.nextLine();
+        while(!passwd.equals(resultado.getPassword())){
+            System.out.println("Senha de acesso errada.");
+            passwd = s.nextLine();
+        }
         
-        return null;
-        /*
-        Contribuinte user = estado.getContribs().get(nif);
-        if (user != null && user.getPassword() == passwd) 
-            return user;
-        
-        System.out.println("Não existe esse Nº de Contribuinte ou senha de acesso errada.");
-        return null;
-        */
+        return resultado;
     }
 }
