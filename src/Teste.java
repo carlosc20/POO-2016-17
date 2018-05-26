@@ -41,9 +41,9 @@ public class Teste
     {
         Estado e = new Estado();
         
-        Coletivo empresa1 = new Coletivo(1001, "Empresa1", "", "", "", new java.util.ArrayList<>(), 0);
-        Coletivo empresa2 = new Coletivo(1002, "Empresa2", "", "", "", new java.util.ArrayList<>(), 0);
-        Coletivo empresa3 = new Coletivo(1003, "Empresa3", "", "", "", new java.util.ArrayList<>(), 0);
+        Coletivo empresa1 = new Coletivo(1001, "Empresa1", "", "", "", new java.util.HashSet<>(), 0);
+        Coletivo empresa2 = new Coletivo(1002, "Empresa2", "", "", "", new java.util.HashSet<>(), 0);
+        Coletivo empresa3 = new Coletivo(1003, "Empresa3", "", "", "", new java.util.HashSet<>(), 0);
         
         Individual cliente1 = new Individual(1, "Cliente1", "", "", "", 0, 0, null, null, new java.util.ArrayList<>());
         Individual cliente2 = new Individual(2, "Cliente1", "", "", "", 0, 0, null, null, new java.util.ArrayList<>());

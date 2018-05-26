@@ -136,9 +136,7 @@ public class App
         
     }
     
-    private static LocalDate scanData(Scanner s){
-        return LocalDate.now();//acabar
-    }
+    
     
     private static int maisGastador(Contribuinte a, Contribuinte b){
         Set<Fatura> faturasA = estado.getFaturas(a.getNif());
@@ -158,8 +156,8 @@ public class App
     private static int maisFaturador(Coletivo a, Coletivo b){
         Set<Fatura> faturasA = estado.getFaturas(a.getNif());
         Set<Fatura> faturasB = estado.getFaturas(a.getNif());
-        float totalA = a.getTotalFaturado();
-        float totalB = b.getTotalFaturado();
+        float totalA = a.totalFaturado();
+        float totalB = b.totalFaturado();
         
         if(totalA > totalB){
             return -1;
@@ -211,7 +209,11 @@ public class App
         
         return resultado;
     }
-
+    
+    private static LocalDate scanData(Scanner s){
+        return LocalDate.now();//acabar
+    }
+    
     private static AtivEco scanAtiv(Scanner s){
         
         AtivEco[] ativs = AtivEco.values();
@@ -228,6 +230,19 @@ public class App
         }
         
         return ativs[esc];
+    }
+    
+    private static int scanNif(Scanner s) {
+        System.out.println("Nif:"); 
+        int emit;
+        try {
+            emit = s.nextInt();
+        } catch (InputMismatchException e){
+            System.out.println("Input Errado");
+            emit = -1;
+        }
+        
+        return emit;
     }
     
     private static void menuAdmin(Scanner s, Individual cont) {
@@ -261,6 +276,14 @@ public class App
         menu(s, ops, desc);
     }
     
+    
+    private static void deducaoFiscal(Scanner s, Individual cont) {
+        System.out.println("Dedução fiscal:");
+        System.out.println("Individual: " + estado.calculaDeducao(cont) + "€");
+        System.out.println("Agregado familiar: " + estado.calculaDeducaoAF(cont) + "€");
+    }
+    
+    
     private static void  menuIndFaturas(Scanner s, Individual cont) {
         System.out.println("Ver faturas:");
         String[] desc = new String[] {
@@ -279,18 +302,7 @@ public class App
         menu(s, ops, desc);
     }
     
-    private static int scanNif(Scanner s) {
-        System.out.println("Nif:"); 
-        int emit;
-        try {
-            emit = s.nextInt();
-        } catch (InputMismatchException e){
-            System.out.println("Input Errado");
-            emit = -1;
-        }
-        
-        return emit;
-    }
+
     
     private static void menuFaturas(Scanner s, Set<Fatura> faturas) {
         System.out.println("Escolha uma fatura para editar a atividade económica (esta operação ficará registada)");
@@ -325,10 +337,7 @@ public class App
     
     
    
-    private static void deducaoFiscal(Scanner s, Individual cont) {
-        System.out.println("Individual: " + estado.calculaDeducao(cont) + "€");
-        System.out.println("Agregado familiar: " + estado.calculaDeducaoAF(cont) + "€");
-    }
+
         
 
     
@@ -386,7 +395,7 @@ public class App
             "Ordenadas por valor decrescente",
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() {  } },//corrigir
+            new Opcao() { public void escolher() { verFaturasContIntervalo(s, cont, ind); } },
             new Opcao() { public void escolher() { verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( b.getValorTotal() - a.getValorTotal() ))); } }
         };
         menu(s, ops, desc);
@@ -399,7 +408,16 @@ public class App
         }
     }
     
-    
+    private static void  verFaturasContIntervalo(Scanner s, Coletivo cont, int ind){
+        
+        System.out.println("De:");
+        LocalDate inicio = scanData(s);
+        
+        System.out.println("Até:");
+        LocalDate fim = scanData(s);
+        
+        verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, inicio, fim));
+    }
     
     private static void  verTotalFaturado(Scanner s, Coletivo cont) {
         
