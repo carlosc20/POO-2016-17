@@ -46,6 +46,7 @@ public class Estado implements Serializable
         this.faturas = new HashMap<>();
         this.tabela = new TabelaIncentivoFiscal();
         this.faturasId = new HashMap<>();
+        this.alteracoes = new HashMap<>();
     }
     
     /**
