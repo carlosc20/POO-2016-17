@@ -84,7 +84,7 @@ public class Estado implements Serializable
     public void addContribuinte(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         this.contribuintes.put(nif, contribuinte);
-        this.faturas.put(nif, new TreeSet<>((a, b) -> a.getDataEmissao().compareTo(b.getDataEmissao())));
+        this.faturas.put(nif, new TreeSet<>());
     }
     
     /**
@@ -213,10 +213,10 @@ public class Estado implements Serializable
      * @return Set com as faturas
      */
     public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente) throws NaoExisteContribuinteException {
-        if(this.contribuintes.get(nifEmitente) != null){
+        if(this.contribuintes.get(nifEmitente) == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
         }
-        
+
         Set<Fatura> faturas = this.faturas.get(nifCliente);
         
         if(faturas == null){
@@ -245,7 +245,7 @@ public class Estado implements Serializable
      * @return Set com as faturas
      */
     public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, LocalDate inicio, LocalDate fim) throws NaoExisteContribuinteException {
-        if(this.contribuintes.get(nifEmitente) != null){
+        if(this.contribuintes.get(nifEmitente) == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
         }
         
@@ -254,6 +254,7 @@ public class Estado implements Serializable
         if(faturas == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifCliente));
         }
+
         
         faturas = faturas.subSet(new Fatura(inicio), new Fatura(fim));
         Set<Fatura> resultado = new HashSet<>();
@@ -277,7 +278,7 @@ public class Estado implements Serializable
      * @return Set com as faturas
      */
     public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator<Fatura> c) throws NaoExisteContribuinteException {
-        if(this.contribuintes.get(nifEmitente) != null){
+        if(this.contribuintes.get(nifEmitente) == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
         }
         

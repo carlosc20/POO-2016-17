@@ -6,7 +6,9 @@
  * @version (a version number or a date)
  */
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.HashSet;
 import java.util.Comparator;
@@ -23,8 +25,7 @@ import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.HashMap;
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.SortedSet;
+import java.time.format.DateTimeParseException;
 import java.util.stream.Collectors;
 
 public class App
@@ -119,7 +120,7 @@ public class App
             new Opcao() { public void escolher() { 
                     Contribuinte cont;
                     try {
-                        cont = login();
+                        cont = login(s);
                         if (cont instanceof Individual){
                             menuInd(s, (Individual) cont);
                         } else {
@@ -222,15 +223,26 @@ public class App
         return resultado;
     }
     
-    private static LocalDate scanData(Scanner s){
-        return LocalDate.now();//acabar
+    private static LocalDate scanData(Scanner s) throws DateTimeParseException {
+        String data = s.nextLine();
+        try{
+            return LocalDate.parse(data);
+        } catch(DateTimeParseException e){
+            if(data.equals("")){
+                LocalDate agora = LocalDate.now();
+                System.out.println(agora);
+                return agora;
+            } else {
+                throw e;
+            }
+        }   
     }
     
     private static AtivEco scanAtiv(Scanner s){
         
         AtivEco[] ativs = AtivEco.values();
         for(int i = 0; i < ativs.length; i++){
-             System.out.println(i + "->" + ativs[i]);
+             System.out.println(i + "->" + ativs[i].fancyToString());
         }
         
         int esc;
@@ -496,15 +508,16 @@ public class App
     }
     
     private static void  verFaturasContIntervalo(Scanner s, Coletivo cont, int ind){
+        try {
+            System.out.println("De:");
+            LocalDate inicio = scanData(s);
         
-        System.out.println("De:");
-        LocalDate inicio = scanData(s);
-        
-        System.out.println("Até:");
-        LocalDate fim = scanData(s);
-        
-        try{
+            System.out.println("Até:");
+            LocalDate fim = scanData(s);
             verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, inicio, fim));
+            
+        } catch (DateTimeParseException e){
+            System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");
         } catch (NaoExisteContribuinteException e){
             System.out.println("Contribuinte não encontrado: " + e.getMessage());
         }
@@ -512,36 +525,37 @@ public class App
     
     private static void  verTotalFaturado(Scanner s, Coletivo cont) {
         
-        System.out.println("De:");
-        LocalDate inicio = scanData(s);
+        try {
+            System.out.println("De:");
+            LocalDate inicio = scanData(s);
         
-        System.out.println("Até:");
-        LocalDate fim = scanData(s);
-        
-        System.out.println(cont.totalFaturado(inicio, fim));
+            System.out.println("Até:");
+            LocalDate fim = scanData(s);
+            
+            System.out.println(cont.totalFaturado(inicio, fim));
+            
+        } catch (DateTimeParseException e){
+            System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");
+        }
     }
     
 
     
     
     
-    private static Contribuinte login() throws PasswordErradaException, NaoExisteContribuinteException, NumberFormatException{
+    private static Contribuinte login(Scanner s) throws PasswordErradaException, NaoExisteContribuinteException, NumberFormatException{
         String passwd;
         Contribuinte resultado = null;
-        Scanner scanner = new Scanner(System.in);
-        int tentativas = 3;
         
         System.out.println("Nº de Contribuinte:");
-        String nif = scanner.nextLine();
+        String nif = s.nextLine();
         resultado = estado.getContribuinte(Integer.parseInt(nif));
         
         System.out.println("Senha de acesso:");
-        passwd = scanner.nextLine();
+        passwd = s.nextLine();
         if(!passwd.equals(resultado.getPassword())){
             throw new PasswordErradaException(passwd);
         }
-        
-        scanner.close();
         
         return resultado;
     }
