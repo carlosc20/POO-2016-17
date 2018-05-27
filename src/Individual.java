@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 public class Individual extends Contribuinte
 {
-    // situação sócioprossional, que pode ser utilizada para o cálculo das deduções fiscais: 
     private Set<Integer> dependentesAF; // AF = agregado familiar
     private float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível
     private List<AtivEco> ativDedutiveis; 
