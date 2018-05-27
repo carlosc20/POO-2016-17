@@ -33,6 +33,8 @@ public class Estado implements Serializable
     
     private Map<Integer, Fatura> faturasId;
     
+    
+    
     private TabelaIncentivoFiscal tabela;
     
     /**

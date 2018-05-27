@@ -16,7 +16,7 @@ public abstract class Contribuinte
     private String nome;
     private String email;
     private String morada;
-    private String password; //Isto é muito seguro
+    private String password; 
     private float totalGasto;
     
     /**
