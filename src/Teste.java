@@ -75,7 +75,7 @@ public class Teste
         }
        
         App teste = new App(estado);
-        teste.run();
+        teste.main(null);
     }
 }
 

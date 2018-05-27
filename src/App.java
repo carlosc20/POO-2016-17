@@ -51,24 +51,25 @@ public class App
     
     
     public static void main(String[] args) {
-        
+        /*
         try {
             estado = Estado.leEstado();
         }
         catch(Exception e){
             estado = new Estado();
         }
-        
+        */
         Scanner s = new Scanner(System.in);
         menuInicial(s);
         s.close();
-        
+        /*
         try {
             estado.guardaEstado();
         } 
         catch(IOException e){
             System.out.print(e.getMessage());
         }
+        */
     }
     
     public void run(){
@@ -113,6 +114,9 @@ public class App
                     Contribuinte cont;
                     try {
                         cont = login(s);
+                        if (cont instanceof Administrador){
+                            menuAdmin(s);
+                        } else
                         if (cont instanceof Individual){
                             menuInd(s, (Individual) cont);
                         } else {
@@ -152,11 +156,11 @@ public class App
     }
     
     
-    private static void menuAdmin(Scanner s, Individual cont) {
+    private static void menuAdmin(Scanner s) {
         String[] desc = new String[] {
             "Registar contribuinte", 
             "Ver os 10 contribuintes que gastam mais",
-            "Ver as 10 empresas que mais faturam"
+            "Ver as N empresas que mais faturam"
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { menuAdminRegistar(s); } }, 
@@ -216,7 +220,7 @@ public class App
         
         //cenas
         
-        estado.addContribuinte(new Individual(nif, nome, email, morada, password, coefFiscal, nifAF, ativDedutiveis));
+        //estado.addContribuinte(new Individual(nif, nome, email, morada, password, coefFiscal, nifAF, ativDedutiveis));
     }
     
     private static void registarCol(Scanner s){
