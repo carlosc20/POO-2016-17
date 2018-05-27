@@ -6,7 +6,9 @@
  * @version (a version number or a date)
  */
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.HashSet;
 import java.util.Comparator;
@@ -23,8 +25,7 @@ import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.util.HashMap;
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.SortedSet;
+import java.time.format.DateTimeParseException;
 import java.util.stream.Collectors;
 
 public class App
@@ -119,7 +120,7 @@ public class App
             new Opcao() { public void escolher() { 
                     Contribuinte cont;
                     try {
-                        cont = login();
+                        cont = login(s);
                         if (cont instanceof Individual){
                             menuInd(s, (Individual) cont);
                         } else {
@@ -141,51 +142,8 @@ public class App
         menu(s, ops, desc);
     }
     
-    private static int maisGastador(Contribuinte a, Contribuinte b){
-        try {
-            Set<Fatura> faturasA = estado.getFaturas(a.getNif());
-            Set<Fatura> faturasB = estado.getFaturas(a.getNif());
-        } catch(NaoExisteContribuinteException err){
-            return 0;
-        }
-
-        float totalA = a.getTotalGasto();
-        float totalB = b.getTotalGasto();
-        
-        if(totalA > totalB){
-            return -1;
-        } else if(totalA > totalB){
-            return 1;
-        }
-        
-        return 0;
-    }
-    
-    private static int maisFaturador(Coletivo a, Coletivo b){
-        try{
-            Set<Fatura> faturasA = estado.getFaturas(a.getNif());
-            Set<Fatura> faturasB = estado.getFaturas(a.getNif());
-        } catch(NaoExisteContribuinteException err){
-            return 0;
-        }
-        float totalA = a.totalFaturado();
-        float totalB = b.totalFaturado();
-        
-        if(totalA > totalB){
-            return -1;
-        } else if(totalA > totalB){
-            return 1;
-        }
-        
-        return 0;
-    }
-    
     private static Set<Contribuinte> topGastadores(int n){
-        Set<Contribuinte> ordenar = new TreeSet<Contribuinte>(new Comparator<Contribuinte>() {
-            public int compare(Contribuinte a, Contribuinte b) {
-                return maisGastador(a, b);
-            }
-        });
+        SortedSet<Contribuinte> ordenar = new TreeSet<Contribuinte>( (a, b) -> Float.compare(a.getTotalGasto(), b.getTotalGasto()) );
         Set<Contribuinte> resultado = new HashSet<Contribuinte>();
         
         for(Contribuinte contribuinte : estado.getContribuintes()){
@@ -201,19 +159,17 @@ public class App
         return resultado;
     }
     
-    private static Set<Contribuinte> topFaturadores(int n){
-        Set<Contribuinte> ordenar = new TreeSet<Contribuinte>(new Comparator<Contribuinte>() {
-            public int compare(Contribuinte a, Contribuinte b) {
-                return maisFaturador((Coletivo) a, (Coletivo) b);
-            }
-        });
-        Set<Contribuinte> resultado = new HashSet<Contribuinte>();
+    private static Set<Coletivo> topFaturadores(int n){
+        Set<Coletivo> ordenar = new TreeSet<Coletivo>( (a, b) -> Float.compare(a.totalFaturado(), b.totalFaturado()) );
+        Set<Coletivo> resultado = new HashSet<Coletivo>();
         
         for(Contribuinte contribuinte : estado.getContribuintes()){
-            ordenar.add(contribuinte);
+            if(contribuinte instanceof Coletivo){
+                ordenar.add((Coletivo) contribuinte);
+            }
         }
         
-        Iterator<Contribuinte> iter = ordenar.iterator();
+        Iterator<Coletivo> iter = ordenar.iterator();
         
         for(int i = 0; i < n && iter.hasNext(); i++){
             resultado.add(iter.next());
@@ -222,15 +178,26 @@ public class App
         return resultado;
     }
     
-    private static LocalDate scanData(Scanner s){
-        return LocalDate.now();//acabar
+    private static LocalDate scanData(Scanner s) throws DateTimeParseException {
+        String data = s.nextLine();
+        try{
+            return LocalDate.parse(data);
+        } catch(DateTimeParseException e){
+            if(data.equals("")){
+                LocalDate agora = LocalDate.now();
+                System.out.println(agora);
+                return agora;
+            } else {
+                throw e;
+            }
+        }   
     }
     
     private static AtivEco scanAtiv(Scanner s){
         
         AtivEco[] ativs = AtivEco.values();
         for(int i = 0; i < ativs.length; i++){
-             System.out.println(i + "->" + ativs[i]);
+             System.out.println(i + "->" + ativs[i].fancyToString());
         }
         
         int esc;
@@ -326,7 +293,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try{
-                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() )));
+                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( Float.compare(a.getValorTotal(), b.getValorTotal()) )));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
@@ -404,7 +371,8 @@ public class App
     
     private static void emitirFatura(Scanner s, Coletivo cont){
         int nif;
-        int valor;
+        float valor;
+        LocalDate data;
         String desc;
 
         System.out.println("Dados da Fatura");
@@ -419,9 +387,17 @@ public class App
         
         System.out.println("Valor em euros:");
         try {
-            valor = Integer.parseInt(s.nextLine());
+            valor = Float.parseFloat(s.nextLine());
         } catch (NumberFormatException e) {
             System.out.println("Input Errado");
+            return;
+        }
+        
+        System.out.println("Data de emissão:");
+        try {
+            data = scanData(s);
+        } catch (DateTimeParseException e){
+            System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");
             return;
         }
         
@@ -451,7 +427,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try{
-                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - a.getValorTotal() )));
+                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( Float.compare(b.getValorTotal(), a.getValorTotal()) )));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
@@ -478,7 +454,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try {
-                        verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( b.getValorTotal() - a.getValorTotal() )));
+                        verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( Float.compare(b.getValorTotal(), a.getValorTotal())    )));
                     } catch(NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
@@ -496,15 +472,16 @@ public class App
     }
     
     private static void  verFaturasContIntervalo(Scanner s, Coletivo cont, int ind){
+        try {
+            System.out.println("De:");
+            LocalDate inicio = scanData(s);
         
-        System.out.println("De:");
-        LocalDate inicio = scanData(s);
-        
-        System.out.println("Até:");
-        LocalDate fim = scanData(s);
-        
-        try{
+            System.out.println("Até:");
+            LocalDate fim = scanData(s);
             verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, inicio, fim));
+            
+        } catch (DateTimeParseException e){
+            System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");
         } catch (NaoExisteContribuinteException e){
             System.out.println("Contribuinte não encontrado: " + e.getMessage());
         }
@@ -512,36 +489,37 @@ public class App
     
     private static void  verTotalFaturado(Scanner s, Coletivo cont) {
         
-        System.out.println("De:");
-        LocalDate inicio = scanData(s);
+        try {
+            System.out.println("De:");
+            LocalDate inicio = scanData(s);
         
-        System.out.println("Até:");
-        LocalDate fim = scanData(s);
-        
-        System.out.println(cont.totalFaturado(inicio, fim));
+            System.out.println("Até:");
+            LocalDate fim = scanData(s);
+            
+            System.out.println(cont.totalFaturado(inicio, fim));
+            
+        } catch (DateTimeParseException e){
+            System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");
+        }
     }
     
 
     
     
     
-    private static Contribuinte login() throws PasswordErradaException, NaoExisteContribuinteException, NumberFormatException{
+    private static Contribuinte login(Scanner s) throws PasswordErradaException, NaoExisteContribuinteException, NumberFormatException{
         String passwd;
         Contribuinte resultado = null;
-        Scanner scanner = new Scanner(System.in);
-        int tentativas = 3;
         
         System.out.println("Nº de Contribuinte:");
-        String nif = scanner.nextLine();
+        String nif = s.nextLine();
         resultado = estado.getContribuinte(Integer.parseInt(nif));
         
         System.out.println("Senha de acesso:");
-        passwd = scanner.nextLine();
+        passwd = s.nextLine();
         if(!passwd.equals(resultado.getPassword())){
             throw new PasswordErradaException(passwd);
         }
-        
-        scanner.close();
         
         return resultado;
     }

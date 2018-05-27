@@ -84,7 +84,7 @@ public class Estado implements Serializable
     public void addContribuinte(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         this.contribuintes.put(nif, contribuinte);
-        this.faturas.put(nif, new TreeSet<>((a, b) -> a.getDataEmissao().compareTo(b.getDataEmissao())));
+        this.faturas.put(nif, new TreeSet<>());
     }
     
     /**
@@ -213,10 +213,10 @@ public class Estado implements Serializable
      * @return Set com as faturas
      */
     public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente) throws NaoExisteContribuinteException {
-        if(this.contribuintes.get(nifEmitente) != null){
+        if(this.contribuintes.get(nifEmitente) == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
         }
-        
+
         Set<Fatura> faturas = this.faturas.get(nifCliente);
         
         if(faturas == null){
@@ -245,7 +245,7 @@ public class Estado implements Serializable
      * @return Set com as faturas
      */
     public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, LocalDate inicio, LocalDate fim) throws NaoExisteContribuinteException {
-        if(this.contribuintes.get(nifEmitente) != null){
+        if(this.contribuintes.get(nifEmitente) == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
         }
         
@@ -254,6 +254,7 @@ public class Estado implements Serializable
         if(faturas == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifCliente));
         }
+
         
         faturas = faturas.subSet(new Fatura(inicio), new Fatura(fim));
         Set<Fatura> resultado = new HashSet<>();
@@ -277,7 +278,7 @@ public class Estado implements Serializable
      * @return Set com as faturas
      */
     public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator<Fatura> c) throws NaoExisteContribuinteException {
-        if(this.contribuintes.get(nifEmitente) != null){
+        if(this.contribuintes.get(nifEmitente) == null){
             throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
         }
         
@@ -345,11 +346,11 @@ public class Estado implements Serializable
         Set<Fatura> faturasCliente = this.faturas.get(nifCliente);
         
         if(faturasEmitente == null){
-            faturasEmitente = new TreeSet<Fatura>((a, b) -> a.getDataEmissao().compareTo(b.getDataEmissao()));
+            faturasEmitente = new TreeSet<Fatura>();
         }
         
         if(faturasCliente == null){
-            faturasCliente = new TreeSet<Fatura>((a, b) -> a.getDataEmissao().compareTo(b.getDataEmissao()));
+            faturasCliente = new TreeSet<Fatura>();
         }
         
         faturasEmitente.add(clone);
@@ -379,6 +380,32 @@ public class Estado implements Serializable
     }
     
     /**
+     * Calcula o total faturado num intervalo de tempo
+     * 
+     * @param nif       Número de contribuinte
+     * @param inicio    Data de início
+     * @param fim       Data de fim
+     * 
+     * @return True se a Fatura existir no Set das Faturas do Emitente
+     */
+    public float totalFaturado(int nif, LocalDate inicio, LocalDate fim) throws NaoExisteContribuinteException {
+        SortedSet<Fatura> faturas = this.faturas.get(nif);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        
+        faturas = faturas.subSet(new Fatura(inicio), new Fatura(fim));
+        
+        float resultado = 0.0f;
+        for(Fatura fatura : faturas){
+            resultado += fatura.getValorTotal();
+        }
+        
+        return resultado;
+    }
+    
+    /**
      * Calcula a deduçao das Faturas, atraves da atividade Economica
      * 
      * @param faturas Set com as faturas a ser deduzidas
@@ -387,11 +414,13 @@ public class Estado implements Serializable
      */
     private float calculaDeducaoFaturas(Set<Fatura> faturas){
         float resultado = 0;
-        int valorFatura;
+        float valorFatura;
         float ativEcoPercen;
         float ativEcoLimite;
         
-        if(faturas == null){return 0;}
+        if(faturas == null){
+            return 0;
+        }
         
         for(Fatura fatura : faturas){
             valorFatura = fatura.getValorTotal();

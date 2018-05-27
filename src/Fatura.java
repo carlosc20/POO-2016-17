@@ -6,9 +6,10 @@
  * @version 17/05/2018
  */
 
+import java.lang.Comparable;
 import java.time.LocalDate;
 
-public class Fatura {
+public class Fatura implements Comparable<Fatura> {
     private static int totalFaturas;
     
     private int id;
@@ -17,7 +18,7 @@ public class Fatura {
     private int nifCliente;
     private String descricao;
     private AtivEco ativEconomica;
-    private int valorTotal;
+    private float valorTotal;
     
     /**
      * Construtor para objetos da classe Fatura
@@ -30,7 +31,7 @@ public class Fatura {
         this.setNifCliente(0);
         this.setDescricao("");
         this.setAtivEconomica(ativEconomica.Pendente);
-        this.setValorTotal(0);
+        this.setValorTotal(0.0f);
     }
     
     /**
@@ -42,11 +43,11 @@ public class Fatura {
     public Fatura(LocalDate dataEmissao){
         this.id = -1;
         this.setNifEmitente(0);
-        this.setDataEmissao(LocalDate.now());
+        this.setDataEmissao(dataEmissao);
         this.setNifCliente(0);
         this.setDescricao("");
         this.setAtivEconomica(ativEconomica.Pendente);
-        this.setValorTotal(0);
+        this.setValorTotal(0.0f);
     }
     
     /**
@@ -60,7 +61,7 @@ public class Fatura {
      * @param  ativEco           Atividade económica da fatura
      * @param  valorTotal        Valor da fatura
      */
-    public Fatura(int emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, int valorTotal) {
+    public Fatura(int emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, float valorTotal) {
         this.setId();
         this.setNifEmitente(emitente);
         this.setDataEmissao(dataEmissao);
@@ -84,7 +85,7 @@ public class Fatura {
         this.setValorTotal(other.getValorTotal());
     }
 
-	/**
+    /**
      * Construtor para objetos da classe Fatura copiando outra fatura
      * Atribui o id passado como parâmetro
      */
@@ -108,7 +109,7 @@ public class Fatura {
 
     /**
      * Atribui um id passado como parâmetro
-     * @param id 		Novo id da fatura
+     * @param id        Novo id da fatura
      */
     private void setId(int id) {
         this.id = id;
@@ -124,13 +125,13 @@ public class Fatura {
 
     /**
      * Atribui o NIF do emitente à fatura
-     * @param nif 		Novo nif da fatura
+     * @param nif       Novo nif da fatura
      */
     public void setNifEmitente(int nif) {
         this.nifEmitente = nif;
     }
 
-	/**
+    /**
      * Retorna o NIF do emitente da fatura
      * @return NIF do emitente da fatura
      */
@@ -140,7 +141,7 @@ public class Fatura {
 
     /**
      * Atribui uma nova data de emissão à fatura
-     * @param dataEmissao 		Nova data de emissão
+     * @param dataEmissao       Nova data de emissão
      */
     public void setDataEmissao(LocalDate dataEmissao) {
         this.dataEmissao = dataEmissao;
@@ -156,7 +157,7 @@ public class Fatura {
 
     /**
      * Atribui um novo NIF do cliente
-     * @param nifCliente 		Novo NIF do cliente
+     * @param nifCliente        Novo NIF do cliente
      */
     public void setNifCliente(int nifCliente) {
         this.nifCliente = nifCliente;
@@ -172,7 +173,7 @@ public class Fatura {
 
     /**
      * Atribui uma nova descrição
-     * @param descricao 		Nova descrição
+     * @param descricao         Nova descrição
      */
     public void setDescricao(String descricao) {
         this.descricao = descricao;
@@ -188,7 +189,7 @@ public class Fatura {
 
     /**
      * Atribui uma nova atividade económica
-     * @param ativEco 		Nova atividade económica
+     * @param ativEco       Nova atividade económica
      */
     public void setAtivEconomica(AtivEco ativEco) {
         this.ativEconomica = ativEco;
@@ -212,9 +213,9 @@ public class Fatura {
 
     /**
      * Atribui um novo valor total da fatura
-     * @param valorTotal 		Novo valor da fatura
+     * @param valorTotal        Novo valor da fatura
      */
-    public void setValorTotal(int valorTotal) {
+    public void setValorTotal(float valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -222,7 +223,7 @@ public class Fatura {
      * Retorna o valor total da fatura
      * @return Valor total da fatura
      */
-    public int getValorTotal() {
+    public float getValorTotal() {
         return this.valorTotal;
     }
     
@@ -253,6 +254,10 @@ public class Fatura {
     
     public int hashCode(){
         return this.getId();
+    }
+    
+    public int compareTo(Fatura o){
+        return this.dataEmissao.compareTo(o.getDataEmissao());
     }
 
     public String fancyToString(){

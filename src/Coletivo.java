@@ -63,7 +63,7 @@ public class Coletivo extends Contribuinte
      * @return Uma nova fatura
      */
     // Por fazer
-    public Fatura emitirFatura(int valor,int cliente, LocalDate data, String descricao){
+    public Fatura emitirFatura(float valor,int cliente, LocalDate data, String descricao){
         AtivEco atividadeE = AtivEco.Pendente; //fica à espera de validaçao do cliente
         
         if(ativEco.size() == 1) {
