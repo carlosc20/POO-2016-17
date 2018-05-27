@@ -25,7 +25,7 @@ public class Individual extends Contribuinte
     {
         super();
         this.dependentesAF = new HashSet<>();
-        this.coefFiscal = 0;
+        this.coefFiscal = 1.0f;
         this.ativDedutiveis = new HashSet<>(); 
     }
     
@@ -45,9 +45,9 @@ public class Individual extends Contribuinte
     {
         super(nif, nome, email, morada, password);
         this.coefFiscal = coefFiscal;
-        this.dependentesAF = new HashSet<>();
-        this.coefFiscal = 0;
-        this.ativDedutiveis = new HashSet<>();
+        this.dependentesAF = new HashSet<>(nifAF);
+        this.coefFiscal = coefFiscal;
+        this.ativDedutiveis = new HashSet<>(ativDedutiveis);
     }
     
     /**

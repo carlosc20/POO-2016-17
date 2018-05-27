@@ -82,7 +82,7 @@ public class Teste
             while(rand.nextBoolean()){
                 af.add(rand.nextInt(i));
             }
-            Individual novo = new Individual(i, "Cliente " + i, "cliente" + i + "@email.com", "Rua R," + i, "", 0.0f, new HashSet<>(), ativEcos);
+            Individual novo = new Individual(i, "Cliente " + i, "cliente" + i + "@email.com", "Rua R," + i, "", 1.0f, new HashSet<>(), ativEcos);
             this.estado.addContribuinte(novo);
         }
 

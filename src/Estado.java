@@ -473,7 +473,7 @@ public class Estado implements Serializable
      * 
      * @return Soma das deduçoes de todas as Faturas do Set
      */
-    private float calculaDeducaoFaturas(Set<Fatura> faturas){
+    private float calculaDeducaoFaturas(Individual individual, Set<Fatura> faturas){
         float resultado = 0;
         float valorDeduzido;
         AtivEco ativEco;
@@ -504,7 +504,7 @@ public class Estado implements Serializable
             resultado += valor;
         }
         
-        return resultado;
+        return resultado * individual.getCoefFiscal();
     }
     
     /**
@@ -514,11 +514,11 @@ public class Estado implements Serializable
      * 
      * @return Soma das deduçoes de todas as Faturas do Set 
      */
-    public float calculaDeducao(Contribuinte contribuinte){
+    public float calculaDeducao(Individual contribuinte){
         int nif = contribuinte.getNif();
         Set<Fatura> faturas = this.faturas.get(nif);
         
-        return calculaDeducaoFaturas(faturas);
+        return calculaDeducaoFaturas(contribuinte, faturas);
     }
     
     /**
@@ -541,7 +541,12 @@ public class Estado implements Serializable
 
         for(int nif : nifs){
             faturas = this.faturas.get(nif);
-            resultado += calculaDeducaoFaturas(faturas);
+            try{
+                Individual individual = (Individual) this.getContribuinte(nif);
+                resultado += calculaDeducaoFaturas(individual, faturas);
+            } catch (NaoExisteContribuinteException e){
+                resultado += 0;
+            }
         }
         
         return resultado;   
