@@ -11,8 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.io.Serializable;
 
-public class Coletivo extends Contribuinte
+public class Coletivo extends Contribuinte implements Serializable
 {
 
     private String concelho;

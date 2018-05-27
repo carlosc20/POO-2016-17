@@ -8,8 +8,9 @@
  */
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.io.Serializable;
 
-public abstract class Contribuinte
+public abstract class Contribuinte implements Serializable
 {
 
     private int nif;

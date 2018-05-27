@@ -34,9 +34,7 @@ public class Teste
     @Before
     public void setUp()
     {
-       Coletivo col1 = new Coletivo(1001, "Restaurante", "rest@email.com", "Rua Rest", "", "Braga", new java.util.HashSet<>());
-       Individual ind1 = new Individual(1, "John Doe", "johndoe@email.com", "Rua Aqui", "", 0.0f, new HashSet<>(), new HashSet<>());
-       Fatura fat1 = new Fatura(1001, LocalDate.ofYearDay(2018, 20), 1, "Comida", AtivEco.Pendente, 10);
+
     }
 
     /**
@@ -53,6 +51,7 @@ public class Teste
     @Test
     public void testarMenu()
     {
+        
         this.estado = new Estado();
         int numEmpresas = 10;
         int numClientes = 25;
@@ -98,8 +97,15 @@ public class Teste
                 }
             }
         }
-       
+        
         App teste = new App(estado);
+        teste.main(null);
+    }
+    
+    @Test
+    public void testarMenuSemDados()
+    {
+        App teste = new App();
         teste.main(null);
     }
 }

@@ -5,7 +5,9 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-public class FamiliaNumerosa extends Individual implements CasoEspecial
+import java.io.Serializable;
+
+public class FamiliaNumerosa extends Individual implements CasoEspecial, Serializable
 {
     private static int minimo = 4;
     private float bonificacao;
@@ -30,7 +32,7 @@ public class FamiliaNumerosa extends Individual implements CasoEspecial
      */
     public double reducaoImposto(){
 
-        return 0;
+        return 1.2;
     }
     
     public static int minimoDeDependentes(){

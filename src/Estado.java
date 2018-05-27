@@ -69,7 +69,7 @@ public class Estado implements Serializable
         return e;
     }
     
-    //Fazer documentação
+  
     
     public float getIncentivoFiscal(String nomeDoConcelho){
         return this.tabela.getIncentivoFiscal(nomeDoConcelho);
@@ -480,6 +480,7 @@ public class Estado implements Serializable
         float valorAtual;
         float limite;
         float total;
+        float fatorMult;
         Map<AtivEco, Float> ativEcoValores = new HashMap<>();
         
         if(faturas == null){
@@ -487,12 +488,24 @@ public class Estado implements Serializable
         }
 
         for(Fatura fatura : faturas){
-            valorDeduzido = fatura.getValorDeduzido();
+            fatorMult = 1;
+            Individual cont = (Individual) this.contribuintes.get(fatura.getNifCliente());//pode dar erro se for apagado um contribuinte
+            Coletivo emit = (Coletivo) this.contribuintes.get(fatura.getNifEmitente());
+            Set<AtivEco> ativs = cont.getAtivDedutiveis();
+            
+            if(cont instanceof CasoEspecial){
+                fatorMult *= ((CasoEspecial)cont).reducaoImposto();
+            }
+            if(emit instanceof CasoEspecial){
+                fatorMult *= ((CasoEspecial)cont).reducaoImposto();
+            }
             ativEco = fatura.getAtivEconomica();
+            if(!ativs.contains(ativEco)) break;
+            valorDeduzido = fatura.getValorDeduzido();
             limite = ativEco.getLimite();
             valorAtual = ativEcoValores.get(ativEco);
-            total = valorAtual + valorDeduzido;
-
+            total = valorAtual + valorDeduzido * fatorMult;
+            
             if(total <= limite){
                 valorAtual = total;
             } else {

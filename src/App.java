@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.HashSet;
 import java.util.Comparator;
@@ -37,6 +38,7 @@ public class App
             estado = Estado.leEstado();
         }
         catch(Exception e){
+            System.out.print("Falha ao abrir estado anterior\n");
             estado = new Estado();
         }
     }
@@ -51,34 +53,13 @@ public class App
     
     
     public static void main(String[] args) {
-        /*
-        try {
-            estado = Estado.leEstado();
-        }
-        catch(Exception e){
-            estado = new Estado();
-        }
-        */
+
         Scanner s = new Scanner(System.in);
         menuInicial(s);
         s.close();
-        /*
-        try {
-            estado.guardaEstado();
-        } 
-        catch(IOException e){
-            System.out.print(e.getMessage());
-        }
-        */
+        
     }
     
-    public void run(){
-        
-        Scanner s = new Scanner(System.in);
-        menuInicial(s);
-        s.close();
-        
-    }
     
     private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
         
@@ -107,7 +88,9 @@ public class App
     
     private static void menuInicial(Scanner s) {
         String[] desc = new String[] {
-            "Login"
+            "Login",
+            "Guardar estado",
+            "Abrir estado"
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { 
@@ -133,6 +116,26 @@ public class App
                         return;
                     }
                 } 
+            },
+            new Opcao() { public void escolher() { 
+                    try {
+                        estado.guardaEstado();
+                    } 
+                    catch(IOException e){
+                        System.out.print("Não foi possível guardar o estado");
+                        System.out.print(e.getMessage());
+                    }
+                }
+            },
+            new Opcao() { public void escolher() { 
+                    try {
+                        estado = Estado.leEstado();
+                    }
+                    catch(Exception e){
+                        System.out.print("Falha ao abrir estado anterior\n");
+                        estado = new Estado();
+                    }
+                }
             }
         };
         menu(s, ops, desc);
@@ -160,7 +163,7 @@ public class App
             "Registar contribuinte", 
             "Ver os 10 contribuintes que gastam mais",
             "Ver as N empresas que mais faturam",
-            "Ver alterações"
+            "Ver alterações de uma fatura"
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { menuAdminRegistar(s); } }, 
@@ -176,13 +179,24 @@ public class App
                              
                           } 
                         },
-            new Opcao() { public void escolher() { menuVerAlteracoes(s); } }           
+            new Opcao() { public void escolher() { 
+                            int id = scanNumber(s);
+                            try{
+                                verAlteracoes(estado.getAlteracoes(id)); 
+                            }
+                            catch(NaoExistemAlteracoesException e){
+                                System.out.println("Não tem alterações");
+                            }
+            } }           
         };
         menu(s, ops, desc);
     }
     
-    private static void menuVerAlteracoes(Scanner s){
-    
+
+    private static void verAlteracoes(List<Alteracao> alteracoes) {
+        for(Alteracao a : alteracoes){
+            System.out.println(a.fancyToString()); 
+        }
     }
     
     private static void menuAdminRegistar(Scanner s) {

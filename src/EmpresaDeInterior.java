@@ -5,7 +5,9 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-public class EmpresaDeInterior extends Coletivo implements CasoEspecial
+import java.io.Serializable;
+
+public class EmpresaDeInterior extends Coletivo implements CasoEspecial, Serializable
 {
     private float incentivo;
     /**
@@ -29,7 +31,7 @@ public class EmpresaDeInterior extends Coletivo implements CasoEspecial
      */
     public double reducaoImposto(){
 
-        return 0;
+        return 1.2;
     }
     
 }
