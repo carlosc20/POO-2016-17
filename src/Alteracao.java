@@ -30,22 +30,47 @@ public class Alteracao implements Serializable
         return new Alteracao(this);
     }
     
+    /**
+     * Retorna a data da alteração
+     * 
+     * @return data da alteraçao
+     */
     public LocalDate getData(){
         return this.data;
     }
     
+    /**
+     * Retorna o id da Fatura que foi alterada
+     * 
+     * @return Id da Fatura
+     */
     public int getFatura(){
         return this.fatura;
     }
     
+        /**
+     * Retorna a Atividade economica nova
+     * 
+     * @return Atividade Economica nova
+     */
     public AtivEco getNova(){
         return this.nova;
     }
     
+    /**
+     * Retorna a Atividade economica antiga
+     * 
+     * @return Atividade Economica antiga
+     */
     public AtivEco getAntiga(){
         return this.antiga;
     }
     
+    /**
+     * Retorna uma String com a informação das Alteraçoes feitas num fatura, nomeadamente na atividade economica
+     * 
+     * @return String com as informações a serem apresentadas a um user
+     */
     public String fancyToString(){
         StringBuilder sb = new StringBuilder("");
         sb.append("Id da Fatura: ").append(fatura).append(";");

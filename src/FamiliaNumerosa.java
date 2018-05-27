@@ -34,7 +34,7 @@ public class FamiliaNumerosa extends Individual implements CasoEspecial, Seriali
 
         return 1.2;
     }
-    
+
     public static int minimoDeDependentes(){
         return minimo;
     }

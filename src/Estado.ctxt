@@ -66,6 +66,7 @@ comment5.params=nomeDoConcelho\ incentivo
 comment5.target=void\ setIncentivoFiscal(java.lang.String,\ float)
 comment6.params=nomeDoConcelho
 comment6.target=void\ removeIncentivoFiscal(java.lang.String)
+comment6.text=\r\n\ Remove\ Incentivo\ Fiscal\r\n\ \r\n\ @param\ nomeDoConcelho\ Concelho\ a\ ser\ removido\r\n
 comment7.params=nif
 comment7.target=Contribuinte\ getContribuinte(int)
 comment7.text=\r\n\ Obtem\ as\ informa\u00E7\u00F5es\ do\ Contribuinte\ guardadas\ na\ Map,\ usando\ o\ NIF\r\n\ \r\n\ @param\ NIF\ Numero\ de\ Identifica\u00E7\u00E3o\ Fiscal\r\n\ \r\n\ @return\ Clone\ do\ objeto\ Contribuite\r\n
