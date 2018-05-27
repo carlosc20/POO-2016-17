@@ -122,7 +122,7 @@ public class Estado implements Serializable
     }
     
     public void addAlteracao(Alteracao alter){
-        int id = alter.getId();
+        int id = alter.getFatura();
         List<Alteracao> resultado = this.alteracoes.get(id);
         if (resultado == null) {
             resultado = new ArrayList<Alteracao>();
@@ -131,12 +131,18 @@ public class Estado implements Serializable
         resultado.add(alter);
     }
     
-    public List<Alteracao> getAlteracoes(int id){
-        List<Alteracao> resultado = this.alteracoes.get(id);
+    public List<Alteracao> getAlteracoes(int id) throws NaoExistemAlteracoesException{
+        List<Alteracao> alteracao = this.alteracoes.get(id);
+        List<Alteracao> resultado = new ArrayList<>();
+        
+        for(Alteracao alt : alteracao){
+            resultado.add(alt.clone());
+        }
+        
         if(resultado == null){
             throw new NaoExistemAlteracoesException(Integer.toString(id));
         }
-        return resultado.clone();
+        return resultado;
     }
     
     /**

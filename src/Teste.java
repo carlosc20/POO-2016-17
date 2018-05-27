@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.time.LocalDate;
 
 /**
@@ -56,8 +57,9 @@ public class Teste
         int numEmpresas = 10;
         int numClientes = 25;
         String[] concelhos = {"Braga", "Guimarães", "Aveiro", "Lisboa", "Guarda", "Castelo Branco"};
+        Random rand = new Random();
         for(int i = 0; i < numEmpresas; i++){
-            Coletivo novo = new Coletivo(1000 + i, "Empresa " + i, "empresa" + i + "@email.com", "Rua R, " + i, "", concelhos[new Random(concelhos.length)], new java.util.HashSet<>());
+            Coletivo novo = new Coletivo(1000 + i, "Empresa " + i, "empresa" + i + "@email.com", "Rua R, " + i, "", concelhos[rand.nextInt(concelhos.length)], new java.util.HashSet<>());
             this.estado.addContribuinte(novo);
         }
         
@@ -70,7 +72,11 @@ public class Teste
             for(int j = i; j < numClientes; j++){
                 for(int k = 0; k < j; k++){
                     Fatura novo = new Fatura(1000 + i, LocalDate.ofYearDay(2018, i * j + k + 1), j, "Comida", AtivEco.Pendente, i * j + k);
-                    this.estado.addFatura(novo);
+                    try{
+                        this.estado.addFatura(novo);
+                    } catch (Exception e) {
+                        System.out.println("Fatura não emitida: " + e.getMessage());
+                    }
                 }
             }
         }

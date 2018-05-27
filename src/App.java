@@ -487,7 +487,7 @@ public class App
             if(emitente.temAtivEco(ativ)) {
                 fatura.setAtivEconomica(ativ);
                 estado.addFatura(fatura);
-                addAlteracao(new Alteracao(fatura.getId(),fatura.getAtivEconomica(), ativ, LocalDate.now()));
+                estado.addAlteracao(new Alteracao(fatura.getId(),fatura.getAtivEconomica(), ativ, LocalDate.now()));
                 System.out.println("Atribuição concluída com sucesso");
             } else {
                 System.out.println("Erro: A empresa emitente não tem essa atividade económica.");

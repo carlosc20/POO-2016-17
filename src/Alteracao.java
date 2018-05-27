@@ -25,7 +25,42 @@ public class Alteracao
         data = data;
     }
     
-    public Alteracao clone(Alteracao alteracao){
+    public Alteracao clone(){
         return new Alteracao(this);
+    }
+    
+    public LocalDate getData(){
+        return this.data;
+    }
+    
+    public int getFatura(){
+        return this.fatura;
+    }
+    
+    public AtivEco getNova(){
+        return this.nova;
+    }
+    
+    public AtivEco getAntiga(){
+        return this.antiga;
+    }
+    
+    public String fancyToString(){
+        StringBuilder sb = new StringBuilder("");
+        sb.append("Id da Fatura: ").append(fatura).append(";");
+        sb.append("Atividade Economica antiga: ").append(antiga.fancyToString()).append(";");
+        sb.append("Atividade Economica nova: ").append(nova.fancyToString()).append(";");
+        sb.append("Data: ").append(data.toString()).append(";");
+        return sb.toString();
+    }
+    
+    public String toString(){
+        StringBuilder sb = new StringBuilder("Alteraçao{");
+        sb.append("Id da Fatura: ").append(fatura).append(";\n");
+        sb.append("Atividade Economica antiga: ").append(antiga.toString()).append(";\n");
+        sb.append("Atividade Economica nova: ").append(nova.toString()).append(";\n");
+        sb.append("Data: ").append(data.toString()).append(";\n");
+        sb.append("}\n");
+        return sb.toString();
     }
 }
