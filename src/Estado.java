@@ -84,6 +84,7 @@ public class Estado implements Serializable
     public void addContribuinte(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
         this.contribuintes.put(nif, contribuinte);
+        this.faturas.put(nif, new TreeSet<>((a, b) -> a.getDataEmissao().compareTo(b.getDataEmissao())));
     }
     
     /**
@@ -137,9 +138,14 @@ public class Estado implements Serializable
      * 
      * @return Set com as faturas
      */
-    public Set<Fatura> getFaturas(int nif){
-        Set<Fatura> resultado = new HashSet<>();
+    public Set<Fatura> getFaturas(int nif) throws NaoExisteContribuinteException {
         Set<Fatura> faturas = this.faturas.get(nif);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        
+        Set<Fatura> resultado = new HashSet<>();
         
         for(Fatura fatura : faturas){
             resultado.add(fatura.clone());
@@ -156,11 +162,15 @@ public class Estado implements Serializable
      * 
      * @return Set com as faturas
      */
-    public SortedSet<Fatura> getFaturas(int nif, Comparator<Fatura> c){
-        SortedSet<Fatura> resultado = new TreeSet<>(c);
-
+    public SortedSet<Fatura> getFaturas(int nif, Comparator<Fatura> c) throws NaoExisteContribuinteException {
         Set<Fatura> faturas = this.faturas.get(nif);
         
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        
+        SortedSet<Fatura> resultado = new TreeSet<>(c);
+            
         for(Fatura fatura : faturas){
             resultado.add(fatura.clone());
         }
@@ -177,9 +187,15 @@ public class Estado implements Serializable
      * 
      * @return Set com as faturas
      */
-     public Set<Fatura> getFaturas(int nif, LocalDate inicio, LocalDate fim){
+     public Set<Fatura> getFaturas(int nif, LocalDate inicio, LocalDate fim) throws NaoExisteContribuinteException {
+        SortedSet<Fatura> faturas = this.faturas.get(nif);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        
+        faturas = faturas.subSet(new Fatura(inicio), new Fatura(fim));
         Set<Fatura> resultado = new HashSet<>();
-        Set<Fatura> faturas = this.faturas.get(nif).subSet(new Fatura(inicio), new Fatura(fim));
         
         for(Fatura fatura : faturas){
             resultado.add(fatura.clone());
@@ -196,8 +212,17 @@ public class Estado implements Serializable
      * 
      * @return Set com as faturas
      */
-    public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente){
+    public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente) throws NaoExisteContribuinteException {
+        if(this.contribuintes.get(nifEmitente) != null){
+            throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
+        }
+        
         Set<Fatura> faturas = this.faturas.get(nifCliente);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nifCliente));
+        }
+        
         Set<Fatura> resultado = new HashSet<>();
         
         for(Fatura fatura : faturas){
@@ -219,8 +244,18 @@ public class Estado implements Serializable
      * 
      * @return Set com as faturas
      */
-    public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, LocalDate inicio, LocalDate fim){
-        Set<Fatura> faturas = this.faturas.get(nifCliente).subSet(new Fatura(inicio), new Fatura(fim));
+    public Set<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, LocalDate inicio, LocalDate fim) throws NaoExisteContribuinteException {
+        if(this.contribuintes.get(nifEmitente) != null){
+            throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
+        }
+        
+        SortedSet<Fatura> faturas = this.faturas.get(nifCliente);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nifCliente));
+        }
+        
+        faturas = faturas.subSet(new Fatura(inicio), new Fatura(fim));
         Set<Fatura> resultado = new HashSet<>();
         
         for(Fatura fatura : faturas){
@@ -241,8 +276,17 @@ public class Estado implements Serializable
      * 
      * @return Set com as faturas
      */
-    public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator<Fatura> c){
-        Set<Fatura> faturas = this.faturas.get(nifCliente);
+    public SortedSet<Fatura> getFaturasEmComum(int nifEmitente, int nifCliente, Comparator<Fatura> c) throws NaoExisteContribuinteException {
+        if(this.contribuintes.get(nifEmitente) != null){
+            throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
+        }
+        
+        SortedSet<Fatura> faturas = this.faturas.get(nifCliente);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nifCliente));
+        }
+        
         SortedSet<Fatura> resultado = new TreeSet<>(c);
         
         for(Fatura fatura : faturas){
@@ -254,8 +298,13 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif){
+    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif) throws NaoExisteContribuinteException {
         Set<Fatura> faturas = getFaturas(nif);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        
         Map<Integer , Set<Fatura>> resultado = new HashMap<>();
         
         for(Fatura fatura : faturas){
@@ -266,8 +315,13 @@ public class Estado implements Serializable
         return resultado;
     }
     
-    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif, LocalDate inicio, LocalDate fim){
+    public Map<Integer, Set<Fatura>> getFaturasDosContribuintes(int nif, LocalDate inicio, LocalDate fim) throws NaoExisteContribuinteException {
         Set<Fatura> faturas = getFaturas(nif, inicio, fim);
+        
+        if(faturas == null){
+            throw new NaoExisteContribuinteException(Integer.toString(nif));
+        }
+        
         Map<Integer, Set<Fatura>> resultado = new HashMap<>();
         
         for(Fatura fatura : faturas){

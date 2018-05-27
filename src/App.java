@@ -86,75 +86,6 @@ public class App
         
     }
     
-    /*
-    private static Contribuinte login(Scanner s){
-
-        System.out.println("Nº de Contribuinte:");
-        int nif = scanNif(s);
-       
-        System.out.println("Senha de acesso:");
-        String passwd = s.nextLine();
-        
-        
-        try{
-            Contribuinte user = estado.getContribuinte(nif);
-            if (user != null && user.getPassword() == passwd) 
-                return user;
-            else
-                System.out.println("Senha de acesso errada");
-        }
-        catch(NaoExisteContribuinteException e ){
-            System.out.println("Não existe esse Nº de Contribuinte");
-        }
-
-        return null;
-        
-    }
-    */
-        /*
-           Contribuinte user = null;
-        try{
-            user = estado.getContribuinte(1);
-        }
-        catch(NaoExisteContribuinteException e ){
-            System.out.println("Não existe 1");
-        }
-        return user;
-        */
-    private static Contribuinte login(){
-        String passwd;
-        String nif = "";
-        Contribuinte resultado = null;
-        Scanner nifScanner = new Scanner(System.in);
-        Scanner passScanner = new Scanner(System.in);
-        
-        System.out.println("Nº de Contribuinte:");
-        do {
-            nif = nifScanner.nextLine();
-
-            try{
-                resultado = estado.getContribuinte(Integer.parseInt(nif));
-            } catch(NaoExisteContribuinteException err){
-                System.out.println("Nº de Contribuinte não encontrado. Tente novamente:");
-            } catch(NumberFormatException err){
-                System.out.println("Nº de Contribuinte não válido. Tente novamente:");
-            }
-        } while(resultado == null);
-        
-        System.out.println("Senha de acesso:");
-        passwd = passScanner.nextLine();
-        while(!passwd.equals(resultado.getPassword())){
-
-            System.out.println("Senha de acesso errada. Tente novamente:");
-            passwd = passScanner.nextLine();
-        }
-        
-        nifScanner.close();
-        passScanner.close();
-        
-        return resultado;
-    }
-    
     private static void menu(Scanner s, Opcao[] opcoes, String[] desc){
         
         int op = 0;
@@ -166,8 +97,8 @@ public class App
             System.out.println("0 -> Sair/Retroceder");
             
             try {
-                op = s.nextInt();
-            } catch (InputMismatchException e){
+                op = Integer.parseInt(s.nextLine());
+            } catch (NumberFormatException e){
                 System.out.println("Input Errado");
                 op = -1;
             }
@@ -186,22 +117,38 @@ public class App
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { 
-                            Contribuinte cont = login();
-                            if(cont == null) return;
-                            if (cont instanceof Individual){
-                                menuInd(s, (Individual) cont);
-                            } else {
-                                menuCol(s, (Coletivo) cont);
-                            } 
-                           } 
+                    Contribuinte cont;
+                    try {
+                        cont = login();
+                        if (cont instanceof Individual){
+                            menuInd(s, (Individual) cont);
+                        } else {
+                            menuCol(s, (Coletivo) cont);
                         }
+                    } catch(NaoExisteContribuinteException err){
+                        System.out.println("Nº de Contribuinte inexistente.");
+                        return;
+                    } catch(NumberFormatException err){
+                        System.out.println("Nº de Contribuinte inválido.");
+                        return;
+                    } catch(PasswordErradaException err){
+                        System.out.println("Senha errada.");
+                        return;
+                    }
+                } 
+            }
         };
         menu(s, ops, desc);
     }
     
     private static int maisGastador(Contribuinte a, Contribuinte b){
-        Set<Fatura> faturasA = estado.getFaturas(a.getNif());
-        Set<Fatura> faturasB = estado.getFaturas(a.getNif());
+        try {
+            Set<Fatura> faturasA = estado.getFaturas(a.getNif());
+            Set<Fatura> faturasB = estado.getFaturas(a.getNif());
+        } catch(NaoExisteContribuinteException err){
+            return 0;
+        }
+
         float totalA = a.getTotalGasto();
         float totalB = b.getTotalGasto();
         
@@ -215,8 +162,12 @@ public class App
     }
     
     private static int maisFaturador(Coletivo a, Coletivo b){
-        Set<Fatura> faturasA = estado.getFaturas(a.getNif());
-        Set<Fatura> faturasB = estado.getFaturas(a.getNif());
+        try{
+            Set<Fatura> faturasA = estado.getFaturas(a.getNif());
+            Set<Fatura> faturasB = estado.getFaturas(a.getNif());
+        } catch(NaoExisteContribuinteException err){
+            return 0;
+        }
         float totalA = a.totalFaturado();
         float totalB = b.totalFaturado();
         
@@ -284,8 +235,8 @@ public class App
         
         int esc;
         try {
-            esc = s.nextInt();
-        } catch (InputMismatchException e){
+            esc = Integer.parseInt(s.nextLine());
+        } catch (NumberFormatException e){
             System.out.println("Input Errado");
             esc = -1;
         }
@@ -296,8 +247,8 @@ public class App
     private static int scanNif(Scanner s) {
         int nif;
         try {
-            nif = s.nextInt();
-        } catch (InputMismatchException e){
+            nif = Integer.parseInt(s.nextLine());
+        } catch (NumberFormatException e){
             System.out.println("Input Errado");
             nif = -1;
         }
@@ -354,10 +305,42 @@ public class App
             "Por um emitente" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEconomica() == AtivEco.Pendente).collect(Collectors.toSet()) );} },
-            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) )));} },
-            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() )));} },
-            new Opcao() { public void escolher() { menuFaturas(s, estado.getFaturasEmComum( scanNif(s), cont.getNif()));} }
+            new Opcao() {
+                public void escolher() {
+                    try {
+                        menuFaturas(s, estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEconomica() == AtivEco.Pendente).collect(Collectors.toSet()) );
+                    } catch (NaoExisteContribuinteException err){
+
+                    }
+                }
+            },
+            new Opcao() {
+                public void escolher() {
+                    try{
+                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) )));
+                    } catch (NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    }
+                }
+            },
+            new Opcao() {
+                public void escolher() {
+                    try{
+                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() )));
+                    } catch (NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    }
+                }
+            },
+            new Opcao() {
+                public void escolher() {
+                    try {
+                        menuFaturas(s, estado.getFaturasEmComum( scanNif(s), cont.getNif()));
+                    } catch (NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    }
+                }
+            }
         };
 
         menu(s, ops, desc);
@@ -420,15 +403,30 @@ public class App
     }
     
     private static void emitirFatura(Scanner s, Coletivo cont){
+        int nif;
+        int valor;
+        String desc;
+
         System.out.println("Dados da Fatura");
+
         System.out.println("Nº de Contribuinte do Cliente:");
-        int nif = s.nextInt(); //adicionar exceçoes
+        try {
+            nif = Integer.parseInt(s.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Input Errado");
+            return;
+        }
         
         System.out.println("Valor em euros:");
-        int valor = s.nextInt();
+        try {
+            valor = Integer.parseInt(s.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Input Errado");
+            return;
+        }
         
         System.out.println("Descrição:");
-        String desc = s.nextLine();
+        desc = s.nextLine();
         
         estado.addFatura(cont.emitirFatura(valor, nif, LocalDate.now(), desc));
     }
@@ -441,9 +439,29 @@ public class App
             "Por contribuinte" 
         };
         Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) ))); } },
-            new Opcao() { public void escolher() { verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - a.getValorTotal() ))); } },
-            new Opcao() { public void escolher() { menuFaturasCont(s, cont, scanNif(s)); } }
+            new Opcao() {
+                public void escolher() {
+                    try{
+                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao() )))); 
+                    } catch (NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    }
+                }
+            },
+            new Opcao() {
+                public void escolher() {
+                    try{
+                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - a.getValorTotal() )));
+                    } catch (NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    }
+                }
+            },
+            new Opcao() {
+                public void escolher() {
+                    menuFaturasCont(s, cont, scanNif(s));
+                }
+            }
         };
         menu(s, ops, desc);
     }
@@ -457,7 +475,15 @@ public class App
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { verFaturasContIntervalo(s, cont, ind); } },
-            new Opcao() { public void escolher() { verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( b.getValorTotal() - a.getValorTotal() ))); } }
+            new Opcao() {
+                public void escolher() {
+                    try {
+                        verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( b.getValorTotal() - a.getValorTotal() )));
+                    } catch(NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    }
+                }
+            }
         };
         menu(s, ops, desc);
     }
@@ -477,7 +503,11 @@ public class App
         System.out.println("Até:");
         LocalDate fim = scanData(s);
         
-        verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, inicio, fim));
+        try{
+            verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, inicio, fim));
+        } catch (NaoExisteContribuinteException e){
+            System.out.println("Contribuinte não encontrado: " + e.getMessage());
+        }
     }
     
     private static void  verTotalFaturado(Scanner s, Coletivo cont) {
@@ -495,6 +525,24 @@ public class App
     
     
     
-    
-
+    private static Contribuinte login() throws PasswordErradaException, NaoExisteContribuinteException, NumberFormatException{
+        String passwd;
+        Contribuinte resultado = null;
+        Scanner scanner = new Scanner(System.in);
+        int tentativas = 3;
+        
+        System.out.println("Nº de Contribuinte:");
+        String nif = scanner.nextLine();
+        resultado = estado.getContribuinte(Integer.parseInt(nif));
+        
+        System.out.println("Senha de acesso:");
+        passwd = scanner.nextLine();
+        if(!passwd.equals(resultado.getPassword())){
+            throw new PasswordErradaException(passwd);
+        }
+        
+        scanner.close();
+        
+        return resultado;
+    }
 }

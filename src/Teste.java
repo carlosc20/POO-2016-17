@@ -5,6 +5,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashSet;
+import java.time.LocalDate;
+
 /**
  * The test class Teste.
  *
@@ -14,16 +17,7 @@ import org.junit.Test;
 public class Teste
 {
     Estado estado;
-        
-    Coletivo empresa1;
-    Coletivo empresa2;
-    Coletivo empresa3;
-    
-    Individual cliente1;
-    Individual cliente2;
-    Individual cliente3;
-    Individual cliente4;
-    Individual cliente5;
+
     /**
      * Default constructor for test class Teste
      */
@@ -58,51 +52,29 @@ public class Teste
     public void testarMenu()
     {
         this.estado = new Estado();
+        int numEmpresas = 10;
+        int numClientes = 25;
+        for(int i = 0; i < numEmpresas; i++){
+            Coletivo novo = new Coletivo(1000 + i, "Empresa" + i, "empresa" + i + "@email.com", "Rua R, " + i, "", new java.util.HashSet<>());
+            this.estado.addContribuinte(novo);
+        }
+        
+        for(int i = 0; i < numClientes; i++){
+            Individual novo = new Individual(i, "Cliente" + i, "cliente" + i + "@email.com", "Rua R," + i, "", 0.0f, new HashSet<>(), new HashSet<>());
+            this.estado.addContribuinte(novo);
+        }
 
-        
-        this.empresa1 = new Coletivo(1001, "Empresa1", "email1", "morada1", "1234", new java.util.HashSet<>(), 100);
-        this.empresa2 = new Coletivo(1002, "Empresa2", "", "", "", new java.util.HashSet<>(), 0);
-        this.empresa3 = new Coletivo(1003, "Empresa3", "", "", "", new java.util.HashSet<>(), 0);
-
-        Individual cliente1 = new Individual(1, "Cliente1", "e1", "m1", "1234", 0, 0, null, null, new java.util.ArrayList<>());
-        Individual cliente2 = new Individual(2, "Cliente2", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
-        Individual cliente3 = new Individual(3, "Cliente3", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
-        Individual cliente4 = new Individual(4, "Cliente4", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
-        Individual cliente5 = new Individual(5, "Cliente5", "", "", "1234", 0, 0, null, null, new java.util.ArrayList<>());
-
-        
-        this.estado.addContribuinte(empresa1);
-        this.estado.addContribuinte(empresa2);
-        this.estado.addContribuinte(empresa3);
-        
-        this.estado.addContribuinte(cliente1);
-        this.estado.addContribuinte(cliente2);
-        this.estado.addContribuinte(cliente3);
-        this.estado.addContribuinte(cliente4);
-        this.estado.addContribuinte(cliente5);
-        
-        this.estado.addFatura(new Fatura(empresa1.getNif(), cliente1.getNif()));
-        this.estado.addFatura(new Fatura(empresa1.getNif(), cliente1.getNif()));
-        this.estado.addFatura(new Fatura(empresa2.getNif(), cliente1.getNif()));
-        this.estado.addFatura(new Fatura(empresa1.getNif(), cliente3.getNif()));
-        this.estado.addFatura(new Fatura(empresa3.getNif(), cliente4.getNif()));
-        this.estado.addFatura(new Fatura(empresa3.getNif(), cliente5.getNif()));
+        for(int i = 0; i < numEmpresas; i++){
+            for(int j = i; j < numClientes; j++){
+                for(int k = 0; k < j; k++){
+                    Fatura novo = new Fatura(1000 + i, LocalDate.ofYearDay(2018, i * j + k + 1), j, "Comida", AtivEco.Pendente, i * j + k);
+                    this.estado.addFatura(novo);
+                }
+            }
+        }
        
         App teste = new App(estado);
         teste.run();
-
-
-    }
-
-
-    @Test
-    public void getContribuinte()
-    {
-        try{
-            assertEquals(empresa1, this.estado.getContribuinte(1001));
-        } catch(Exception err){
-            assertEquals(false, true);
-        }
     }
 }
 

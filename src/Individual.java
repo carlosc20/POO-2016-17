@@ -11,17 +11,12 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 public class Individual extends Contribuinte
 {
     private Set<Integer> dependentesAF; // AF = agregado familiar
     private float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível
-    private List<AtivEco> ativDedutiveis; 
-    private List<Fatura> faturas;
-    private List<Alteracao> histAlter;
-    
-    
+    private Set<AtivEco> ativDedutiveis; 
     
     /**
      * Construtor para objetos da classe Individual
@@ -29,10 +24,9 @@ public class Individual extends Contribuinte
     public Individual()
     {
         super();
-        this.dependentesAF = null;
+        this.dependentesAF = new HashSet<>();
         this.coefFiscal = 0;
-        this.ativDedutiveis = null; 
-        this.faturas = new ArrayList<Fatura>();
+        this.ativDedutiveis = new HashSet<>(); 
     }
     
     /**
@@ -47,11 +41,13 @@ public class Individual extends Contribuinte
      * @param  nifAF              Números fiscais do agregado familiar do contribuinte
      * @param  ativDedutiveis     Códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public Individual(int nif, String nome, String email, String morada, String password, int numDependentesAF, int coefFiscal, int[] nifAF, int[] ativDedutiveis, ArrayList<Fatura> faturas)
+    public Individual(int nif, String nome, String email, String morada, String password, float coefFiscal, Set<Integer> nifAF, Set<AtivEco> ativDedutiveis)
     {
         super(nif, nome, email, morada, password);
         this.coefFiscal = coefFiscal;
-        this.faturas = faturas;
+        this.dependentesAF = new HashSet<>();
+        this.coefFiscal = 0;
+        this.ativDedutiveis = new HashSet<>();
     }
     
     /**
@@ -96,9 +92,9 @@ public class Individual extends Contribuinte
      * Altera os códigos das atividades económicas que o contribuinte pode deduzir despesas
      * @param  ativDedutiveis    Códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public void setAtivDedutiveis(List ativDedutiveis)
+    public void setAtivDedutiveis(Set ativDedutiveis)
     {
-        this.ativDedutiveis = ativDedutiveis;
+        this.ativDedutiveis = new HashSet<>(ativDedutiveis);
     }
     
     /**
@@ -106,9 +102,9 @@ public class Individual extends Contribuinte
      * 
      * @return     os códigos das atividades económicas que o contribuinte pode deduzir despesas
      */
-    public List getAtivDedutiveis()
+    public Set getAtivDedutiveis()
     {
-        return this.ativDedutiveis;
+        return new HashSet<>(this.ativDedutiveis);
     }
     
     /**
@@ -161,8 +157,8 @@ public class Individual extends Contribuinte
      * 
      * @return String com os elementos da Lista
      */
-    public String fancyAtivEco(List<AtivEco> ativEco){
-        if(ativEco ==null){return "Não tem";}
+    public String fancyAtivEco(Set<AtivEco> ativEco){
+        if(ativEco == null){return "Não tem";}
         StringBuilder sb = new StringBuilder("");
         for(AtivEco a : ativEco){
             sb.append(a.fancyToString()).append("; ");
@@ -198,8 +194,6 @@ public class Individual extends Contribuinte
         sb.append("Nif Dependentes do Agregado Familiar: ").append(this.dependentesAF).append("\n");
         sb.append("Coeficiente Fiscal: ").append(this.coefFiscal).append("\n");
         sb.append("Atividades Dedutiveis").append(this.ativDedutiveis).append("\n");
-        sb.append("Faturas: ").append(this.faturas).append("\n");
-        sb.append("Alteraçoes: ").append(this.histAlter).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
@@ -207,26 +201,6 @@ public class Individual extends Contribuinte
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     // métodos
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    
-    
-     /**
-     * Atribui uma fatura ao consumidor
-     * @param  fatura    Fatura atribuida
-     */
-    public void adicionaFatura(Fatura fatura) {
-        faturas.add(fatura);
-    }
-    
-    
-     /**
-     * Corrige classicação de actividade económica de um documento de despesa e deixa registo desta operação
-     * @param  fatura    Fatura a ser corrigida
-     * @param  setorEco  Setor económico indicado para classificar a fatura    
-     */
-    public void corrigeFatura(Fatura fatura, AtivEco ativ){
-        fatura.setAtivEconomica(ativ);
-        //FAZER: deixar registo
-    }
     
     /**
      * Clona um objeto

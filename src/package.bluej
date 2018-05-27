@@ -2,6 +2,7 @@
 dependency1.from=Fatura
 dependency1.to=AtivEco
 dependency1.type=UsesDependency
+<<<<<<< HEAD
 dependency10.from=Estado
 dependency10.to=Fatura
 dependency10.type=UsesDependency
@@ -73,23 +74,103 @@ dependency8.to=App
 dependency8.type=UsesDependency
 dependency9.from=Estado
 dependency9.to=Contribuinte
+=======
+dependency10.from=Teste
+dependency10.to=Coletivo
+dependency10.type=UsesDependency
+dependency11.from=Teste
+dependency11.to=Individual
+dependency11.type=UsesDependency
+dependency12.from=Teste
+dependency12.to=Fatura
+dependency12.type=UsesDependency
+dependency13.from=Teste
+dependency13.to=App
+dependency13.type=UsesDependency
+dependency14.from=Estado
+dependency14.to=Contribuinte
+dependency14.type=UsesDependency
+dependency15.from=Estado
+dependency15.to=Fatura
+dependency15.type=UsesDependency
+dependency16.from=Estado
+dependency16.to=NaoExisteContribuinteException
+dependency16.type=UsesDependency
+dependency17.from=Estado
+dependency17.to=Coletivo
+dependency17.type=UsesDependency
+dependency18.from=Estado
+dependency18.to=Individual
+dependency18.type=UsesDependency
+dependency19.from=App
+dependency19.to=Estado
+dependency19.type=UsesDependency
+dependency2.from=Individual
+dependency2.to=AtivEco
+dependency2.type=UsesDependency
+dependency20.from=App
+dependency20.to=Contribuinte
+dependency20.type=UsesDependency
+dependency21.from=App
+dependency21.to=NaoExisteContribuinteException
+dependency21.type=UsesDependency
+dependency22.from=App
+dependency22.to=Individual
+dependency22.type=UsesDependency
+dependency23.from=App
+dependency23.to=Coletivo
+dependency23.type=UsesDependency
+dependency24.from=App
+dependency24.to=Fatura
+dependency24.type=UsesDependency
+dependency25.from=App
+dependency25.to=AtivEco
+dependency25.type=UsesDependency
+dependency3.from=Individual
+dependency3.to=Fatura
+dependency3.type=UsesDependency
+dependency4.from=Individual
+dependency4.to=Alteracao
+dependency4.type=UsesDependency
+dependency5.from=Alteracao
+dependency5.to=Fatura
+dependency5.type=UsesDependency
+dependency6.from=Alteracao
+dependency6.to=AtivEco
+dependency6.type=UsesDependency
+dependency7.from=Coletivo
+dependency7.to=AtivEco
+dependency7.type=UsesDependency
+dependency8.from=Coletivo
+dependency8.to=Fatura
+dependency8.type=UsesDependency
+dependency9.from=Teste
+dependency9.to=Estado
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 dependency9.type=UsesDependency
-editor.fx.0.height=876
-editor.fx.0.width=1456
+editor.fx.0.height=784
+editor.fx.0.width=1382
 editor.fx.0.x=-8
 editor.fx.0.y=-8
-objectbench.height=89
-objectbench.width=1416
-package.divider.horizontal=0.6
-package.divider.vertical=0.8762886597938144
-package.editor.height=673
-package.editor.width=1326
+objectbench.height=123
+objectbench.width=799
+package.divider.horizontal=0.5988112927191679
+package.divider.vertical=0.8099415204678363
+package.editor.height=547
+package.editor.width=1252
 package.editor.x=-8
 package.editor.y=-8
+<<<<<<< HEAD
 package.frame.height=876
 package.frame.width=1456
 package.numDependencies=25
 package.numTargets=15
+=======
+package.frame.height=784
+package.frame.width=1382
+package.numDependencies=25
+package.numTargets=12
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 package.showExtends=true
 package.showUses=true
 project.charset=UTF-8
@@ -103,25 +184,44 @@ target1.name=App
 target1.showInterface=false
 target1.type=ClassTarget
 target1.width=80
+<<<<<<< HEAD
 target1.x=250
 target1.y=90
+=======
+target1.x=240
+target1.y=100
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target10.height=50
-target10.name=Individual
+target10.name=Contribuinte
 target10.showInterface=false
+<<<<<<< HEAD
 target10.type=ClassTarget
 target10.width=90
 target10.x=490
 target10.y=410
+=======
+target10.type=AbstractTarget
+target10.width=100
+target10.x=460
+target10.y=120
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target11.height=50
-target11.name=NaoExisteContribuinteException
+target11.name=Alteracao
 target11.showInterface=false
 target11.type=ClassTarget
+<<<<<<< HEAD
 target11.width=230
 target11.x=740
 target11.y=20
+=======
+target11.width=80
+target11.x=640
+target11.y=410
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target12.height=50
-target12.name=AtividadeEconomica
+target12.name=Teste
 target12.showInterface=false
+<<<<<<< HEAD
 target12.type=ClassTarget
 target12.width=150
 target12.x=930
@@ -147,24 +247,43 @@ target15.type=UnitTestTargetJunit4
 target15.width=80
 target15.x=90
 target15.y=60
+=======
+target12.type=UnitTestTargetJunit4
+target12.width=80
+target12.x=70
+target12.y=10
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target2.height=50
 target2.name=Coletivo
 target2.showInterface=false
 target2.type=ClassTarget
 target2.width=80
+<<<<<<< HEAD
 target2.x=280
 target2.y=410
+=======
+target2.x=580
+target2.y=300
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target3.height=50
-target3.name=CasoEspecial
+target3.name=Fatura
 target3.showInterface=false
+<<<<<<< HEAD
 target3.type=InterfaceTarget
 target3.width=100
 target3.x=390
 target3.y=610
+=======
+target3.type=ClassTarget
+target3.width=80
+target3.x=180
+target3.y=30
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target4.height=50
-target4.name=FamiliaNumerosa
+target4.name=TabelaIncentivoFiscal
 target4.showInterface=false
 target4.type=ClassTarget
+<<<<<<< HEAD
 target4.width=130
 target4.x=470
 target4.y=520
@@ -182,24 +301,62 @@ target6.type=ClassTarget
 target6.width=160
 target6.x=900
 target6.y=410
+=======
+target4.width=160
+target4.x=30
+target4.y=170
+target5.height=50
+target5.name=Estado
+target5.showInterface=false
+target5.type=ClassTarget
+target5.width=80
+target5.x=360
+target5.y=180
+target6.height=50
+target6.name=AtivEco
+target6.showInterface=false
+target6.type=EnumTarget
+target6.width=80
+target6.x=850
+target6.y=350
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target7.height=50
-target7.name=Estado
+target7.name=Individual
 target7.showInterface=false
 target7.type=ClassTarget
+<<<<<<< HEAD
 target7.width=80
 target7.x=530
 target7.y=170
+=======
+target7.width=90
+target7.x=720
+target7.y=240
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target8.height=50
-target8.name=EmpresaDeInterior
+target8.name=NaoExisteContribuinteException
 target8.showInterface=false
 target8.type=ClassTarget
+<<<<<<< HEAD
 target8.width=140
 target8.x=250
 target8.y=520
+=======
+target8.width=230
+target8.x=840
+target8.y=70
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
 target9.height=50
-target9.name=AtivEco
+target9.name=AtividadeEconomica
 target9.showInterface=false
+<<<<<<< HEAD
 target9.type=EnumTarget
 target9.width=80
 target9.x=690
 target9.y=100
+=======
+target9.type=ClassTarget
+target9.width=150
+target9.x=30
+target9.y=250
+>>>>>>> e28fd1f47e630ed37272c606b378618aa27b1cdd
