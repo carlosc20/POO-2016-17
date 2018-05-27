@@ -459,10 +459,11 @@ public class Estado implements Serializable
     public float calculaDeducaoAF(Individual contribuinte){
         List<Integer> nifs = new ArrayList<>();
         nifs.add(contribuinte.getNif());
+        
         for(int nif : contribuinte.getAgregadoFamiliar()){
             nifs.add(nif);
         }
-        
+
         Set<Fatura> faturas;
         float resultado = 0;
 

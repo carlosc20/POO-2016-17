@@ -302,6 +302,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try {
+                        System.out.println("Número do contribuinte: ");
                         menuFaturas(s, estado.getFaturasEmComum( scanNif(s), cont.getNif()));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
@@ -313,16 +314,15 @@ public class App
         menu(s, ops, desc);
     }
     
-
-    
     private static void menuFaturas(Scanner s, Set<Fatura> faturas) {
         System.out.println("Escolha uma fatura para editar a atividade económica (esta operação ficará registada)");
         
+               for(Fatura f : faturas){
+            System.out.println(f.fancyToString()); 
+        }
         
         
-        
-        
-        //FAZERRRRRRRRRRRRRRRRRRRRRRRRRR
+
     }
 
     
@@ -404,7 +404,7 @@ public class App
         System.out.println("Descrição:");
         desc = s.nextLine();
         
-        estado.addFatura(cont.emitirFatura(valor, nif, LocalDate.now(), desc));
+        estado.addFatura(cont.emitirFatura(valor, nif, data, desc));
     }
     
     private static void  menuColFaturas(Scanner s, Coletivo cont) {
@@ -445,7 +445,7 @@ public class App
     
     
     private static void  menuFaturasCont(Scanner s, Coletivo cont, int ind) {
-        System.out.println("Faturas do contribuinte " + ind + " :");
+        System.out.println("Faturas do contribuinte " + ind + ":");
         String[] desc = new String[] {
             "Num intervalo",
             "Ordenadas por valor decrescente",
@@ -467,8 +467,7 @@ public class App
     
     private static void verFaturas(Set<Fatura> faturas) {
         for(Fatura f : faturas){
-            System.out.println(f); 
-            System.out.println("\n"); 
+            System.out.println(f.fancyToString()); 
         }
     }
     
@@ -497,7 +496,7 @@ public class App
             System.out.println("Até:");
             LocalDate fim = scanData(s);
             
-            System.out.println(estado.totalFaturado(cont.getNif(), inicio, fim) + " €");
+            System.out.println("Total faturado: " + estado.totalFaturado(cont.getNif(), inicio, fim) + " €");
             
         } catch (DateTimeParseException e){
             System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");

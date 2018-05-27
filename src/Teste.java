@@ -55,7 +55,7 @@ public class Teste
         int numEmpresas = 10;
         int numClientes = 25;
         for(int i = 0; i < numEmpresas; i++){
-            Coletivo novo = new Coletivo(1000 + i, "Empresa" + i, "empresa" + i + "@email.com", "Rua R, " + i, "", new java.util.HashSet<>());
+            Coletivo novo = new Coletivo(1000 + i, "Empresa" + i, "empresa" + i + "@email.com", "Rua R, " + i, "", new HashSet<>());
             this.estado.addContribuinte(novo);
         }
         
