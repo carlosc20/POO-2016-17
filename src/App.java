@@ -143,9 +143,8 @@ public class App
         Contribuinte resultado = null;
         
         System.out.println("Nº de Contribuinte:");
-        String nif = s.nextLine();
-        resultado = estado.getContribuinte(Integer.parseInt(nif));
-        
+        resultado = estado.getContribuinte(scanNumber(s));
+       
         System.out.println("Senha de acesso:");
         passwd = s.nextLine();
         if(!passwd.equals(resultado.getPassword())){
@@ -166,8 +165,14 @@ public class App
             new Opcao() { public void escolher() { menuAdminRegistar(s); } }, 
             new Opcao() { public void escolher() { System.out.println(topGastadores(10)); } },
             new Opcao() { public void escolher() {
-                            int n = scanNif(s);
-                            System.out.println(topFaturadores(n)); 
+                            try{
+                                int n = scanNumber(s);
+                                System.out.println(topFaturadores(n));
+                            } catch (NumberFormatException e) {
+                                System.out.println("Input Errado");
+                                return;
+                            }
+                             
                           } 
                         } 
         };
@@ -194,16 +199,16 @@ public class App
         String morada;
         String password; 
         
-        Set<Integer> nifAF; // AF = agregado familiar
-        float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível
-        Set<AtivEco> ativDedutiveis;
+        Set<Integer> nifAF = new HashSet<>();
+        float coefFiscal;
+        Set<AtivEco> ativDedutiveis = new HashSet<>(); //????
         
 
         System.out.println("Dados do contribuinte:");
 
         System.out.println("Nº de Contribuinte:");
         try {
-            nif = Integer.parseInt(s.nextLine());
+            nif = scanNumber(s);
         } catch (NumberFormatException e) {
             System.out.println("Input Errado");
             return;
@@ -217,14 +222,86 @@ public class App
         morada = s.nextLine();
         System.out.println("Senha de acesso:");
         password = s.nextLine();
+        System.out.println("Coeficiente fiscal:");
+        try {
+            coefFiscal = Float.parseFloat(s.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Input Errado");
+            return;
+        }
+
+        System.out.println("Adicionar NIF do agregado familiar (vazio para terminar)");
+        boolean continuar = true;
+        int nifDependente;
+        do {
+            try{
+                nifDependente = scanNumber(s);
+                nifAF.add(nifDependente);
+            } catch (NumberFormatException e) {
+                continuar = false;
+            }
+        } while(continuar);
         
-        //cenas
+        System.out.println("Adicionar atividades económicas (vazio para terminar)");
+        continuar = true;
+        AtivEco ativ;
+        do {
+            try{
+                ativ = scanAtiv(s);
+                ativDedutiveis.add(ativ);
+            } catch(NumberFormatException e){
+                continuar = false;
+            }
+        } while(continuar);
         
-        //estado.addContribuinte(new Individual(nif, nome, email, morada, password, coefFiscal, nifAF, ativDedutiveis));
+        estado.addContribuinte(new Individual(nif, nome, email, morada, password, coefFiscal, nifAF, ativDedutiveis));
     }
     
     private static void registarCol(Scanner s){
+        int nif;
+        String nome;
+        String email;
+        String morada;
+        String password; 
         
+        float coefFiscal;
+        String concelho;
+        Set<AtivEco> ativEco = new HashSet<>();
+
+        System.out.println("Dados do contribuinte:");
+
+        System.out.println("Nº de Contribuinte:");
+        try {
+            nif = scanNumber(s);
+        } catch (NumberFormatException e) {
+            System.out.println("Input Errado");
+            return;
+        }
+        
+        System.out.println("Nome:");
+        nome = s.nextLine();
+        System.out.println("Email:");
+        email = s.nextLine();
+        System.out.println("Morada:");
+        morada = s.nextLine();
+        System.out.println("Senha de acesso:");
+        password = s.nextLine();
+        System.out.println("Concelho:");
+        concelho = s.nextLine();
+
+        System.out.println("Adicionar contribuinte ao agregado familiar (vazio para terminar)");
+        boolean continuar = true;
+        AtivEco ativ;
+        do {
+            try {
+                ativ = scanAtiv(s);
+                ativEco.add(ativ);
+            } catch(NumberFormatException e){
+                continuar = false;
+            }
+        } while(continuar);
+
+       estado.addContribuinte(new Coletivo(nif, nome, email, morada, password, concelho, ativEco));
     }
     
     private static Set<Contribuinte> topGastadores(int n){
@@ -278,34 +355,20 @@ public class App
         }   
     }
     
-    private static AtivEco scanAtiv(Scanner s){
+    private static AtivEco scanAtiv(Scanner s) throws NumberFormatException{
         
         AtivEco[] ativs = AtivEco.values();
         for(int i = 0; i < ativs.length; i++){
              System.out.println(i + "->" + ativs[i].fancyToString());
         }
         
-        int esc;
-        try {
-            esc = Integer.parseInt(s.nextLine());
-        } catch (NumberFormatException e){
-            System.out.println("Input Errado");
-            esc = -1;
-        }
+        int esc = Integer.parseInt(s.nextLine());
         
         return ativs[esc];
     }
     
-    private static int scanNif(Scanner s) {
-        int nif;
-        try {
-            nif = Integer.parseInt(s.nextLine());
-        } catch (NumberFormatException e){
-            System.out.println("Input Errado");
-            nif = -1;
-        }
-        
-        return nif;
+    private static int scanNumber(Scanner s) throws NumberFormatException{
+        return Integer.parseInt(s.nextLine());
     }
     
     
@@ -350,8 +413,8 @@ public class App
                 public void escolher() {
                     try {
                         verFaturas(estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEconomica() == AtivEco.Pendente).collect(Collectors.toSet()) );
-                    } catch (NaoExisteContribuinteException err){
-
+                    } catch (NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
                 }
             },
@@ -377,9 +440,12 @@ public class App
                 public void escolher() {
                     try {
                         System.out.println("Número do contribuinte: ");
-                        verFaturas(estado.getFaturasEmComum( scanNif(s), cont.getNif()));
+                        verFaturas(estado.getFaturasEmComum( scanNumber(s), cont.getNif()));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input Errado");
+                        return;
                     }
                 }
             },
@@ -387,15 +453,17 @@ public class App
                 public void escolher() {
                     try {
                         System.out.println("Número da fatura:");
-                        Fatura fat = estado.getFatura(scanNif(s));
+                        Fatura fat = estado.getFatura(scanNumber(s));
                         if (estado.getFaturas(cont.getNif()).contains(fat))
                             classificaFatura(s, cont,fat);
                         else
                             System.out.println("Fatura não encontrada");
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input Errado");
+                        return;
                     }
-                    
                 }
             }
         };
@@ -456,7 +524,7 @@ public class App
 
         System.out.println("Nº de Contribuinte do Cliente:");
         try {
-            nif = Integer.parseInt(s.nextLine());
+            nif = scanNumber(s);
         } catch (NumberFormatException e) {
             System.out.println("Input Errado");
             return;
@@ -513,7 +581,12 @@ public class App
             new Opcao() {
                 public void escolher() {
                     System.out.println("Número do contribuinte: ");
-                    menuFaturasCont(s, cont, scanNif(s));
+                    try{
+                        menuFaturasCont(s, cont, scanNumber(s));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input Errado");
+                        return;
+                    }
                 }
             }
         };

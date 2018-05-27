@@ -14,11 +14,11 @@ public enum AtivEco
     Imoveis(0.15f, 502f, "Imoveis"),
     Lares(0.25f, 403.75f, "Lares"),
     Automoveis(0.3f, 500f, "Automoveis"),
-    Motociclos(0, 0, "Motociclos"), // não tem
+    Motociclos(0.15f, 250f, "Motociclos"),
     AlojametoRestauracao(0.15f, 250f, "Alojameto/Restauracao"),
     Beleza(0.15f, 250f, "Beleza"),
-    Veterinario(0, 0, "Veterinario"), // não tem
-    Transportes(0, 0, "Transportes"); // não tem
+    Veterinario(0.15f, 250f, "Veterinario"),
+    Transportes(0.15f, 250f, "Transportes");
     
     private float percentagem;
     private float limite;
