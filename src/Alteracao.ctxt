@@ -1,4 +1,4 @@
 #BlueJ class context
 comment0.target=Alteracao
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ Alteracao\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment0.text=\r\n\ Classe\ que\ guarda\ as\ informa\u00E7\u00F5es\ de\ altera\u00E7\u00F5es\ faitas\ a\ uma\ fatura\r\n\ A\ \u00FAnica\ altera\u00E7\u00E3o\ que\ pode\ ser\ feita\ \u00E9\ na\ atividade\ econ\u00F3mica\r\n
 numComments=1

@@ -159,7 +159,8 @@ public class App
         String[] desc = new String[] {
             "Registar contribuinte", 
             "Ver os 10 contribuintes que gastam mais",
-            "Ver as N empresas que mais faturam"
+            "Ver as N empresas que mais faturam",
+            "Ver alterações"
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { menuAdminRegistar(s); } }, 
@@ -174,9 +175,14 @@ public class App
                             }
                              
                           } 
-                        } 
+                        },
+            new Opcao() { public void escolher() { menuVerAlteracoes(s); } }           
         };
         menu(s, ops, desc);
+    }
+    
+    private static void menuVerAlteracoes(Scanner s){
+    
     }
     
     private static void menuAdminRegistar(Scanner s) {
@@ -479,7 +485,8 @@ public class App
         try {
             Coletivo emitente = (Coletivo) estado.getContribuinte(fatura.getNifEmitente());
             if(emitente.temAtivEco(ativ)) {
-                fatura.setAtivEconomica(ativ);
+                fatura.setAtivEconomica(ativ);//alterar buscar outra-----------------------------------------------------
+                addAlteracao(new Alteracao(fatura.getId(),fatura.getAtivEconomica(), ativ, LocalDate.now()));
                 System.out.println("Atribuição concluída com sucesso");
             } else {
                 System.out.println("Erro: A empresa emitente não tem essa atividade económica.");
