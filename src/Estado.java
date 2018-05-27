@@ -33,7 +33,7 @@ public class Estado implements Serializable
     
     private Map<Integer, Fatura> faturasId;
     
-    
+    private Map<Integer, List<Alteracao>> alteracoes;
     
     private TabelaIncentivoFiscal tabela;
     
@@ -119,6 +119,24 @@ public class Estado implements Serializable
         }
         this.contribuintes.put(nif, contribuinte);
         this.faturas.put(nif, new TreeSet<>());
+    }
+    
+    public void addAlteracao(Alteracao alter){
+        int id = alter.getId();
+        List<Alteracao> resultado = this.alteracoes.get(id);
+        if (resultado == null) {
+            resultado = new ArrayList<Alteracao>();
+            alteracoes.put(id,resultado);
+        }
+        resultado.add(alter);
+    }
+    
+    public List<Alteracao> getAlteracoes(int id){
+        List<Alteracao> resultado = this.alteracoes.get(id);
+        if(resultado == null){
+            throw new NaoExistemAlteracoesException(Integer.toString(id));
+        }
+        return resultado.clone();
     }
     
     /**
