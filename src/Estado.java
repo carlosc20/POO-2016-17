@@ -31,6 +31,8 @@ public class Estado implements Serializable
 
     private Map<Integer, SortedSet<Fatura>> faturas;
     
+    private TabelaIncentivoFiscal tabela;
+    
     /**
      * Construtor para objetos da classe Contribuinte
      */
@@ -38,6 +40,7 @@ public class Estado implements Serializable
     {
         this.contribuintes = new HashMap<>();
         this.faturas = new HashMap<>();
+        this.tabela = new TabelaIncentivoFiscal();
     }
     
     /**
@@ -59,6 +62,18 @@ public class Estado implements Serializable
         Estado e = (Estado) ois.readObject();
         ois.close();
         return e;
+    }
+    
+    public float getIncentivoFiscal(String nomeDoConcelho){
+        return this.tabela.getIncentivoFiscal(nomeDoConcelho);
+    }
+    
+    public void setIncentivoFiscal(String nomeDoConcelho, float incentivo){
+        this.tabela.setIncentivoFiscal(nomeDoConcelho, incentivo);
+    }
+    
+    public void removeIncentivoFiscal(String nomeDoConcelho){
+        this.tabela.removeIncentivoFiscal(nomeDoConcelho);
     }
     
     /**
@@ -83,6 +98,18 @@ public class Estado implements Serializable
      */
     public void addContribuinte(Contribuinte contribuinte){
         int nif = contribuinte.getNif();
+        if(contribuinte instanceof Individual){
+            Individual individual = (Individual) contribuinte;
+            if(individual.getAgregadoFamiliar().size() > FamiliaNumerosa.minimoDeDependentes()){
+                contribuinte = new FamiliaNumerosa(individual);
+            }
+        } else if(contribuinte instanceof Coletivo){
+            Coletivo coletivo = (Coletivo) contribuinte;
+            float incentivo = tabela.getIncentivoFiscal(coletivo.getConcelho());
+            if(incentivo > 0.0f){
+                contribuinte = new EmpresaDeInterior(coletivo, incentivo);
+            }
+        }
         this.contribuintes.put(nif, contribuinte);
         this.faturas.put(nif, new TreeSet<>());
     }

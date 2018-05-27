@@ -8,13 +8,18 @@
 public class FamiliaNumerosa extends Individual implements CasoEspecial
 {
     private static int minimo = 4;
-
+    private float bonificacao;
+    
     /**
-     * Constructor for objects of class FamiliaNumerosa
+     * Constructor for objects of class FamiliaNumerosa recendo um Individual
+     * 
+     * @param individual    Contribuinte com mais filhos que o mínimo
+     * 
      */
-    public FamiliaNumerosa()
+    public FamiliaNumerosa(Individual individual)
     {
-
+        super(individual);
+        bonificacao = 0.05f * individual.getAgregadoFamiliar().size();
     }
 
     /**
@@ -26,5 +31,9 @@ public class FamiliaNumerosa extends Individual implements CasoEspecial
     public double reducaoImposto(){
 
         return 0;
+    }
+    
+    public static int minimoDeDependentes(){
+        return minimo;
     }
 }

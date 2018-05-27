@@ -7,13 +7,18 @@
  */
 public class EmpresaDeInterior extends Coletivo implements CasoEspecial
 {
-    
+    private float incentivo;
     /**
-     * Constructor for objects of class EmpresaDeInterior
+     * Constructor da classe EmpresaDeInterior recebendo um Coletivo
+     * 
+     * @param coletivo      Empresa
+     * @param incentivo     Percentual de incentivo
+     * 
      */
-    public EmpresaDeInterior()
+    public EmpresaDeInterior(Coletivo coletivo, float incentivo)
     {
-
+        super(coletivo);
+        this.incentivo = incentivo;
     }
 
     /**

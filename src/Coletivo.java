@@ -15,6 +15,7 @@ import java.time.LocalDate;
 public class Coletivo extends Contribuinte
 {
 
+    private String concelho;
     private Set<AtivEco> ativEco; 
     private float totalFaturado;
     
@@ -24,6 +25,7 @@ public class Coletivo extends Contribuinte
     public Coletivo(){
         super();
         this.ativEco = new HashSet<>();
+        this.concelho = "";
         this.totalFaturado = 0.0f;
     }
     
@@ -35,11 +37,13 @@ public class Coletivo extends Contribuinte
      * @param  email              E-mail de contacto do contribuinte
      * @param  morada             Morada do contribuinte
      * @param  password           Palavra-passe de acesso do contribuinte
+     * @param  concelho           Concelho da empresa
      * @param  ativEco            Set com as atividades económicas
      * @param  fatorDeducao       Fator de dedução
      */
-    public Coletivo(int nif, String nome, String email, String morada, String password, Set<AtivEco> ativEco){
+    public Coletivo(int nif, String nome, String email, String morada, String password, String concelho, Set<AtivEco> ativEco){
         super(nif, nome, email, morada, password);
+        this.concelho = concelho;
         this.ativEco = new HashSet<>(ativEco);
         this.totalFaturado = 0.0f;
     }
@@ -50,6 +54,7 @@ public class Coletivo extends Contribuinte
      */
     public Coletivo(Coletivo outro){
         super(outro);
+        this.concelho = outro.getConcelho();
         this.ativEco = outro.getAtivEco();
         this.totalFaturado = outro.totalFaturado();
     }
@@ -106,6 +111,22 @@ public class Coletivo extends Contribuinte
      */
     public boolean temAtivEco(AtivEco ativ){
         return ativEco.contains(ativ);
+    }
+    
+    /**
+     * Modifica o concelho da empresa
+     * @param concelho Concelho da empresa
+     */
+    public void setConcelho(String concelho){
+        this.concelho = concelho;
+    }
+    
+    /**
+     * Retorna o concelho da empresa
+     * @return Concelho da empresa
+     */
+    public String getConcelho(){
+        return this.concelho;
     }
     
     /**
