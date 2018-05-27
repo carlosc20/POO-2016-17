@@ -269,13 +269,14 @@ public class App
             "Com atribuição pendente",
             "Ordenadas por data",
             "Ordenadas por valor",
-            "Por um emitente" 
+            "Por um emitente",
+            "Atribuir/corrigir atividade económica"
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() {
                 public void escolher() {
                     try {
-                        menuFaturas(s, estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEconomica() == AtivEco.Pendente).collect(Collectors.toSet()) );
+                        verFaturas(estado.getFaturas(cont.getNif()).stream().filter(f -> f.getAtivEconomica() == AtivEco.Pendente).collect(Collectors.toSet()) );
                     } catch (NaoExisteContribuinteException err){
 
                     }
@@ -284,7 +285,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try{
-                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) )));
+                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)->( b.getDataEmissao().compareTo(a.getDataEmissao()) )));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
@@ -293,7 +294,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try{
-                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( Float.compare(a.getValorTotal(), b.getValorTotal()) )));
+                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( Float.compare(a.getValorTotal(), b.getValorTotal()) )));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
@@ -303,29 +304,32 @@ public class App
                 public void escolher() {
                     try {
                         System.out.println("Número do contribuinte: ");
-                        menuFaturas(s, estado.getFaturasEmComum( scanNif(s), cont.getNif()));
+                        verFaturas(estado.getFaturasEmComum( scanNif(s), cont.getNif()));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
+                }
+            },
+            new Opcao() {
+                public void escolher() {
+                    try {
+                        System.out.println("Número da fatura:");
+                        Fatura fat = estado.getFatura(scanNif(s));
+                        if (estado.getFaturas(cont.getNif()).contains(fat))
+                            classificaFatura(s, cont,fat);
+                        else
+                            System.out.println("Fatura não encontrada");
+                    } catch (NaoExisteContribuinteException e){
+                        System.out.println("Contribuinte não encontrado: " + e.getMessage());
+                    }
+                    
                 }
             }
         };
 
         menu(s, ops, desc);
     }
-    
-    private static void menuFaturas(Scanner s, Set<Fatura> faturas) {
-        System.out.println("Escolha uma fatura para editar a atividade económica (esta operação ficará registada)");
-        
-               for(Fatura f : faturas){
-            System.out.println(f.fancyToString()); 
-        }
-        
-        
 
-    }
-
-    
     private static void classificaFatura(Scanner s, Individual cont, Fatura fatura){
         
         System.out.println("Atividade Económica:");
