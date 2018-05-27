@@ -140,8 +140,9 @@ public class Individual extends Contribuinte
      * 
      * @return Um Set com os NIFs do Agregado Familiar
      */
-    public Set<Integer> getAgregadoFamiliar(){
+    public Set<Integer> getAgregadoFamiliar(){     
         HashSet<Integer> novo = new HashSet<>();
+        if(this.dependentesAF == null) return novo;
         
         for(int nif : this.dependentesAF){
             novo.add(nif);

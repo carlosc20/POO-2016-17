@@ -263,12 +263,12 @@ public class Fatura implements Comparable<Fatura> {
     public String fancyToString(){
         StringBuilder sb = new StringBuilder("");
         sb.append("Id: ").append(this.id).append("; ");
-        sb.append("Atividade Economica: ").append(this.ativEconomica.fancyToString()).append(";\n");
+        sb.append("Atividade Económica: ").append(this.ativEconomica.fancyToString()).append(";\n");
         sb.append("NIF Cliente: ").append(this.nifCliente).append("; ");
         sb.append("Emitente: ").append(this.nifEmitente).append("; ");
-        sb.append("Data Emissao: ").append(this.dataEmissao.toString()).append(";\n");
+        sb.append("Data Emissão: ").append(this.dataEmissao.toString()).append(";\n");
         sb.append("Valor Total: ").append(this.valorTotal).append("; ");
-        sb.append("Descricao: ").append(this.descricao).append(";\n");
+        sb.append("Descrição: ").append(this.descricao).append(";\n");
         return sb.toString();
     }
    
