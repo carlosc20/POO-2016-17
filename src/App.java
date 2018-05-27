@@ -142,51 +142,8 @@ public class App
         menu(s, ops, desc);
     }
     
-    private static int maisGastador(Contribuinte a, Contribuinte b){
-        try {
-            Set<Fatura> faturasA = estado.getFaturas(a.getNif());
-            Set<Fatura> faturasB = estado.getFaturas(a.getNif());
-        } catch(NaoExisteContribuinteException err){
-            return 0;
-        }
-
-        float totalA = a.getTotalGasto();
-        float totalB = b.getTotalGasto();
-        
-        if(totalA > totalB){
-            return -1;
-        } else if(totalA > totalB){
-            return 1;
-        }
-        
-        return 0;
-    }
-    
-    private static int maisFaturador(Coletivo a, Coletivo b){
-        try{
-            Set<Fatura> faturasA = estado.getFaturas(a.getNif());
-            Set<Fatura> faturasB = estado.getFaturas(a.getNif());
-        } catch(NaoExisteContribuinteException err){
-            return 0;
-        }
-        float totalA = a.totalFaturado();
-        float totalB = b.totalFaturado();
-        
-        if(totalA > totalB){
-            return -1;
-        } else if(totalA > totalB){
-            return 1;
-        }
-        
-        return 0;
-    }
-    
     private static Set<Contribuinte> topGastadores(int n){
-        Set<Contribuinte> ordenar = new TreeSet<Contribuinte>(new Comparator<Contribuinte>() {
-            public int compare(Contribuinte a, Contribuinte b) {
-                return maisGastador(a, b);
-            }
-        });
+        SortedSet<Contribuinte> ordenar = new TreeSet<Contribuinte>( (a, b) -> Float.compare(a.getTotalGasto(), b.getTotalGasto()) );
         Set<Contribuinte> resultado = new HashSet<Contribuinte>();
         
         for(Contribuinte contribuinte : estado.getContribuintes()){
@@ -202,19 +159,17 @@ public class App
         return resultado;
     }
     
-    private static Set<Contribuinte> topFaturadores(int n){
-        Set<Contribuinte> ordenar = new TreeSet<Contribuinte>(new Comparator<Contribuinte>() {
-            public int compare(Contribuinte a, Contribuinte b) {
-                return maisFaturador((Coletivo) a, (Coletivo) b);
-            }
-        });
-        Set<Contribuinte> resultado = new HashSet<Contribuinte>();
+    private static Set<Coletivo> topFaturadores(int n){
+        Set<Coletivo> ordenar = new TreeSet<Coletivo>( (a, b) -> Float.compare(a.totalFaturado(), b.totalFaturado()) );
+        Set<Coletivo> resultado = new HashSet<Coletivo>();
         
         for(Contribuinte contribuinte : estado.getContribuintes()){
-            ordenar.add(contribuinte);
+            if(contribuinte instanceof Coletivo){
+                ordenar.add((Coletivo) contribuinte);
+            }
         }
         
-        Iterator<Contribuinte> iter = ordenar.iterator();
+        Iterator<Coletivo> iter = ordenar.iterator();
         
         for(int i = 0; i < n && iter.hasNext(); i++){
             resultado.add(iter.next());
@@ -338,7 +293,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try{
-                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - b.getValorTotal() )));
+                        menuFaturas(s, estado.getFaturas(cont.getNif(), (a,b)-> ( Float.compare(a.getValorTotal(), b.getValorTotal()) )));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
@@ -416,7 +371,8 @@ public class App
     
     private static void emitirFatura(Scanner s, Coletivo cont){
         int nif;
-        int valor;
+        float valor;
+        LocalDate data;
         String desc;
 
         System.out.println("Dados da Fatura");
@@ -431,9 +387,17 @@ public class App
         
         System.out.println("Valor em euros:");
         try {
-            valor = Integer.parseInt(s.nextLine());
+            valor = Float.parseFloat(s.nextLine());
         } catch (NumberFormatException e) {
             System.out.println("Input Errado");
+            return;
+        }
+        
+        System.out.println("Data de emissão:");
+        try {
+            data = scanData(s);
+        } catch (DateTimeParseException e){
+            System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");
             return;
         }
         
@@ -463,7 +427,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try{
-                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( b.getValorTotal() - a.getValorTotal() )));
+                        verFaturas(estado.getFaturas(cont.getNif(), (a,b)-> ( Float.compare(b.getValorTotal(), a.getValorTotal()) )));
                     } catch (NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }
@@ -490,7 +454,7 @@ public class App
             new Opcao() {
                 public void escolher() {
                     try {
-                        verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( b.getValorTotal() - a.getValorTotal() )));
+                        verFaturas(estado.getFaturasEmComum(cont.getNif(), ind, (a,b)-> ( Float.compare(b.getValorTotal(), a.getValorTotal())    )));
                     } catch(NaoExisteContribuinteException e){
                         System.out.println("Contribuinte não encontrado: " + e.getMessage());
                     }

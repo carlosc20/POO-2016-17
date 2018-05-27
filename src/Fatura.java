@@ -18,7 +18,7 @@ public class Fatura implements Comparable<Fatura> {
     private int nifCliente;
     private String descricao;
     private AtivEco ativEconomica;
-    private int valorTotal;
+    private float valorTotal;
     
     /**
      * Construtor para objetos da classe Fatura
@@ -31,7 +31,7 @@ public class Fatura implements Comparable<Fatura> {
         this.setNifCliente(0);
         this.setDescricao("");
         this.setAtivEconomica(ativEconomica.Pendente);
-        this.setValorTotal(0);
+        this.setValorTotal(0.0f);
     }
     
     /**
@@ -47,7 +47,7 @@ public class Fatura implements Comparable<Fatura> {
         this.setNifCliente(0);
         this.setDescricao("");
         this.setAtivEconomica(ativEconomica.Pendente);
-        this.setValorTotal(0);
+        this.setValorTotal(0.0f);
     }
     
     /**
@@ -61,7 +61,7 @@ public class Fatura implements Comparable<Fatura> {
      * @param  ativEco           Atividade económica da fatura
      * @param  valorTotal        Valor da fatura
      */
-    public Fatura(int emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, int valorTotal) {
+    public Fatura(int emitente, LocalDate dataEmissao, int nifCliente, String descricao, AtivEco ativEco, float valorTotal) {
         this.setId();
         this.setNifEmitente(emitente);
         this.setDataEmissao(dataEmissao);
@@ -215,7 +215,7 @@ public class Fatura implements Comparable<Fatura> {
      * Atribui um novo valor total da fatura
      * @param valorTotal        Novo valor da fatura
      */
-    public void setValorTotal(int valorTotal) {
+    public void setValorTotal(float valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -223,7 +223,7 @@ public class Fatura implements Comparable<Fatura> {
      * Retorna o valor total da fatura
      * @return Valor total da fatura
      */
-    public int getValorTotal() {
+    public float getValorTotal() {
         return this.valorTotal;
     }
     
