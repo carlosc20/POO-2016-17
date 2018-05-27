@@ -31,6 +31,8 @@ public class Estado implements Serializable
 
     private Map<Integer, SortedSet<Fatura>> faturas;
     
+    private Map<Integer, Fatura> faturasId;
+    
     private TabelaIncentivoFiscal tabela;
     
     /**
@@ -41,6 +43,7 @@ public class Estado implements Serializable
         this.contribuintes = new HashMap<>();
         this.faturas = new HashMap<>();
         this.tabela = new TabelaIncentivoFiscal();
+        this.faturasId = new HashMap<>();
     }
     
     /**
@@ -63,6 +66,8 @@ public class Estado implements Serializable
         ois.close();
         return e;
     }
+    
+    //Fazer documentação
     
     public float getIncentivoFiscal(String nomeDoConcelho){
         return this.tabela.getIncentivoFiscal(nomeDoConcelho);
@@ -369,6 +374,7 @@ public class Estado implements Serializable
         Fatura clone = fatura.clone();
         int nifEmitente = fatura.getNifEmitente();
         int nifCliente = fatura.getNifCliente();
+        int id = fatura.getId();
         Set<Fatura> faturasEmitente = this.faturas.get(nifEmitente);
         Set<Fatura> faturasCliente = this.faturas.get(nifCliente);
         
@@ -382,6 +388,8 @@ public class Estado implements Serializable
         
         faturasEmitente.add(clone);
         faturasCliente.add(clone);
+        this.faturasId.put(id, clone);
+        
         Coletivo emitente = (Coletivo) this.contribuintes.get(nifEmitente);
         Contribuinte cliente = this.contribuintes.get(nifCliente);
         
@@ -392,18 +400,18 @@ public class Estado implements Serializable
     }
     
     /**
-     * Testa se uma Fatura existe no Set das Faturas do Emitente
+     * Retorna uma fatura dando o seu id
      * 
-     * @param fatura Fatura a ser testada
+     * @param id    id da fatura
      * 
-     * @return True se a Fatura existir no Set das Faturas do Emitente
+     * @return Fatura com esse id, null se não encontrar
      */
-    public boolean existeFatura(Fatura fatura){
-        int nif = fatura.getNifEmitente();
-        Set<Fatura> resultado = new HashSet<>();
-        Set<Fatura> faturas = this.faturas.get(nif);
-        
-        return faturas.contains(fatura);
+    public Fatura getFatura(int id){
+        Fatura fatura = this.faturasId.get(id);
+        if(fatura != null){
+            fatura = fatura.clone();
+        }
+        return fatura;
     }
     
     /**
