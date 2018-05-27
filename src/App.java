@@ -435,6 +435,7 @@ public class App
             },
             new Opcao() {
                 public void escolher() {
+                    System.out.println("Número do contribuinte: ");
                     menuFaturasCont(s, cont, scanNif(s));
                 }
             }
@@ -496,10 +497,12 @@ public class App
             System.out.println("Até:");
             LocalDate fim = scanData(s);
             
-            System.out.println(cont.totalFaturado(inicio, fim));
+            System.out.println(estado.totalFaturado(cont.getNif(), inicio, fim) + " €");
             
         } catch (DateTimeParseException e){
             System.out.println("A data apresentada é inválida. O formato é aaaa-mm-dd.");
+        } catch (NaoExisteContribuinteException e){
+            System.out.println("Contribuinte não encontrado: " + e.getMessage());
         }
     }
     
