@@ -54,8 +54,12 @@ public class Teste
         
         this.estado = new Estado();
         int numEmpresas = 10;
-        int numClientes = 25;
+        int numClientes = 200;
         String[] concelhos = {"Braga", "Guimarães", "Aveiro", "Lisboa", "Guarda", "Castelo Branco"};
+        //Concelhos com incentivo fiscal
+        this.estado.setIncentivoFiscal("Guarda", 1.5f);
+        this.estado.setIncentivoFiscal("Castelo Branco", 2.0f);
+        
         Random rand = new Random();
         this.estado.addContribuinte(new Administrador());
 
@@ -88,7 +92,7 @@ public class Teste
         for(int i = 1; i <= numEmpresas; i++){
             for(int j = 1; j <= numClientes; j++){
                 while(rand.nextBoolean()){
-                    Fatura novo = new Fatura(10000 + i, LocalDate.ofYearDay(2017, 1 + rand.nextInt(364)), j, "Comida", AtivEco.Pendente, rand.nextInt(100000) / 100.0f);
+                    Fatura novo = new Fatura(10000 + i, LocalDate.ofYearDay(2017, 1 + rand.nextInt(364)), j, "Comida", AtivEco.values()[rand.nextInt(AtivEco.values().length)], rand.nextInt(100000) / 100.0f);
                     try{
                         this.estado.addFatura(novo);
                     } catch (Exception e) {
