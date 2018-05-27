@@ -38,6 +38,7 @@ public class App
             estado = Estado.leEstado();
         }
         catch(Exception e){
+            System.out.print("Falha ao abrir estado anterior\n");
             estado = new Estado();
         }
     }
@@ -52,25 +53,11 @@ public class App
     
     
     public static void main(String[] args) {
-        /*
-        try {
-            estado = Estado.leEstado();
-        }
-        catch(Exception e){
-            estado = new Estado();
-        }
-        */
+
         Scanner s = new Scanner(System.in);
         menuInicial(s);
         s.close();
-        /*
-        try {
-            estado.guardaEstado();
-        } 
-        catch(IOException e){
-            System.out.print(e.getMessage());
-        }
-        */
+        
     }
     
     
@@ -101,7 +88,9 @@ public class App
     
     private static void menuInicial(Scanner s) {
         String[] desc = new String[] {
-            "Login"
+            "Login",
+            "Guardar estado",
+            "Abrir estado"
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { 
@@ -127,6 +116,26 @@ public class App
                         return;
                     }
                 } 
+            },
+            new Opcao() { public void escolher() { 
+                    try {
+                        estado.guardaEstado();
+                    } 
+                    catch(IOException e){
+                        System.out.print("Não foi possível guardar o estado");
+                        System.out.print(e.getMessage());
+                    }
+                }
+            },
+            new Opcao() { public void escolher() { 
+                    try {
+                        estado = Estado.leEstado();
+                    }
+                    catch(Exception e){
+                        System.out.print("Falha ao abrir estado anterior\n");
+                        estado = new Estado();
+                    }
+                }
             }
         };
         menu(s, ops, desc);
@@ -154,7 +163,7 @@ public class App
             "Registar contribuinte", 
             "Ver os 10 contribuintes que gastam mais",
             "Ver as N empresas que mais faturam",
-            "Ver alterações"
+            "Ver alterações de uma fatura"
         };
         Opcao[] ops = new Opcao[] {
             new Opcao() { public void escolher() { menuAdminRegistar(s); } }, 
@@ -170,31 +179,20 @@ public class App
                              
                           } 
                         },
-            new Opcao() { public void escolher() { menuVerAlteracoes(s); } }           
-        };
-        menu(s, ops, desc);
-    }
-    
-    private static void menuVerAlteracoes(Scanner s){
-        String[] desc = new String[] {
-            "Todas", 
-            "Por id"
-        };
-        Opcao[] ops = new Opcao[] {
-            new Opcao() { public void escolher() { menuAdminRegistar(s); } }, 
             new Opcao() { public void escolher() { 
-                int id = scanNumber(s);
-                try{
-                    verAlteracoes(estado.getAlteracoes(id)); 
-                }
-                catch(NaoExistemAlteracoesException e){
-                    System.out.println("Não tem alterações");
-                }
-            } }
+                            int id = scanNumber(s);
+                            try{
+                                verAlteracoes(estado.getAlteracoes(id)); 
+                            }
+                            catch(NaoExistemAlteracoesException e){
+                                System.out.println("Não tem alterações");
+                            }
+            } }           
         };
         menu(s, ops, desc);
     }
     
+
     private static void verAlteracoes(List<Alteracao> alteracoes) {
         for(Alteracao a : alteracoes){
             System.out.println(a.fancyToString()); 
@@ -501,7 +499,8 @@ public class App
         try {
             Coletivo emitente = (Coletivo) estado.getContribuinte(fatura.getNifEmitente());
             if(emitente.temAtivEco(ativ)) {
-                fatura.setAtivEconomica(ativ);//alterar buscar outra-----------------------------------------------------
+                fatura.setAtivEconomica(ativ);
+                estado.addFatura(fatura);
                 estado.addAlteracao(new Alteracao(fatura.getId(),fatura.getAtivEconomica(), ativ, LocalDate.now()));
                 System.out.println("Atribuição concluída com sucesso");
             } else {
@@ -572,7 +571,11 @@ public class App
         System.out.println("Descrição:");
         desc = s.nextLine();
         
-        estado.addFatura(cont.emitirFatura(valor, nif, data, desc));
+        try {
+            estado.addFatura(cont.emitirFatura(valor, nif, data, desc));
+        } catch(NaoExisteContribuinteException e){
+            System.out.println("Contribuinte não encontrado: " + e.getMessage());
+        }
     }
     
     private static void  menuColFaturas(Scanner s, Coletivo cont) {

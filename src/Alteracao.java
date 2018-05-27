@@ -1,10 +1,11 @@
 
 import java.time.LocalDate;
+import java.io.Serializable;
 /**
  * Classe que guarda as informações de alterações faitas a uma fatura
  * A única alteração que pode ser feita é na atividade económica
  */
-public class Alteracao
+public class Alteracao implements Serializable
 {
     private int fatura;
     private AtivEco nova;

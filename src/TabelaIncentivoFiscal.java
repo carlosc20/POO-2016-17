@@ -1,7 +1,8 @@
 import java.util.Map;
 import java.util.HashMap;
+import java.io.Serializable;
 
-public class TabelaIncentivoFiscal
+public class TabelaIncentivoFiscal implements Serializable
 {
     private Map<String, Float> tabela;
     

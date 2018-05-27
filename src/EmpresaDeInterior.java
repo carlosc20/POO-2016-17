@@ -5,7 +5,9 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-public class EmpresaDeInterior extends Coletivo implements CasoEspecial
+import java.io.Serializable;
+
+public class EmpresaDeInterior extends Coletivo implements CasoEspecial, Serializable
 {
     private float incentivo;
     /**

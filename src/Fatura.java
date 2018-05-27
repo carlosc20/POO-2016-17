@@ -8,8 +8,9 @@
 
 import java.lang.Comparable;
 import java.time.LocalDate;
+import java.io.Serializable;
 
-public class Fatura implements Comparable<Fatura> {
+public class Fatura implements Comparable<Fatura>, Serializable {
     private static int totalFaturas;
     
     private int id;

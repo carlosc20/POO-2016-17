@@ -5,7 +5,9 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Administrador extends Contribuinte
+import java.io.Serializable;
+
+public class Administrador extends Contribuinte implements Serializable
 {
 
     /**

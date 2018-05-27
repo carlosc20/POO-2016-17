@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.time.LocalDate;
+import java.io.Serializable;
 
-public class Individual extends Contribuinte
+public class Individual extends Contribuinte implements Serializable
 {
     private Set<Integer> dependentesAF; // AF = agregado familiar
     private float coefFiscal; // um fator multiplicativo que é associado a cada despesa elegível

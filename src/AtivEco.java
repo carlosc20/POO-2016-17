@@ -5,7 +5,9 @@
  * @author (your name here)
  * @version (version number or date here)
  */
-public enum AtivEco
+import java.io.Serializable;
+
+public enum AtivEco implements Serializable
 {
     Pendente(0, 0, "Pendente"),
     Geral(0.35f, 250f, "Geral"),
