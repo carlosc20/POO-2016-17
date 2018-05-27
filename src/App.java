@@ -485,7 +485,8 @@ public class App
         try {
             Coletivo emitente = (Coletivo) estado.getContribuinte(fatura.getNifEmitente());
             if(emitente.temAtivEco(ativ)) {
-                fatura.setAtivEconomica(ativ);//alterar buscar outra-----------------------------------------------------
+                fatura.setAtivEconomica(ativ);
+                estado.addFatura(fatura);
                 addAlteracao(new Alteracao(fatura.getId(),fatura.getAtivEconomica(), ativ, LocalDate.now()));
                 System.out.println("Atribuição concluída com sucesso");
             } else {
@@ -556,7 +557,11 @@ public class App
         System.out.println("Descrição:");
         desc = s.nextLine();
         
-        estado.addFatura(cont.emitirFatura(valor, nif, data, desc));
+        try {
+            estado.addFatura(cont.emitirFatura(valor, nif, data, desc));
+        } catch(NaoExisteContribuinteException e){
+            System.out.println("Contribuinte não encontrado: " + e.getMessage());
+        }
     }
     
     private static void  menuColFaturas(Scanner s, Coletivo cont) {

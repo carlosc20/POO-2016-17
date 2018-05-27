@@ -390,7 +390,7 @@ public class Estado implements Serializable
      * 
      * @param fatura Fatura a ser adicionada
      */
-    public void addFatura(Fatura fatura){
+    public void addFatura(Fatura fatura) throws NaoExisteContribuinteException {
         Fatura clone = fatura.clone();
         int nifEmitente = fatura.getNifEmitente();
         int nifCliente = fatura.getNifCliente();
@@ -399,11 +399,11 @@ public class Estado implements Serializable
         Set<Fatura> faturasCliente = this.faturas.get(nifCliente);
         
         if(faturasEmitente == null){
-            faturasEmitente = new TreeSet<Fatura>();
+            throw new NaoExisteContribuinteException(Integer.toString(nifEmitente));
         }
         
         if(faturasCliente == null){
-            faturasCliente = new TreeSet<Fatura>();
+            throw new NaoExisteContribuinteException(Integer.toString(nifCliente));
         }
         
         faturasEmitente.add(clone);

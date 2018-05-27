@@ -55,13 +55,14 @@ public class Teste
         this.estado = new Estado();
         int numEmpresas = 10;
         int numClientes = 25;
+        String[] concelhos = {"Braga", "Guimarães", "Aveiro", "Lisboa", "Guarda", "Castelo Branco"};
         for(int i = 0; i < numEmpresas; i++){
-            Coletivo novo = new Coletivo(1000 + i, "Empresa" + i, "empresa" + i + "@email.com", "Rua R, " + i, "", "Braga", new java.util.HashSet<>());
+            Coletivo novo = new Coletivo(1000 + i, "Empresa " + i, "empresa" + i + "@email.com", "Rua R, " + i, "", concelhos[new Random(concelhos.length)], new java.util.HashSet<>());
             this.estado.addContribuinte(novo);
         }
         
         for(int i = 0; i < numClientes; i++){
-            Individual novo = new Individual(i, "Cliente" + i, "cliente" + i + "@email.com", "Rua R," + i, "", 0.0f, new HashSet<>(), new HashSet<>());
+            Individual novo = new Individual(i, "Cliente " + i, "cliente" + i + "@email.com", "Rua R," + i, "", 0.0f, new HashSet<>(), new HashSet<>());
             this.estado.addContribuinte(novo);
         }
 
