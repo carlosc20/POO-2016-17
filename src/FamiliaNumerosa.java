@@ -32,7 +32,7 @@ public class FamiliaNumerosa extends Individual implements CasoEspecial, Seriali
      */
     public double reducaoImposto(){
 
-        return 0;
+        return 1.2;
     }
     
     public static int minimoDeDependentes(){

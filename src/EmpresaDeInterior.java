@@ -31,7 +31,7 @@ public class EmpresaDeInterior extends Coletivo implements CasoEspecial, Seriali
      */
     public double reducaoImposto(){
 
-        return 0;
+        return 1.2;
     }
     
 }
