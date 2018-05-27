@@ -57,20 +57,38 @@ public class Teste
         int numClientes = 25;
         String[] concelhos = {"Braga", "Guimarães", "Aveiro", "Lisboa", "Guarda", "Castelo Branco"};
         Random rand = new Random();
-        for(int i = 0; i < numEmpresas; i++){
-            Coletivo novo = new Coletivo(1000 + i, "Empresa " + i, "empresa" + i + "@email.com", "Rua R, " + i, "", concelhos[rand.nextInt(concelhos.length)], new java.util.HashSet<>());
+        this.estado.addContribuinte(new Administrador());
+
+        for(int i = 1; i <= numEmpresas; i++){
+            HashSet<AtivEco> ativEcos = new HashSet<>();
+            for(AtivEco ativ : AtivEco.values()){
+                if(rand.nextBoolean()){
+                    ativEcos.add(ativ);
+                }
+            }
+            Coletivo novo = new Coletivo(10000 + i, "Empresa " + i, "empresa" + i + "@email.com", "Rua R, " + i, "", concelhos[rand.nextInt(concelhos.length)], ativEcos);
             this.estado.addContribuinte(novo);
         }
         
-        for(int i = 0; i < numClientes; i++){
-            Individual novo = new Individual(i, "Cliente " + i, "cliente" + i + "@email.com", "Rua R," + i, "", 0.0f, new HashSet<>(), new HashSet<>());
+        for(int i = 1; i <= numClientes; i++){
+            HashSet<AtivEco> ativEcos = new HashSet<>();
+            for(AtivEco ativ : AtivEco.values()){
+                if(rand.nextBoolean()){
+                    ativEcos.add(ativ);
+                }
+            }
+            HashSet<Integer> af = new HashSet<>();
+            while(rand.nextBoolean()){
+                af.add(rand.nextInt(i));
+            }
+            Individual novo = new Individual(i, "Cliente " + i, "cliente" + i + "@email.com", "Rua R," + i, "", 0.0f, new HashSet<>(), ativEcos);
             this.estado.addContribuinte(novo);
         }
 
-        for(int i = 0; i < numEmpresas; i++){
-            for(int j = i; j < numClientes; j++){
-                for(int k = 0; k < j; k++){
-                    Fatura novo = new Fatura(1000 + i, LocalDate.ofYearDay(2018, i * j + k + 1), j, "Comida", AtivEco.Pendente, i * j + k);
+        for(int i = 1; i <= numEmpresas; i++){
+            for(int j = 1; j <= numClientes; j++){
+                while(rand.nextBoolean()){
+                    Fatura novo = new Fatura(10000 + i, LocalDate.ofYearDay(2017, 1 + rand.nextInt(364)), j, "Comida", AtivEco.Pendente, rand.nextInt(100000) / 100.0f);
                     try{
                         this.estado.addFatura(novo);
                     } catch (Exception e) {
