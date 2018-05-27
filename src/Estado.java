@@ -469,22 +469,33 @@ public class Estado implements Serializable
      */
     private float calculaDeducaoFaturas(Set<Fatura> faturas){
         float resultado = 0;
-        float valorFatura;
-        float ativEcoPercen;
-        float ativEcoLimite;
+        float valorDeduzido;
+        AtivEco ativEco;
+        float valorAtual;
+        float limite;
+        float total;
+        Map<AtivEco, Float> ativEcoValores = new HashMap<>();
         
         if(faturas == null){
             return 0;
         }
-        
+
         for(Fatura fatura : faturas){
-            valorFatura = fatura.getValorTotal();
-            ativEcoPercen = fatura.getAtivEconomica().getPercentagem();
-            ativEcoLimite = fatura.getAtivEconomica().getLimite();
-            
-            if(valorFatura * ativEcoPercen <= ativEcoLimite){
-                resultado += valorFatura * ativEcoPercen;
-            }    
+            valorDeduzido = fatura.getValorDeduzido();
+            ativEco = fatura.getAtivEconomica();
+            limite = ativEco.getLimite();
+            valorAtual = ativEcoValores.get(ativEco);
+            total = valorAtual + valorDeduzido;
+
+            if(total <= limite){
+                valorAtual = total;
+            } else {
+                valorAtual = limite;
+            }
+        }
+
+        for (float valor : ativEcoValores.values() ) {
+            resultado += valor;
         }
         
         return resultado;

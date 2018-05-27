@@ -19,6 +19,7 @@ public class Fatura implements Comparable<Fatura> {
     private String descricao;
     private AtivEco ativEconomica;
     private float valorTotal;
+    private float valorDeduzido;
     
     /**
      * Construtor para objetos da classe Fatura
@@ -193,6 +194,7 @@ public class Fatura implements Comparable<Fatura> {
      */
     public void setAtivEconomica(AtivEco ativEco) {
         this.ativEconomica = ativEco;
+        calculaDeducao();
     }
 
     /**
@@ -226,7 +228,15 @@ public class Fatura implements Comparable<Fatura> {
     public float getValorTotal() {
         return this.valorTotal;
     }
+
+    private void calculaDeducao() {
+        this.valorDeduzido = this.valorTotal * this.ativEconomica.getPercentagem();
+    }
     
+    public float getValorDeduzido() {
+    	return this.valorDeduzido;
+    }
+
     /**
      * Copia a fatura
      */
