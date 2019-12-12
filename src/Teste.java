@@ -19,35 +19,6 @@ public class Teste
 {
     Estado estado;
 
-    /**
-     * Default constructor for test class Teste
-     */
-    public Teste()
-    {
-    }
-
-    /**
-     * Sets up the test fixture.
-     *
-     * Called before every test case method.
-     */
-    @Before
-    public void setUp()
-    {
-
-    }
-
-    /**
-     * Tears down the test fixture.
-     *
-     * Called after every test case method.
-     */
-    @After
-    public void tearDown()
-    {
-        
-    }
-
     @Test
     public void testarMenu()
     {
