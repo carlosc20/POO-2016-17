@@ -5,35 +5,23 @@
  * @author (your name)
  * @version (a version number or a date)
  */
-import java.util.Map;
-import java.util.HashMap;
+
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.HashSet;
-import java.util.Comparator;
 import java.util.Iterator;
-import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.ClassNotFoundException;
-import java.io.File;
-import java.util.HashMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.stream.Collectors;
 
-public class App
-{
+public class App {
     private static Estado estado;
 
-    public App() {
+    public App(){
         try {
             estado = Estado.leEstado();
         }

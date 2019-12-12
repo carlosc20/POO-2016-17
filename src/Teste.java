@@ -1,10 +1,3 @@
-
-
-import static org.junit.Assert.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.HashSet;
 import java.util.Random;
 import java.time.LocalDate;
@@ -19,9 +12,7 @@ public class Teste
 {
     Estado estado;
 
-    @Test
-    public void testarMenu()
-    {
+    public void testarMenu(){
         
         this.estado = new Estado();
         int numEmpresas = 10;
@@ -76,12 +67,16 @@ public class Teste
         App teste = new App(estado);
         teste.main(null);
     }
-    
-    @Test
+
     public void testarMenuSemDados()
     {
         App teste = new App();
         teste.main(null);
+    }
+
+    public static void main(String[] args) {
+        Teste t = new Teste();
+        t.testarMenu();
     }
 }
 
