@@ -1,5 +1,4 @@
+src/*.bluej
+src/*.ctxt
+src/*.class
 
-src/package.bluej
-src/package.bluej
-src/Teste.class
-src/Individual.class

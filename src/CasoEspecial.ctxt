@@ -1,7 +1,0 @@
-#BlueJ class context
-comment0.target=CasoEspecial
-comment0.text=\r\n\ Write\ a\ description\ of\ interface\ CasoEspecial\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
-comment1.params=
-comment1.target=double\ reducaoImposto()
-comment1.text=\r\n\ Calcula\ o\ montante\ de\ dedu\u00E7\u00E3o\ associado\r\n\r\n\ @return\ \ \ valor\ em\ euros\r\n
-numComments=2
